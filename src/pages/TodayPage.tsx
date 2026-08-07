@@ -299,14 +299,23 @@ export default function TodayPage() {
 
       <div className="h-4" />
 
-      {/* Floating Cosmos Twin */}
-      <div className="pointer-events-none fixed bottom-24 left-1/2 z-30 flex w-full max-w-[420px] -translate-x-1/2 justify-end px-4">
+      {/* Floating Cosmos Twin — living orb */}
+      <div className="pointer-events-none fixed bottom-[92px] left-1/2 z-30 flex w-full max-w-[420px] -translate-x-1/2 justify-end px-4">
         <button
           onClick={() => nav("/twin")}
-          className="glass pointer-events-auto flex items-center gap-2 rounded-full border border-cosmic/30 py-2 pl-2 pr-3.5 shadow-[0_8px_24px_rgba(124,58,237,0.28)] transition-transform duration-200 active:scale-95"
+          className="glass pointer-events-auto relative flex items-center gap-2 rounded-full border border-cosmic/30 py-2 pl-2 pr-3.5 shadow-[0_8px_24px_rgba(124,58,237,0.28)] transition-transform duration-200 active:scale-95"
         >
+          {/* pulsing halo */}
+          <span
+            className="pointer-events-none absolute -left-1 top-1/2 h-11 w-11 -translate-y-1/2 rounded-full"
+            style={{
+              background: "radial-gradient(circle, rgba(139,124,252,0.45), transparent 70%)",
+              animation: "orb-halo 2.8s ease-in-out infinite",
+            }}
+          />
           <Orb size={30} />
-          <span className="text-xs font-bold text-text-primary">Ask Twin</span>
+          <span className="relative text-xs font-bold text-text-primary">Ask Twin</span>
+          <style>{`@keyframes orb-halo{0%,100%{transform:translateY(-50%) scale(1);opacity:.7}50%{transform:translateY(-50%) scale(1.5);opacity:.15}}`}</style>
         </button>
       </div>
 
