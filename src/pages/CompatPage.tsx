@@ -112,6 +112,25 @@ export default function CompatPage() {
                 "linear-gradient(155deg,#FF6B2C 0%,#E11D74 52%,#FF9A1F 100%)",
             }}
           >
+            {/* constellation lines */}
+            <svg
+              className="pointer-events-none absolute inset-0 h-full w-full"
+              viewBox="0 0 340 604"
+              preserveAspectRatio="none"
+              fill="none"
+            >
+              <g stroke="rgba(255,255,255,0.35)" strokeWidth="1">
+                <path d="M30 90 L78 60 L128 96 L96 150 Z" />
+                <path d="M250 430 L292 400 L312 458 L266 480 Z" />
+              </g>
+              {[
+                [30, 90], [78, 60], [128, 96], [96, 150],
+                [250, 430], [292, 400], [312, 458], [266, 480],
+              ].map(([x, y], i) => (
+                <circle key={i} cx={x} cy={y} r="2.5" fill="#FFE08A" />
+              ))}
+            </svg>
+
             {/* floating sparkles */}
             {Array.from({ length: 30 }).map((_, i) => (
               <span
@@ -173,8 +192,31 @@ export default function CompatPage() {
                 ))}
               </div>
 
-              <div className="mt-auto flex items-center gap-1 pt-6 text-[10px] text-white/70">
-                <Spark size={10} /> cosmos-os.app
+              <div className="mt-auto flex w-full items-end justify-between pt-6">
+                <div className="flex items-center gap-1 text-[10px] text-white/70">
+                  <Spark size={10} /> cosmos-os.app
+                </div>
+                {/* mini QR (decorative, deterministic) */}
+                <div className="rounded-md bg-white/95 p-1">
+                  <div
+                    className="grid gap-[1px]"
+                    style={{ gridTemplateColumns: "repeat(7, 4px)" }}
+                  >
+                    {Array.from({ length: 49 }).map((_, i) => (
+                      <span
+                        key={i}
+                        style={{
+                          width: 4,
+                          height: 4,
+                          background:
+                            (i * 7 + 3) % 5 < 2 || i < 3 || i % 7 === 0
+                              ? "#2A1B10"
+                              : "transparent",
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>

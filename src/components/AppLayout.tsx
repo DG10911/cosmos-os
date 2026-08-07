@@ -81,34 +81,41 @@ function TopBar() {
 
 function TabBar() {
   return (
-    <nav className="glass fixed bottom-0 left-1/2 z-20 flex h-[68px] w-full max-w-[420px] -translate-x-1/2 items-start justify-around border-t border-gold/15 pt-2.5">
-      {TABS.map((tab) => (
-        <NavLink
-          key={tab.to}
-          to={tab.to}
-          className={({ isActive }) =>
-            cn(
-              "relative flex flex-col items-center gap-1 px-3 py-1 transition-all duration-300 ease-smooth active:scale-90",
-              isActive ? "text-gold" : "text-text-muted hover:text-text-primary"
-            )
-          }
-        >
-          {({ isActive }) => (
-            <>
-              {isActive && (
-                <span className="absolute -top-2.5 h-1.5 w-1.5 rounded-full bg-gold shadow-[0_0_8px_2px_rgba(255,107,44,0.5)]" />
-              )}
-              <tab.icon
-                size={22}
-                strokeWidth={isActive ? 2.4 : 1.8}
-              />
-              <span className="text-[10px] font-medium tracking-wide">
-                {tab.label}
-              </span>
-            </>
-          )}
-        </NavLink>
-      ))}
+    <nav className="fixed bottom-3 left-1/2 z-20 w-full max-w-[420px] -translate-x-1/2 px-3">
+      <div className="glass flex h-[64px] items-center justify-around rounded-full border border-gold/20 shadow-[0_12px_32px_rgba(191,105,30,0.18)]">
+        {TABS.map((tab) => (
+          <NavLink
+            key={tab.to}
+            to={tab.to}
+            className={({ isActive }) =>
+              cn(
+                "relative flex flex-col items-center gap-0.5 px-3 py-1.5 transition-colors duration-300 active:scale-90",
+                isActive ? "text-gold" : "text-text-muted hover:text-text-primary"
+              )
+            }
+          >
+            {({ isActive }) => (
+              <>
+                {isActive && (
+                  <motion.span
+                    layoutId="dock-pill"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                    className="absolute inset-x-0 -inset-y-0.5 rounded-2xl bg-gold/10 ring-1 ring-gold/25"
+                  />
+                )}
+                <tab.icon
+                  size={22}
+                  strokeWidth={isActive ? 2.4 : 1.8}
+                  className="relative"
+                />
+                <span className="relative text-[10px] font-medium tracking-wide">
+                  {tab.label}
+                </span>
+              </>
+            )}
+          </NavLink>
+        ))}
+      </div>
     </nav>
   );
 }
