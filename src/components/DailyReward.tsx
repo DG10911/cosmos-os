@@ -21,7 +21,7 @@ export function DailyReward() {
     if (app.rewardClaimed) return;
     app.claimDaily(todayReward);
     setConfetti((c) => c + 1);
-    toast(`Daily reward claimed · +${todayReward} Karma`);
+    toast(`The cosmos left you +${todayReward} Karma ✦`);
   }
 
   return (

@@ -18,7 +18,11 @@ import {
   X,
   BadgeCheck,
   ChevronRight,
+  Sun,
+  Gauge,
+  PartyPopper,
 } from "lucide-react";
+import { auraScore } from "../data/planets";
 import { TODAY, ASTROLOGERS, avatarUrl } from "../data/seed";
 import { useApp } from "../state/AppState";
 import { useToast } from "../components/Toast";
@@ -51,7 +55,7 @@ export default function TodayPage() {
     if (app.ritualDone) return;
     app.completeRitual();
     setConfetti((c) => c + 1);
-    toast("Ritual complete · +10 Karma");
+    toast("A small offering. A big shift · +10 Karma");
   }
 
   function tapTool(k: string) {
@@ -89,8 +93,14 @@ export default function TodayPage() {
             <Share2 size={15} />
           </button>
         </div>
-        <h2 className="serif mt-4 text-[26px] leading-snug">{TODAY.heroTitle}</h2>
-        <p className="mt-1 text-[14px] text-white/90">{TODAY.heroSub}</p>
+        <h2 className="serif mt-4 text-[24px] leading-snug">{TODAY.heroTitle}</h2>
+        <p className="mt-1 text-[13px] text-white/90">{TODAY.heroSub}</p>
+        <button
+          onClick={() => nav("/brief")}
+          className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-[13px] font-bold text-[#FF6B2C] active:scale-95"
+        >
+          <Sun size={14} /> Read your Morning Brief →
+        </button>
         <Sparkles className="absolute -bottom-3 -right-3 text-white/15" size={90} />
       </motion.div>
 
@@ -119,6 +129,31 @@ export default function TodayPage() {
             </button>
           ))}
         </div>
+      </div>
+
+      {/* Aura + Festival */}
+      <div className="mt-4 grid grid-cols-2 gap-3">
+        <button
+          onClick={() => nav("/aura")}
+          className="tint-tile flex flex-col justify-between p-4 text-left"
+          style={{ background: "linear-gradient(150deg,#7C3AED,#E11D74)" }}
+        >
+          <div className="flex items-center justify-between text-white">
+            <Gauge size={18} />
+            <span className="mono text-xl font-bold">{auraScore(app.streak, app.karma)}</span>
+          </div>
+          <span className="mt-2 text-[12px] font-bold text-white">Your Aura Score →</span>
+          <span className="text-[10px] text-white/80">level up your 9 planets</span>
+        </button>
+        <button
+          onClick={() => nav("/festival")}
+          className="tint-tile flex flex-col justify-between p-4 text-left"
+          style={{ background: "linear-gradient(150deg,#FF6B2C,#FFB423)" }}
+        >
+          <PartyPopper size={18} className="text-white" />
+          <span className="mt-2 text-[12px] font-bold text-white">Festival cards →</span>
+          <span className="text-[10px] text-white/85">bless a friend, get shared</span>
+        </button>
       </div>
 
       {/* Daily reward */}

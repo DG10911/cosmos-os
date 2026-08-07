@@ -106,7 +106,7 @@ function Missions({
             onClick={() => {
               app.completeMissionDay();
               setConfetti((c) => c + 1);
-              toast("Mission progress · +10 Karma");
+              toast("The universe noticed · +10 Karma");
             }}
           />
         </div>
@@ -121,7 +121,7 @@ function Missions({
               key={m.id}
               onClick={() => {
                 app.toggleWeekly(m.id, m.karma);
-                if (!done) toast(`+${m.karma} Karma`);
+                if (!done) toast("Karma received");
               }}
               className="cosmic-card flex w-full items-center gap-3 p-3.5 text-left"
             >
@@ -220,7 +220,7 @@ function Karma({
                 disabled={!affordable}
                 onClick={() => {
                   app.addKarma(-r.cost, `Redeemed: ${r.label}`);
-                  toast("Redeemed successfully");
+                  toast("Blessing unlocked ✦");
                 }}
                 className="rounded-btn bg-gold px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-30"
               >
@@ -246,7 +246,7 @@ function Karma({
           When a friend joins via your invite, you both earn Karma.
         </p>
         <button
-          onClick={() => toast("Invite link copied")}
+          onClick={() => toast("Good karma multiplies — link copied")}
           className="btn-gold mt-3 w-full rounded-btn text-sm"
         >
           Invite Friends

@@ -50,7 +50,7 @@ export default function PredictionsPage() {
     setPreds((prev) => prev.map((p) => (p.id === id ? { ...p, status } : p)));
     if (status === "yes") {
       setConfetti((c) => c + 1);
-      toast("Marked accurate · +20 Karma to trust");
+      toast("Your future came true · +20 Karma to trust");
     } else {
       toast("Outcome recorded");
     }

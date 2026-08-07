@@ -30,7 +30,7 @@ export default function CompatPage() {
       link.download = `cosmos-compat-anya-${name.toLowerCase()}.png`;
       link.href = url;
       link.click();
-      toast("Card saved");
+      toast("Saved · some things are written in the stars ✦");
     } catch {
       toast("Export failed — try again");
     }
