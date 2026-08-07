@@ -115,7 +115,7 @@ export default function SessionPage() {
       <Confetti fire={confetti} />
 
       {/* Top bar */}
-      <header className="flex items-center gap-2 border-b border-white/[0.06] bg-bg/90 px-3 py-2.5 backdrop-blur">
+      <header className="flex items-center gap-2 border-b border-gold/15 bg-bg/90 px-3 py-2.5 backdrop-blur">
         <button onClick={() => nav(-1)} className="text-text-muted">
           <ChevronLeft size={22} />
         </button>
@@ -129,7 +129,7 @@ export default function SessionPage() {
         </span>
         <div className="flex-1">
           <div className="flex items-center gap-1.5">
-            <span className="text-sm font-semibold text-white">{a.name}</span>
+            <span className="text-sm font-semibold text-text-primary">{a.name}</span>
             <TrustSigil score={a.trust} />
           </div>
           <span className="text-[11px] text-success">
@@ -138,7 +138,7 @@ export default function SessionPage() {
         </div>
         <button
           onClick={() => nav(`/session/${a.id}/summary`)}
-          className="rounded-full bg-danger/90 px-3 py-1.5 text-xs font-semibold text-white"
+          className="rounded-full bg-danger/90 px-3 py-1.5 text-xs font-semibold text-text-primary"
         >
           End
         </button>
@@ -160,12 +160,12 @@ export default function SessionPage() {
       </div>
 
       {/* Input */}
-      <div className="border-t border-white/[0.06] bg-bg/90 px-3 pb-3 pt-2 backdrop-blur">
+      <div className="border-t border-gold/15 bg-bg/90 px-3 pb-3 pt-2 backdrop-blur">
         <div className="no-scrollbar mb-2 flex gap-2 overflow-x-auto">
           {["Tell me more", "Book follow-up", "Show me the ritual"].map((q) => (
             <button
               key={q}
-              className="whitespace-nowrap rounded-full border border-white/12 bg-bg-card px-3 py-1.5 text-xs text-text-muted"
+              className="whitespace-nowrap rounded-full border border-gold/20 bg-bg-card px-3 py-1.5 text-xs text-text-muted"
             >
               {q}
             </button>
@@ -174,12 +174,12 @@ export default function SessionPage() {
         <div className="flex items-center gap-2">
           <input
             placeholder="Message Pt. Suresh…"
-            className="h-11 flex-1 rounded-full bg-bg-card px-4 text-sm text-white outline-none placeholder:text-text-muted/60"
+            className="h-11 flex-1 rounded-full bg-bg-card px-4 text-sm text-text-primary outline-none placeholder:text-text-muted/60"
           />
           <button className="text-text-muted">
             <Mic size={20} />
           </button>
-          <button className="flex h-11 w-11 items-center justify-center rounded-full bg-gold text-bg">
+          <button className="flex h-11 w-11 items-center justify-center rounded-full bg-gold text-white">
             <Send size={18} />
           </button>
         </div>
@@ -189,7 +189,7 @@ export default function SessionPage() {
       <AnimatePresence>
         {showWhy && (
           <Modal onClose={() => setShowWhy(false)}>
-            <h3 className="serif text-xl text-white">Why Neelam?</h3>
+            <h3 className="serif text-xl text-text-primary">Why Neelam?</h3>
             <p className="mt-3 text-sm leading-relaxed text-text-muted">
               {RITUAL.why}
             </p>
@@ -211,7 +211,7 @@ export default function SessionPage() {
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-success/15">
                 <Gem size={26} />
               </div>
-              <h3 className="serif mt-3 text-xl text-white">Ordered!</h3>
+              <h3 className="serif mt-3 text-xl text-text-primary">Ordered!</h3>
               <p className="mt-2 text-sm text-text-muted">
                 Your Neelam ring arrives Aug 15. Pt. Suresh has been notified
                 and will guide the energizing ritual.
@@ -251,7 +251,7 @@ function LifeSnapshot({
     <div
       className="border-b border-cyan-400/20"
       style={{
-        background: "linear-gradient(180deg, #1E1E33, #161629)",
+        background: "linear-gradient(180deg, #FFF6EC, #FFFFFF)",
       }}
     >
       <button
@@ -260,7 +260,7 @@ function LifeSnapshot({
       >
         <div className="flex items-center gap-2">
           <Brain size={15} className="text-cyan-300" />
-          <span className="text-xs font-semibold text-white">
+          <span className="text-xs font-semibold text-text-primary">
             Anya's Life Snapshot
           </span>
         </div>
@@ -286,13 +286,13 @@ function LifeSnapshot({
               {tiles.map((t) => (
                 <div
                   key={t.label}
-                  className="flex min-w-[130px] flex-col gap-1 rounded-xl border border-white/[0.06] bg-bg/40 p-2.5"
+                  className="flex min-w-[130px] flex-col gap-1 rounded-xl border border-gold/15 bg-bg/40 p-2.5"
                 >
                   <div className="flex items-center gap-1">
                     {t.icon}
                     <span className="text-[10px] text-text-muted">{t.label}</span>
                   </div>
-                  <span className="text-[12px] font-medium leading-tight text-white">
+                  <span className="text-[12px] font-medium leading-tight text-text-primary">
                     {t.value}
                   </span>
                 </div>
@@ -353,8 +353,8 @@ function Bubble({
       <div
         className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
           isUser
-            ? "rounded-br-sm text-bg"
-            : "cosmic-card rounded-bl-sm text-white/90"
+            ? "rounded-br-sm text-white"
+            : "cosmic-card rounded-bl-sm text-text-primary"
         }`}
         style={
           isUser
@@ -390,7 +390,7 @@ function RitualCard({
       className="aura-border overflow-hidden rounded-2xl p-4"
       style={{
         background:
-          "radial-gradient(120% 100% at 100% 0%, rgba(244,196,48,0.18), transparent 55%), linear-gradient(150deg, #331e57, #1a0b2e)",
+          "radial-gradient(120% 100% at 100% 0%, rgba(244,196,48,0.18), transparent 55%), linear-gradient(150deg, #FFEBD5, #FFE9CE)",
         boxShadow: "0 14px 40px rgba(139,124,252,0.42)",
       }}
     >
@@ -406,9 +406,9 @@ function RitualCard({
           <Gem size={44} />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[15px] font-semibold text-white">{RITUAL.title}</p>
+          <p className="text-[15px] font-semibold text-text-primary">{RITUAL.title}</p>
           <p className="text-[11px] text-text-muted">{RITUAL.subtitle}</p>
-          <p className="mt-0.5 text-[13px] text-white/70">{RITUAL.reason}</p>
+          <p className="mt-0.5 text-[13px] text-text-muted">{RITUAL.reason}</p>
           <div className="mt-1 flex items-baseline gap-2">
             <span className="text-lg font-bold text-gold">
               ₹{RITUAL.price.toLocaleString("en-IN")}
@@ -428,13 +428,13 @@ function RitualCard({
         <div className="mt-3 flex items-center gap-2">
           <button
             onClick={onBuy}
-            className="flex flex-1 items-center justify-center gap-1.5 rounded-btn bg-gold py-2.5 text-sm font-semibold text-bg"
+            className="flex flex-1 items-center justify-center gap-1.5 rounded-btn bg-gold py-2.5 text-sm font-semibold text-white"
           >
             <Spark size={14} /> Buy Now
           </button>
           <button
             onClick={onWhy}
-            className="rounded-btn border border-white/15 px-3 py-2.5 text-sm text-white"
+            className="rounded-btn border border-gold/20 px-3 py-2.5 text-sm text-text-primary"
           >
             Skip
           </button>
@@ -447,7 +447,7 @@ function RitualCard({
         </div>
       )}
 
-      <div className="mt-2 flex items-center justify-end gap-1 text-[11px] text-white/60">
+      <div className="mt-2 flex items-center justify-end gap-1 text-[11px] text-text-muted">
         <ShieldCheck size={12} className="text-success" /> 30-day Prediction
         Warranty
       </div>
@@ -495,7 +495,7 @@ function Modal({
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 40, opacity: 0 }}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-[390px] rounded-2xl border border-white/10 bg-bg-elevated p-5"
+        className="w-full max-w-[390px] rounded-2xl border border-gold/20 bg-bg-elevated p-5"
       >
         {children}
       </motion.div>

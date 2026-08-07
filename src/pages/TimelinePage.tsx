@@ -45,7 +45,7 @@ export default function TimelinePage() {
       >
         <ChevronLeft size={16} /> Back
       </button>
-      <h1 className="serif text-2xl text-white">Your Destiny Timeline</h1>
+      <h1 className="serif text-2xl text-text-primary">Your Destiny Timeline</h1>
 
       {/* filters */}
       <div className="no-scrollbar mt-3 flex gap-2 overflow-x-auto">
@@ -56,7 +56,7 @@ export default function TimelinePage() {
             className={`whitespace-nowrap rounded-full border px-3 py-1.5 text-xs transition ${
               filter === f
                 ? "border-gold bg-gold/10 text-gold"
-                : "border-white/12 text-text-muted"
+                : "border-gold/20 text-text-muted"
             }`}
           >
             {f}
@@ -72,7 +72,7 @@ export default function TimelinePage() {
             {i === nowIndex && (
               <div className="relative mb-4 -ml-6 flex items-center gap-2">
                 <div className="h-px flex-1 bg-gold/50" />
-                <span className="rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold text-bg">
+                <span className="rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold text-white">
                   NOW
                 </span>
               </div>
@@ -98,7 +98,7 @@ export default function TimelinePage() {
                     {e.cat}
                   </span>
                 </div>
-                <p className="mt-1 text-sm font-medium text-white">{e.label}</p>
+                <p className="mt-1 text-sm font-medium text-text-primary">{e.label}</p>
                 {e.confidence && (
                   <p className="mt-0.5 text-[11px] text-text-muted">
                     {e.confidence}% confidence · {e.by}
@@ -132,7 +132,7 @@ export default function TimelinePage() {
               animate={{ y: 0 }}
               exit={{ y: 40 }}
               onClick={(ev) => ev.stopPropagation()}
-              className="w-full max-w-[390px] rounded-2xl border border-white/10 bg-bg-elevated p-5"
+              className="w-full max-w-[390px] rounded-2xl border border-gold/20 bg-bg-elevated p-5"
             >
               <div className="flex items-start justify-between">
                 <span
@@ -145,7 +145,7 @@ export default function TimelinePage() {
                   <X size={18} />
                 </button>
               </div>
-              <h3 className="serif mt-3 text-xl text-white">{active.label}</h3>
+              <h3 className="serif mt-3 text-xl text-text-primary">{active.label}</h3>
               {active.confidence ? (
                 <>
                   <p className="mt-1 text-sm text-gold">

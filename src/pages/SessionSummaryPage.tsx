@@ -49,7 +49,7 @@ export default function SessionSummaryPage() {
         animate={{ opacity: 1, y: 0 }}
         className="text-center"
       >
-        <h1 className="serif text-[26px] text-white">Session Complete</h1>
+        <h1 className="serif text-[26px] text-text-primary">Session Complete</h1>
         <p className="text-sm text-text-muted">12 min with Pt. Suresh Sharma</p>
       </motion.div>
 
@@ -60,7 +60,7 @@ export default function SessionSummaryPage() {
         </CardTitle>
         <ul className="mt-2 space-y-2">
           {SAID.map((s, i) => (
-            <li key={i} className="flex gap-2 text-sm text-white/90">
+            <li key={i} className="flex gap-2 text-sm text-text-primary">
               <span className="text-gold">•</span>
               {s}
             </li>
@@ -83,7 +83,7 @@ export default function SessionSummaryPage() {
                 <span
                   className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded border ${
                     checked.includes(i)
-                      ? "border-success bg-success text-bg"
+                      ? "border-success bg-success text-white"
                       : "border-white/30"
                   }`}
                 >
@@ -93,7 +93,7 @@ export default function SessionSummaryPage() {
                   className={`text-sm ${
                     checked.includes(i)
                       ? "text-text-muted line-through"
-                      : "text-white"
+                      : "text-text-primary"
                   }`}
                 >
                   {a}
@@ -121,17 +121,17 @@ export default function SessionSummaryPage() {
         onClick={() => nav("/predictions")}
         className="mt-4 w-full rounded-card p-4 text-left"
         style={{
-          background: "linear-gradient(145deg,#1a0b2e,#161629)",
+          background: "linear-gradient(145deg,#FFE9CE,#FFFFFF)",
           border: "1px solid rgba(139,124,252,0.35)",
         }}
       >
         <div className="flex items-center gap-2">
           <Target size={16} className="text-gold" />
-          <span className="text-sm font-semibold text-white">
+          <span className="text-sm font-semibold text-text-primary">
             Prediction locked in
           </span>
         </div>
-        <p className="mt-2 text-sm text-white/90">
+        <p className="mt-2 text-sm text-text-primary">
           Pt. Suresh predicted: you'll get clarity on the promotion by{" "}
           <span className="text-gold">22 Nov 2026</span>.
         </p>
@@ -161,13 +161,13 @@ export default function SessionSummaryPage() {
       <div
         className="mt-4 flex items-center gap-3 rounded-card p-4"
         style={{
-          background: "linear-gradient(145deg,#2d1b4e,#1a0b2e)",
+          background: "linear-gradient(145deg,#FFF2E2,#FFE9CE)",
           border: "1px solid rgba(139,124,252,0.3)",
         }}
       >
         <Rocket size={22} className="shrink-0 text-gold" />
         <div className="flex-1">
-          <p className="text-sm font-semibold text-white">
+          <p className="text-sm font-semibold text-text-primary">
             Unlock unlimited AI Twin + 10% off consultations
           </p>
           <p className="text-xs text-text-muted">
@@ -176,7 +176,7 @@ export default function SessionSummaryPage() {
         </div>
         <button
           onClick={() => nav("/me")}
-          className="shrink-0 rounded-btn bg-gold px-3 py-2 text-xs font-semibold text-bg"
+          className="shrink-0 rounded-btn bg-gold px-3 py-2 text-xs font-semibold text-white"
         >
           Try Free
         </button>
@@ -207,7 +207,7 @@ function CardTitle({
   return (
     <div className="flex items-center gap-2">
       {icon}
-      <span className="text-sm font-semibold text-white">{children}</span>
+      <span className="text-sm font-semibold text-text-primary">{children}</span>
     </div>
   );
 }
@@ -224,7 +224,7 @@ function MiniBtn({
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-1 rounded-full border border-white/12 px-2.5 py-1 text-[11px] text-text-muted hover:text-gold"
+      className="flex items-center gap-1 rounded-full border border-gold/20 px-2.5 py-1 text-[11px] text-text-muted hover:text-gold"
     >
       {icon} {label}
     </button>

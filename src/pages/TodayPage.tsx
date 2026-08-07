@@ -48,7 +48,7 @@ export default function TodayPage() {
         className="aura-border relative overflow-hidden rounded-card p-5"
         style={{
           background:
-            "radial-gradient(120% 100% at 80% 0%, rgba(139,124,252,0.28), transparent 60%), linear-gradient(150deg, #1e0d38 0%, #0B0B14 72%)",
+            "radial-gradient(120% 100% at 80% 0%, rgba(139,124,252,0.28), transparent 60%), linear-gradient(150deg, #FFF0DC 0%, #FFE6C9 72%)",
           minHeight: 214,
           boxShadow: "0 12px 40px rgba(139,124,252,0.22)",
         }}
@@ -61,7 +61,7 @@ export default function TodayPage() {
           <span className="text-xs text-text-muted">{TODAY.dateLabel}</span>
         </div>
         <div className="mt-10 flex min-h-[110px] flex-col justify-center">
-          <h2 className="serif text-[27px] leading-snug text-white">
+          <h2 className="serif text-[27px] leading-snug text-text-primary">
             {TODAY.heroTitle}
           </h2>
           <p className="mt-2 text-[15px] text-text-muted">{TODAY.heroSub}</p>
@@ -70,7 +70,7 @@ export default function TodayPage() {
           onClick={() => {
             nav("/circle");
           }}
-          className="absolute bottom-4 right-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-white/70 hover:text-gold"
+          className="absolute bottom-4 right-4 flex h-9 w-9 items-center justify-center rounded-full bg-black/[0.04] text-text-muted hover:text-gold"
         >
           <Share2 size={16} />
         </button>
@@ -116,7 +116,7 @@ export default function TodayPage() {
             <Flame size={18} className="text-gold" />
             <span className="text-xs text-text-muted">Today's Ritual</span>
           </div>
-          <p className="mt-1 text-[13px] font-medium leading-snug text-white">
+          <p className="mt-1 text-[13px] font-medium leading-snug text-text-primary">
             {TODAY.ritual}
           </p>
           <CheckButton
@@ -133,12 +133,12 @@ export default function TodayPage() {
       <div className="cosmic-card mt-4 p-4">
         <div className="flex items-center gap-2">
           <Target size={18} className="text-cosmic" />
-          <span className="text-sm font-medium text-white">
+          <span className="text-sm font-medium text-text-primary">
             Mission of the Day
           </span>
         </div>
-        <p className="mt-2 text-[15px] text-white">Meditate 7 minutes today</p>
-        <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-white/10">
+        <p className="mt-2 text-[15px] text-text-primary">Meditate 7 minutes today</p>
+        <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-black/[0.05]">
           <div
             className="h-full rounded-full bg-gold transition-all duration-500"
             style={{ width: `${(app.missionProgress / 7) * 100}%` }}
@@ -166,7 +166,7 @@ export default function TodayPage() {
         />
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-white">
+            <span className="text-sm font-semibold text-text-primary">
               {suggested.name}
             </span>
             <TrustSigil score={suggested.trust} />
@@ -175,7 +175,7 @@ export default function TodayPage() {
         </div>
         <button
           onClick={() => nav(`/session/${suggested.id}`)}
-          className="rounded-btn bg-gold px-3 py-2 text-xs font-semibold text-bg"
+          className="rounded-btn bg-gold px-3 py-2 text-xs font-semibold text-white"
         >
           Chat ₹{suggested.price}/min
         </button>
@@ -187,7 +187,7 @@ export default function TodayPage() {
           <ChartWheel size={96} />
         </div>
         <div className="flex-1">
-          <p className="text-sm font-semibold text-white">Your Birth Chart</p>
+          <p className="text-sm font-semibold text-text-primary">Your Birth Chart</p>
           <p className="mt-0.5 text-xs text-text-muted">
             Cancer Asc · Rohini · Rahu Mahadasha
           </p>
@@ -205,7 +205,7 @@ export default function TodayPage() {
         onClick={() => setPanchangOpen((o) => !o)}
         className="cosmic-card mt-4 flex w-full items-center justify-between p-4"
       >
-        <span className="text-sm text-white">Today's Panchang</span>
+        <span className="text-sm text-text-primary">Today's Panchang</span>
         <ChevronDown
           size={18}
           className={`text-text-muted transition-transform ${
@@ -230,7 +230,7 @@ export default function TodayPage() {
           className="glass pointer-events-auto flex items-center gap-2 rounded-full border border-cosmic/30 py-2 pl-2 pr-3.5 shadow-[0_8px_28px_rgba(139,124,252,0.35)] transition-transform duration-200 active:scale-95"
         >
           <Orb size={30} />
-          <span className="text-xs font-semibold text-white">Ask Twin</span>
+          <span className="text-xs font-semibold text-text-primary">Ask Twin</span>
         </button>
       </div>
     </div>
@@ -255,7 +255,7 @@ function Tile({
         <span className="text-xs text-text-muted">{label}</span>
       </div>
       <span
-        className={`text-[15px] font-semibold text-white ${mono ? "mono !text-sm" : ""}`}
+        className={`text-[15px] font-semibold text-text-primary ${mono ? "mono !text-sm" : ""}`}
       >
         {value}
       </span>
@@ -267,7 +267,7 @@ function Row({ k, v, danger }: { k: string; v: string; danger?: boolean }) {
   return (
     <div className="flex items-center justify-between">
       <span className="text-text-muted">{k}</span>
-      <span className={danger ? "text-danger" : "text-white"}>{v}</span>
+      <span className={danger ? "text-danger" : "text-text-primary"}>{v}</span>
     </div>
   );
 }

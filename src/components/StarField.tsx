@@ -1,52 +1,45 @@
 import { useMemo } from "react";
 
 /**
- * Layered twinkling star field + drifting aurora + film grain + a slow shooting star.
- * Positions are generated once per mount (deterministic within a session).
+ * Warm ambient background — a soft cream wash with a few floating festive
+ * sparkle dots (saffron / marigold / gold). Light, cheerful, uncluttered.
+ * (Component name kept for compatibility across screens.)
  */
-export function StarField({ count = 80 }: { count?: number }) {
-  const stars = useMemo(() => {
+export function StarField({ count = 26 }: { count?: number }) {
+  const dots = useMemo(() => {
+    const colors = ["#FF6B2C", "#FF9A1F", "#FFC53D"];
     return Array.from({ length: count }).map((_, i) => {
-      const size = Math.random() * 2.2 + 0.4;
-      const isGold = Math.random() < 0.16;
+      const size = Math.random() * 4 + 2;
       return {
         id: i,
         top: `${Math.random() * 100}%`,
         left: `${Math.random() * 100}%`,
         size: `${size}px`,
-        color: isGold ? "#F4C430" : "#ffffff",
+        color: colors[i % colors.length],
         delay: `${Math.random() * 3}s`,
-        duration: `${2 + Math.random() * 3.5}s`,
-        gold: isGold,
+        duration: `${3 + Math.random() * 3}s`,
       };
     });
   }, [count]);
 
   return (
-    <>
-      <div className="star-bg">
-        {stars.map((s) => (
-          <span
-            key={s.id}
-            className="star"
-            style={{
-              top: s.top,
-              left: s.left,
-              width: s.size,
-              height: s.size,
-              background: s.color,
-              animationDelay: s.delay,
-              animationDuration: s.duration,
-              boxShadow: s.gold
-                ? "0 0 8px rgba(244,196,48,0.7)"
-                : "0 0 4px rgba(255,255,255,0.5)",
-            }}
-          />
-        ))}
-        {/* a single, rare shooting star for life */}
-        <span className="shooting-star" style={{ top: "18%", left: "12%" }} />
-      </div>
-      <div className="grain" />
-    </>
+    <div className="star-bg">
+      {dots.map((d) => (
+        <span
+          key={d.id}
+          className="star"
+          style={{
+            top: d.top,
+            left: d.left,
+            width: d.size,
+            height: d.size,
+            background: d.color,
+            opacity: 0.35,
+            animationDelay: d.delay,
+            animationDuration: d.duration,
+          }}
+        />
+      ))}
+    </div>
   );
 }

@@ -25,7 +25,7 @@ export default function ConsultPage() {
 
   return (
     <div className="px-4 pt-3">
-      <h1 className="serif mb-3 text-3xl text-white">Consult</h1>
+      <h1 className="serif mb-3 text-3xl text-text-primary">Consult</h1>
 
       {/* Search */}
       <div className="cosmic-card flex items-center gap-2 px-3">
@@ -34,7 +34,7 @@ export default function ConsultPage() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search astrologers…"
-          className="h-11 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-text-muted/60"
+          className="h-11 flex-1 bg-transparent text-sm text-text-primary outline-none placeholder:text-text-muted/60"
         />
       </div>
 
@@ -43,7 +43,7 @@ export default function ConsultPage() {
         {FILTERS.map((f) => (
           <button
             key={f}
-            className="whitespace-nowrap rounded-full border border-white/12 bg-bg-card px-3 py-1.5 text-xs text-text-muted"
+            className="whitespace-nowrap rounded-full border border-gold/20 bg-bg-card px-3 py-1.5 text-xs text-text-muted"
           >
             {f}
           </button>
@@ -70,7 +70,7 @@ export default function ConsultPage() {
       {!loading && list.length === 0 && (
         <div className="cosmic-card mt-6 flex flex-col items-center gap-2 p-8 text-center">
           <Search size={24} className="text-text-muted" />
-          <p className="text-sm text-white">No astrologers match "{query}"</p>
+          <p className="text-sm text-text-primary">No astrologers match "{query}"</p>
           <button
             onClick={() => setQuery("")}
             className="mt-1 text-xs font-semibold text-gold"
@@ -99,7 +99,7 @@ export default function ConsultPage() {
               />
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="truncate text-sm font-semibold text-white">
+                  <span className="truncate text-sm font-semibold text-text-primary">
                     {a.name}
                   </span>
                   <TrustSigil score={a.trust} />
@@ -113,7 +113,7 @@ export default function ConsultPage() {
                       {s}
                     </span>
                   ))}
-                  <span className="rounded-full bg-white/8 px-2 py-0.5 text-[10px] text-text-muted">
+                  <span className="rounded-full bg-black/[0.04] px-2 py-0.5 text-[10px] text-text-muted">
                     {a.languages}
                   </span>
                 </div>
@@ -139,13 +139,13 @@ export default function ConsultPage() {
             >
               <button
                 onClick={() => nav(`/session/${a.id}`)}
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-btn bg-gold py-2 text-xs font-semibold text-bg"
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-btn bg-gold py-2 text-xs font-semibold text-white"
               >
                 <MessageCircle size={14} /> Chat ₹{a.price}/min
               </button>
               <button
                 onClick={() => nav(`/session/${a.id}`)}
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-btn border border-white/15 py-2 text-xs font-medium text-white"
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-btn border border-gold/20 py-2 text-xs font-medium text-text-primary"
               >
                 <Phone size={14} /> Call ₹{Math.round(a.price * 2.3)}/min
               </button>

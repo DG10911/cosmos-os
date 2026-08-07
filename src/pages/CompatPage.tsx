@@ -59,7 +59,7 @@ export default function CompatPage() {
 
       {stage === "form" && (
         <div>
-          <h1 className="serif text-2xl text-white">
+          <h1 className="serif text-2xl text-text-primary">
             Whose chart do you want to check?
           </h1>
           <p className="mt-1 text-sm text-text-muted">
@@ -72,7 +72,7 @@ export default function CompatPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Riya"
-                className="cosmic-card mt-1.5 h-13 w-full bg-bg-card px-4 py-3 text-base text-white outline-none placeholder:text-text-muted/50 focus:ring-2 focus:ring-gold/60"
+                className="cosmic-card mt-1.5 h-13 w-full bg-bg-card px-4 py-3 text-base text-text-primary outline-none placeholder:text-text-muted/50 focus:ring-2 focus:ring-gold/60"
               />
             </div>
             <div>
@@ -83,7 +83,7 @@ export default function CompatPage() {
                 type="date"
                 value={dob}
                 onChange={(e) => setDob(e.target.value)}
-                className="cosmic-card mt-1.5 h-13 w-full bg-bg-card px-4 py-3 text-base text-white outline-none [color-scheme:dark] focus:ring-2 focus:ring-gold/60"
+                className="cosmic-card mt-1.5 h-13 w-full bg-bg-card px-4 py-3 text-base text-text-primary outline-none [color-scheme:light] focus:ring-2 focus:ring-gold/60"
               />
             </div>
           </div>
@@ -109,10 +109,10 @@ export default function CompatPage() {
             style={{
               aspectRatio: "9 / 16",
               background:
-                "linear-gradient(160deg,#0B0B14 0%,#4c1d95 55%,#0B0B14 100%)",
+                "linear-gradient(155deg,#FF6B2C 0%,#E11D74 52%,#FF9A1F 100%)",
             }}
           >
-            {/* floating stars */}
+            {/* floating sparkles */}
             {Array.from({ length: 30 }).map((_, i) => (
               <span
                 key={i}
@@ -120,11 +120,11 @@ export default function CompatPage() {
                   position: "absolute",
                   top: `${(i * 37) % 100}%`,
                   left: `${(i * 53) % 100}%`,
-                  width: i % 5 === 0 ? 3 : 1.5,
-                  height: i % 5 === 0 ? 3 : 1.5,
+                  width: i % 5 === 0 ? 4 : 2,
+                  height: i % 5 === 0 ? 4 : 2,
                   borderRadius: "50%",
-                  background: i % 5 === 0 ? "#F4C430" : "#fff",
-                  opacity: 0.7,
+                  background: i % 5 === 0 ? "#FFE08A" : "#fff",
+                  opacity: 0.8,
                 }}
               />
             ))}
@@ -134,20 +134,18 @@ export default function CompatPage() {
               <div className="flex items-center gap-3">
                 <img
                   src={avatarUrl(99)}
-                  className="h-14 w-14 rounded-full border-2 border-gold/60 bg-bg-elevated"
+                  className="h-14 w-14 rounded-full border-2 border-white/80 bg-white"
                   alt="Anya"
                 />
-                <div className="h-px w-8 bg-gold" />
+                <div className="h-0.5 w-8 bg-white/80" />
                 <img
                   src={avatarUrl(42)}
-                  className="h-14 w-14 rounded-full border-2 border-gold/60 bg-bg-elevated"
+                  className="h-14 w-14 rounded-full border-2 border-white/80 bg-white"
                   alt={name}
                 />
               </div>
-              <p className="serif mt-4 text-[22px] text-white">
-                Anya × {name}
-              </p>
-              <p className="text-xs text-white/60">
+              <p className="serif mt-4 text-[22px] text-white">Anya × {name}</p>
+              <p className="text-xs text-white/85">
                 {compat.signA} × {compat.signB}
               </p>
 
@@ -157,11 +155,11 @@ export default function CompatPage() {
                   value={compat.score}
                   duration={1100}
                   format={(n) => `${Math.round(n)}`}
-                  className="serif leading-none text-gold"
-                  style={{ fontSize: "88px", textShadow: "0 0 30px rgba(244,196,48,0.5)" }}
+                  className="serif leading-none text-white"
+                  style={{ fontSize: "92px", textShadow: "0 4px 20px rgba(0,0,0,0.25)" }}
                 />
-                <span className="text-xs text-white/50">/ 100</span>
-                <span className="mt-1 text-[11px] uppercase tracking-[0.2em] text-white/70">
+                <span className="text-xs text-white/70">/ 100</span>
+                <span className="mt-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/90">
                   Cosmic Compatibility
                 </span>
               </div>
@@ -169,13 +167,13 @@ export default function CompatPage() {
               {/* insights */}
               <div className="mt-8 space-y-2 px-2">
                 {compat.insights.map((line, i) => (
-                  <p key={i} className="text-[13px] italic leading-snug text-white/85">
+                  <p key={i} className="text-[13px] italic leading-snug text-white/95">
                     {line}
                   </p>
                 ))}
               </div>
 
-              <div className="mt-auto flex items-center gap-1 pt-6 text-[10px] text-white/40">
+              <div className="mt-auto flex items-center gap-1 pt-6 text-[10px] text-white/70">
                 <Spark size={10} /> cosmos-os.app
               </div>
             </div>
@@ -186,7 +184,7 @@ export default function CompatPage() {
             <button
               onClick={share}
               className="flex flex-1 items-center justify-center gap-1.5 rounded-btn py-3 text-sm font-semibold text-white"
-              style={{ background: "linear-gradient(135deg,#8B7CFC,#c026d3)" }}
+              style={{ background: "linear-gradient(135deg,#E11D74,#7C3AED)" }}
             >
               <Share2 size={16} /> Share to Story
             </button>

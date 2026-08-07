@@ -63,16 +63,16 @@ export default function CosmosAIPage() {
   return (
     <div
       className="relative flex h-screen w-full flex-col"
-      style={{ background: "linear-gradient(180deg,#12081f,#0B0B14)" }}
+      style={{ background: "linear-gradient(180deg,#FFEAD2,#FFE6C9)" }}
     >
       {/* header */}
-      <header className="glass flex items-center gap-2 border-b border-white/[0.06] px-3 py-2.5">
+      <header className="glass flex items-center gap-2 border-b border-gold/15 px-3 py-2.5">
         <button onClick={() => nav(-1)} className="text-text-muted">
           <ChevronLeft size={22} />
         </button>
         <Orb size={30} />
         <div className="flex-1">
-          <p className="text-sm font-semibold text-white">Cosmos Twin</p>
+          <p className="text-sm font-semibold text-text-primary">Cosmos Twin</p>
           <p className="text-[11px] text-cosmic">Always here · knows your chart</p>
         </div>
       </header>
@@ -82,7 +82,7 @@ export default function CosmosAIPage() {
         {showSuggestions && (
           <div className="flex flex-col items-center pb-4 pt-8">
             <Orb size={96} />
-            <p className="serif mt-5 text-center text-2xl text-white">
+            <p className="serif mt-5 text-center text-2xl text-text-primary">
               Ask your Twin anything
             </p>
             <p className="mt-1 text-center text-xs text-text-muted">
@@ -102,8 +102,8 @@ export default function CosmosAIPage() {
             <div
               className={`max-w-[78%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                 m.role === "user"
-                  ? "rounded-br-sm text-bg"
-                  : "cosmic-card rounded-bl-sm text-white/90"
+                  ? "rounded-br-sm text-white"
+                  : "cosmic-card rounded-bl-sm text-text-primary"
               }`}
               style={
                 m.role === "user"
@@ -114,7 +114,7 @@ export default function CosmosAIPage() {
               {m.text}
             </div>
             {m.role === "user" && (
-              <span className="ml-2 mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/10 text-text-muted">
+              <span className="ml-2 mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-black/[0.05] text-text-muted">
                 <UserRound size={13} />
               </span>
             )}
@@ -150,7 +150,7 @@ export default function CosmosAIPage() {
               <button
                 key={s}
                 onClick={() => send(s)}
-                className="glass whitespace-nowrap rounded-full border border-cosmic/30 px-3.5 py-2 text-xs text-white/90"
+                className="glass whitespace-nowrap rounded-full border border-cosmic/30 px-3.5 py-2 text-xs text-text-primary"
               >
                 {s}
               </button>
@@ -160,18 +160,18 @@ export default function CosmosAIPage() {
       </AnimatePresence>
 
       {/* composer */}
-      <div className="glass border-t border-white/[0.06] px-3 pb-4 pt-2">
+      <div className="glass border-t border-gold/15 px-3 pb-4 pt-2">
         <div className="flex items-center gap-2">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && send(input)}
             placeholder="Ask your Cosmos Twin…"
-            className="h-11 flex-1 rounded-full bg-bg-card px-4 text-sm text-white outline-none placeholder:text-text-muted/60"
+            className="h-11 flex-1 rounded-full bg-bg-card px-4 text-sm text-text-primary outline-none placeholder:text-text-muted/60"
           />
           <button
             onClick={() => send(input)}
-            className="flex h-11 w-11 items-center justify-center rounded-full text-bg"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-white"
             style={{ background: "linear-gradient(135deg,#8B7CFC,#F4C430)" }}
           >
             <Send size={18} />

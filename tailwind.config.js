@@ -4,53 +4,60 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Warm, bright, festive — Indian-consumer palette
         bg: {
-          DEFAULT: "#0B0B14",
-          card: "#161629",
-          elevated: "#1E1E33",
+          DEFAULT: "#FFF6EC", // warm cream app background
+          card: "#FFFFFF", // clean white cards
+          elevated: "#FFF1E0", // soft cream for elevated surfaces
+          hover: "#FFF3E6",
         },
+        // "gold" = primary saffron (owns the app) — most CTAs use text-gold/bg-gold
         gold: {
-          DEFAULT: "#F4C430",
-          dim: "#B8930F",
+          DEFAULT: "#FF6B2C", // saffron / Swiggy-orange primary
+          dim: "#E8551C",
         },
+        saffron: "#FF6B2C",
+        marigold: "#FF9A1F",
+        amber: "#FFC53D", // festive gold accent (streak, karma, "auspicious")
+        // "cosmic" = mystic violet for AI / predictions
         cosmic: {
-          DEFAULT: "#8B7CFC",
-          deep: "#4c1d95",
+          DEFAULT: "#7C3AED",
+          deep: "#5B21B6",
         },
+        rose: "#F43F6E",
         text: {
-          primary: "#F5F5F7",
-          muted: "#A1A1AA",
+          primary: "#2A1B10", // warm ink
+          muted: "#8C7A68", // warm gray
+          faint: "#BBA894",
         },
-        success: "#4ADE80",
-        danger: "#F87171",
+        success: "#16A34A", // WhatsApp-style green (online / money)
+        danger: "#E5484D",
+        cyan: "#0EA5E9",
       },
       fontFamily: {
-        serif: ['"Instrument Serif"', "serif"],
-        sans: ['"Inter"', "system-ui", "sans-serif"],
+        serif: ['"Baloo 2"', "cursive"], // chunky friendly display (multilingual)
+        sans: ['"Poppins"', "system-ui", "sans-serif"],
         mono: ['"JetBrains Mono"', "monospace"],
       },
       borderRadius: {
-        card: "16px",
-        btn: "12px",
+        card: "20px",
+        btn: "14px",
       },
       transitionTimingFunction: {
         smooth: "cubic-bezier(0.4, 0, 0.2, 1)",
       },
       keyframes: {
-        twinkle: {
-          "0%, 100%": { opacity: "0.2" },
-          "50%": { opacity: "1" },
-        },
+        twinkle: { "0%,100%": { opacity: "0.25" }, "50%": { opacity: "0.9" } },
         "slide-up": {
           "0%": { transform: "translateY(20px)", opacity: "0" },
           "100%": { transform: "translateY(0)", opacity: "1" },
         },
         "pulse-gold": {
-          "0%, 100%": { boxShadow: "0 0 0 0 rgba(244,196,48,0.4)" },
-          "50%": { boxShadow: "0 0 20px 4px rgba(244,196,48,0.4)" },
+          "0%,100%": { boxShadow: "0 0 0 0 rgba(255,107,44,0.4)" },
+          "50%": { boxShadow: "0 0 22px 4px rgba(255,107,44,0.35)" },
         },
         "flame-flicker": {
-          "0%, 100%": { transform: "scale(1)" },
+          "0%,100%": { transform: "scale(1)" },
           "50%": { transform: "scale(1.08)" },
         },
       },

@@ -66,7 +66,7 @@ export default function PredictionsPage() {
         <ChevronLeft size={16} /> Back
       </button>
 
-      <h1 className="serif text-2xl text-white">Prediction Tracker</h1>
+      <h1 className="serif text-2xl text-text-primary">Prediction Tracker</h1>
       <p className="mt-1 text-sm text-text-muted">
         Every prediction, held accountable. This is our promise.
       </p>
@@ -74,7 +74,7 @@ export default function PredictionsPage() {
       {/* Accuracy hero */}
       <div
         className="aura-border mt-4 flex items-center gap-4 rounded-card p-5"
-        style={{ background: "linear-gradient(150deg,#1e0d38,#12081f)" }}
+        style={{ background: "linear-gradient(150deg,#FFF0DC,#FFEAD2)" }}
       >
         <div className="text-center">
           <CountUp
@@ -84,9 +84,9 @@ export default function PredictionsPage() {
           />
           <p className="mt-0.5 text-[11px] text-text-muted">accuracy</p>
         </div>
-        <div className="h-12 w-px bg-white/10" />
+        <div className="h-12 w-px bg-black/[0.05]" />
         <div className="flex-1">
-          <div className="flex items-center gap-2 text-sm text-white">
+          <div className="flex items-center gap-2 text-sm text-text-primary">
             <ShieldCheck size={16} className="text-success" />
             30-day Prediction Warranty
           </div>
@@ -104,7 +104,7 @@ export default function PredictionsPage() {
       </div>
 
       {/* Open predictions — resolvable */}
-      <h3 className="serif mt-6 text-lg text-white">Awaiting outcome</h3>
+      <h3 className="serif mt-6 text-lg text-text-primary">Awaiting outcome</h3>
       <div className="mt-2 space-y-2">
         {open.map((p, i) => (
           <motion.div
@@ -122,7 +122,7 @@ export default function PredictionsPage() {
               </span>
               <span className="text-[11px] text-text-muted">due {p.dueOn}</span>
             </div>
-            <p className="mt-2 text-sm text-white">{p.text}</p>
+            <p className="mt-2 text-sm text-text-primary">{p.text}</p>
             <p className="mt-0.5 text-[11px] text-text-muted">by {p.by}</p>
             <div className="mt-3 flex gap-2">
               <ResolveBtn
@@ -152,13 +152,13 @@ export default function PredictionsPage() {
       </div>
 
       {/* Leaderboard */}
-      <h3 className="serif mt-6 text-lg text-white">Astrologer accuracy</h3>
+      <h3 className="serif mt-6 text-lg text-text-primary">Astrologer accuracy</h3>
       <div className="mt-2 space-y-2">
         {leaderboard.map((row) => (
           <div key={row.astro.id} className="cosmic-card flex items-center gap-3 p-3">
-            <span className="text-sm font-semibold text-white">{row.astro.name}</span>
+            <span className="text-sm font-semibold text-text-primary">{row.astro.name}</span>
             <div className="ml-auto flex items-center gap-2">
-              <div className="h-1.5 w-20 overflow-hidden rounded-full bg-white/10">
+              <div className="h-1.5 w-20 overflow-hidden rounded-full bg-black/[0.05]">
                 <div
                   className="h-full rounded-full bg-gold"
                   style={{ width: `${row.acc}%` }}
@@ -171,13 +171,13 @@ export default function PredictionsPage() {
       </div>
 
       {/* Resolved history */}
-      <h3 className="serif mt-6 text-lg text-white">History</h3>
+      <h3 className="serif mt-6 text-lg text-text-primary">History</h3>
       <div className="mt-2 space-y-2">
         {resolved.map((p) => (
           <div key={p.id} className="cosmic-card flex items-start gap-3 p-3.5">
             <StatusChip status={p.status} />
             <div className="flex-1">
-              <p className="text-sm text-white/90">{p.text}</p>
+              <p className="text-sm text-text-primary">{p.text}</p>
               <p className="text-[11px] text-text-muted">
                 {p.by} · resolved {p.dueOn}
               </p>
