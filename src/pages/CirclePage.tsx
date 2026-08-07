@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Heart, Users2, Home } from "lucide-react";
+import { Spark } from "../components/Glyphs";
 
 export default function CirclePage() {
   const nav = useNavigate();
@@ -27,8 +28,8 @@ export default function CirclePage() {
         <p className="mt-1 text-sm text-text-muted">
           Beautiful, shareable compatibility cards
         </p>
-        <span className="btn-gold mt-4 inline-block rounded-full text-sm">
-          Create Card ✨
+        <span className="btn-gold mt-4 inline-flex items-center gap-1.5 rounded-full text-sm">
+          <Spark size={14} /> Create Card
         </span>
         <p className="mt-3 text-xs text-text-muted">
           12,483 cards created today

@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { StarField } from "../components/StarField";
+import { Spark } from "../components/Glyphs";
 
 export default function SplashPage() {
   const nav = useNavigate();
@@ -58,10 +59,10 @@ export default function SplashPage() {
           className="flex w-full flex-col items-center"
         >
           <button
-            className="btn-gold animate-pulse-gold w-full rounded-full text-lg"
-            onClick={() => nav("/onboarding")}
+            className="btn-gold animate-pulse-gold flex w-full items-center justify-center gap-2 rounded-full text-lg"
+            onClick={() => nav("/auth")}
           >
-            Begin Your Journey ✨
+            <Spark size={18} /> Begin Your Journey
           </button>
           <p className="mt-3 text-center text-xs text-text-muted">
             As personal as your chart. As habitual as your morning.

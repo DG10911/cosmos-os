@@ -1,9 +1,9 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft } from "lucide-react";
 import { StarField } from "../components/StarField";
-import { ONBOARDING_ART } from "../components/CelestialArt";
+import { ArtWheel, ArtOrbits, ArtSunrise } from "../components/CelestialArt";
 import { ChartWheel } from "../components/ChartWheel";
 import { saveUser } from "../data/user";
 
@@ -18,14 +18,14 @@ const GOALS = [
   "Family",
 ];
 
+const ART = [ArtWheel, ArtOrbits, ArtSunrise];
+const TOTAL = 3;
+
 export default function OnboardingPage() {
   const nav = useNavigate();
   const [step, setStep] = useState(1);
   const [finishing, setFinishing] = useState(false);
 
-  // form state
-  const [phone, setPhone] = useState("");
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [birthDate, setBirthDate] = useState("");
   const [birthTime, setBirthTime] = useState("");
   const [birthPlace, setBirthPlace] = useState("");
@@ -33,23 +33,14 @@ export default function OnboardingPage() {
   const [notifyTime, setNotifyTime] = useState("08:30");
   const [whatsapp, setWhatsapp] = useState(true);
 
-  const Art = ONBOARDING_ART[step - 1];
+  const Art = ART[step - 1];
 
   const canContinue =
-    (step === 1 && phone.length === 10) ||
-    (step === 2 && otp.every((d) => d !== "")) ||
-    (step === 3 && birthDate && birthTime && birthPlace.trim()) ||
-    (step === 4 && goals.length === 3) ||
-    step === 5;
+    (step === 1 && birthDate && birthTime && birthPlace.trim()) ||
+    (step === 2 && goals.length === 3) ||
+    step === 3;
 
-  const ctaLabel =
-    step === 1
-      ? "Send OTP"
-      : step === 2
-      ? "Verify"
-      : step === 5
-      ? "Meet Your Cosmos ✨"
-      : "Continue";
+  const ctaLabel = step === TOTAL ? "Meet Your Cosmos" : "Continue";
 
   function toggleGoal(g: string) {
     setGoals((prev) => {
@@ -60,11 +51,11 @@ export default function OnboardingPage() {
   }
 
   function next() {
-    if (step < 5) {
+    if (step < TOTAL) {
       setStep((s) => s + 1);
     } else {
       saveUser({
-        phone,
+        phone: "",
         birthDate,
         birthTime,
         birthPlace,
@@ -109,16 +100,17 @@ export default function OnboardingPage() {
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-[420px] flex-col px-6">
         {/* Progress dots */}
         <div className="flex items-center justify-center gap-2 pt-10">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div
-              key={i}
-              className={`h-2.5 rounded-full transition-all duration-300 ${
-                i <= step
-                  ? "w-6 bg-gold"
-                  : "w-2.5 border border-white/25 bg-transparent"
-              }`}
-            />
-          ))}
+          {Array.from({ length: TOTAL }).map((_, idx) => {
+            const i = idx + 1;
+            return (
+              <div
+                key={i}
+                className={`h-2.5 rounded-full transition-all duration-300 ${
+                  i <= step ? "w-6 bg-gold" : "w-2.5 border border-white/25"
+                }`}
+              />
+            );
+          })}
         </div>
 
         <AnimatePresence mode="wait">
@@ -130,21 +122,13 @@ export default function OnboardingPage() {
             transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
             className="flex flex-1 flex-col"
           >
-            {/* Celestial illustration */}
             <div className="flex h-[170px] items-center justify-center pt-4">
               <Art />
             </div>
 
-            {/* Step content */}
             <div className="mt-2 flex-1">
               {step === 1 && (
-                <Step1 phone={phone} setPhone={setPhone} />
-              )}
-              {step === 2 && (
-                <Step2 otp={otp} setOtp={setOtp} phone={phone} />
-              )}
-              {step === 3 && (
-                <Step3
+                <StepBirth
                   {...{
                     birthDate,
                     setBirthDate,
@@ -155,19 +139,14 @@ export default function OnboardingPage() {
                   }}
                 />
               )}
-              {step === 4 && (
-                <Step4 goals={goals} toggleGoal={toggleGoal} />
-              )}
-              {step === 5 && (
-                <Step5
-                  {...{ notifyTime, setNotifyTime, whatsapp, setWhatsapp }}
-                />
+              {step === 2 && <StepGoals goals={goals} toggleGoal={toggleGoal} />}
+              {step === 3 && (
+                <StepNotify {...{ notifyTime, setNotifyTime, whatsapp, setWhatsapp }} />
               )}
             </div>
           </motion.div>
         </AnimatePresence>
 
-        {/* Bottom actions */}
         <div className="flex flex-col items-center gap-3 pb-8">
           {step > 1 && (
             <button
@@ -190,8 +169,6 @@ export default function OnboardingPage() {
   );
 }
 
-/* ---------- Step components ---------- */
-
 function Question({ title, sub }: { title: string; sub?: string }) {
   return (
     <div className="text-center">
@@ -201,91 +178,7 @@ function Question({ title, sub }: { title: string; sub?: string }) {
   );
 }
 
-function Step1({
-  phone,
-  setPhone,
-}: {
-  phone: string;
-  setPhone: (v: string) => void;
-}) {
-  return (
-    <>
-      <Question title="What's your phone number?" />
-      <div className="mt-8 flex items-center gap-3">
-        <div className="cosmic-card flex h-14 items-center px-4 text-lg text-text-primary">
-          +91
-        </div>
-        <input
-          autoFocus
-          type="tel"
-          inputMode="numeric"
-          value={phone}
-          onChange={(e) =>
-            setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))
-          }
-          placeholder="98765 43210"
-          className="cosmic-card h-14 flex-1 bg-bg-card px-4 text-lg text-text-primary outline-none placeholder:text-text-muted/50 focus:ring-2 focus:ring-gold/60"
-        />
-      </div>
-    </>
-  );
-}
-
-function Step2({
-  otp,
-  setOtp,
-  phone,
-}: {
-  otp: string[];
-  setOtp: (v: string[]) => void;
-  phone: string;
-}) {
-  const refs = useRef<(HTMLInputElement | null)[]>([]);
-  useEffect(() => {
-    refs.current[0]?.focus();
-  }, []);
-
-  function handle(i: number, v: string) {
-    const digit = v.replace(/\D/g, "").slice(-1);
-    const nextOtp = [...otp];
-    nextOtp[i] = digit;
-    setOtp(nextOtp);
-    if (digit && i < 5) refs.current[i + 1]?.focus();
-  }
-
-  return (
-    <>
-      <Question
-        title="Enter the OTP"
-        sub={`Sent to +91 ${phone.slice(0, 5)} ${phone.slice(5) || "•••••"}`}
-      />
-      <div className="mt-8 flex justify-center gap-2">
-        {otp.map((d, i) => (
-          <input
-            key={i}
-            ref={(el) => {
-              refs.current[i] = el;
-            }}
-            value={d}
-            onChange={(e) => handle(i, e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Backspace" && !otp[i] && i > 0)
-                refs.current[i - 1]?.focus();
-            }}
-            inputMode="numeric"
-            maxLength={1}
-            className="cosmic-card h-12 w-12 bg-bg-card text-center text-xl text-text-primary outline-none focus:ring-2 focus:ring-gold/60"
-          />
-        ))}
-      </div>
-      <p className="mt-4 text-center text-xs text-text-muted">
-        Resend OTP (30s)
-      </p>
-    </>
-  );
-}
-
-function Step3(props: {
+function StepBirth(props: {
   birthDate: string;
   setBirthDate: (v: string) => void;
   birthTime: string;
@@ -294,7 +187,7 @@ function Step3(props: {
   setBirthPlace: (v: string) => void;
 }) {
   const inputCls =
-    "cosmic-card mt-1.5 h-13 w-full bg-bg-card px-4 py-3 text-base text-text-primary outline-none focus:ring-2 focus:ring-gold/60 [color-scheme:dark]";
+    "glass mt-1.5 h-13 w-full rounded-btn px-4 py-3 text-base text-white outline-none focus:ring-2 focus:ring-gold/60 [color-scheme:dark]";
   return (
     <>
       <Question
@@ -337,7 +230,7 @@ function Step3(props: {
   );
 }
 
-function Step4({
+function StepGoals({
   goals,
   toggleGoal,
 }: {
@@ -357,7 +250,7 @@ function Step4({
             <button
               key={g}
               onClick={() => toggleGoal(g)}
-              className={`rounded-full border px-4 py-3.5 text-sm font-medium transition-all duration-200 ${
+              className={`rounded-full border px-4 py-3.5 text-sm font-medium transition-all duration-200 active:scale-95 ${
                 active
                   ? "border-2 border-gold bg-gold/10 text-gold"
                   : "border-white/15 bg-bg-card text-white"
@@ -375,7 +268,7 @@ function Step4({
   );
 }
 
-function Step5({
+function StepNotify({
   notifyTime,
   setNotifyTime,
   whatsapp,
@@ -397,7 +290,7 @@ function Step5({
           type="time"
           value={notifyTime}
           onChange={(e) => setNotifyTime(e.target.value)}
-          className="cosmic-card w-48 bg-bg-card px-4 py-4 text-center text-3xl text-gold outline-none [color-scheme:dark] focus:ring-2 focus:ring-gold/60"
+          className="glass w-48 rounded-btn px-4 py-4 text-center text-3xl text-gold outline-none [color-scheme:dark] focus:ring-2 focus:ring-gold/60"
         />
         <button
           onClick={() => setWhatsapp(!whatsapp)}

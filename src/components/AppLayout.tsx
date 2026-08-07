@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { StarField } from "./StarField";
 import { cn } from "../lib/utils";
 import { useApp } from "../state/AppState";
+import { Flame } from "./Glyphs";
 
 const TABS = [
   { to: "/today", icon: Home, label: "Today" },
@@ -71,7 +72,7 @@ function TopBar() {
     <header className="glass fixed left-1/2 top-0 z-20 flex h-14 w-full max-w-[420px] -translate-x-1/2 items-center justify-between border-b border-white/[0.06] px-4">
       <span className="serif text-lg text-text-primary">{greeting()}, Anya</span>
       <span className="mono flex items-center gap-1.5 rounded-full bg-gold/10 px-2.5 py-1 text-gold ring-1 ring-gold/20">
-        <span className="animate-flame-flicker inline-block">🔥</span>
+        <Flame size={16} className="animate-flame-flicker" />
         <span className="text-base font-semibold">{streak}</span>
       </span>
     </header>

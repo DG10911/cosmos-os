@@ -26,6 +26,7 @@ import { TrustSigil } from "./TodayPage";
 import { useApp } from "../state/AppState";
 import { Confetti } from "../components/Confetti";
 import { VoiceNote } from "../components/Waveform";
+import { Spark, Gem } from "../components/Glyphs";
 
 export default function SessionPage() {
   const { id } = useParams();
@@ -207,8 +208,8 @@ export default function SessionPage() {
         {showBought && (
           <Modal onClose={continueAfterBuy}>
             <div className="text-center">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-success/15 text-2xl">
-                ✨
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-success/15">
+                <Gem size={26} />
               </div>
               <h3 className="serif mt-3 text-xl text-white">Ordered!</h3>
               <p className="mt-2 text-sm text-text-muted">
@@ -265,7 +266,7 @@ function LifeSnapshot({
         </div>
         <div className="flex items-center gap-2">
           <span className="text-[10px] text-text-muted">
-            Only {astro} sees this ✨
+            Only {astro} sees this
           </span>
           <ChevronUp
             size={16}
@@ -394,14 +395,15 @@ function RitualCard({
       }}
     >
       <div className="flex items-center gap-1.5">
+        <Spark size={17} className="text-gold" />
         <span className="serif text-[17px] text-gold">
-          🌟 Ritual Suggestion from Pt. Suresh
+          Ritual Suggestion from Pt. Suresh
         </span>
       </div>
 
       <div className="mt-3 flex gap-3">
-        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/40 to-indigo-700/40 text-4xl">
-          💍
+        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/25 to-indigo-700/25">
+          <Gem size={44} />
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-[15px] font-semibold text-white">{RITUAL.title}</p>
@@ -426,9 +428,9 @@ function RitualCard({
         <div className="mt-3 flex items-center gap-2">
           <button
             onClick={onBuy}
-            className="flex-1 rounded-btn bg-gold py-2.5 text-sm font-semibold text-bg"
+            className="flex flex-1 items-center justify-center gap-1.5 rounded-btn bg-gold py-2.5 text-sm font-semibold text-bg"
           >
-            Buy Now ✨
+            <Spark size={14} /> Buy Now
           </button>
           <button
             onClick={onWhy}

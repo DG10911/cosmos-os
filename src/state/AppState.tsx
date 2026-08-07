@@ -18,11 +18,14 @@ type AppState = {
   missionProgress: number; // 0..7
   weeklyDone: string[]; // ids of completed weekly missions
   boughtRitual: boolean; // did the Ritual Moment convert?
+  rewardDay: number; // day index in the 7-day daily-reward cycle
+  rewardClaimed: boolean; // claimed today's reward?
   addKarma: (delta: number, reason: string) => void;
   completeRitual: () => void;
   completeMissionDay: () => void;
   toggleWeekly: (id: string, karma: number) => void;
   markBoughtRitual: () => void;
+  claimDaily: (amount: number) => void;
 };
 
 const KEY = "cosmos_state";
@@ -41,6 +44,8 @@ const DEFAULT = {
   missionProgress: 3,
   weeklyDone: [] as string[],
   boughtRitual: false,
+  rewardDay: 3,
+  rewardClaimed: false,
 };
 
 const Ctx = createContext<AppState | null>(null);
@@ -116,6 +121,23 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     persist({ ...s, boughtRitual: true });
   }, [s, persist]);
 
+  const claimDaily = useCallback(
+    (amount: number) => {
+      if (s.rewardClaimed) return;
+      persist({
+        ...s,
+        rewardClaimed: true,
+        rewardDay: Math.min(7, s.rewardDay + 1),
+        karma: s.karma + amount,
+        karmaLog: [
+          { delta: amount, reason: "Daily check-in reward", at: "Just now" },
+          ...s.karmaLog,
+        ],
+      });
+    },
+    [s, persist]
+  );
+
   return (
     <Ctx.Provider
       value={{
@@ -125,6 +147,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         completeMissionDay,
         toggleWeekly,
         markBoughtRitual,
+        claimDaily,
       }}
     >
       {children}

@@ -49,7 +49,7 @@ export default function SessionSummaryPage() {
         animate={{ opacity: 1, y: 0 }}
         className="text-center"
       >
-        <h1 className="serif text-[26px] text-white">Session Complete ✨</h1>
+        <h1 className="serif text-[26px] text-white">Session Complete</h1>
         <p className="text-sm text-text-muted">12 min with Pt. Suresh Sharma</p>
       </motion.div>
 

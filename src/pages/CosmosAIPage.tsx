@@ -36,7 +36,7 @@ export default function CosmosAIPage() {
   const [msgs, setMsgs] = useState<Msg[]>([
     {
       role: "ai",
-      text: "Hi Anya — I'm your Cosmos Twin. I remember every reading, ritual, and mood you log. Ask me anything, anytime. ✨",
+      text: "Hi Anya — I'm your Cosmos Twin. I remember every reading, ritual, and mood you log. Ask me anything, anytime.",
     },
   ]);
   const [input, setInput] = useState("");
