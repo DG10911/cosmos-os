@@ -1,0 +1,266 @@
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Lock } from "lucide-react";
+import { useApp } from "../state/AppState";
+import { useToast } from "../components/Toast";
+import { Confetti } from "../components/Confetti";
+
+const WEEKLY = [
+  { id: "parents", label: "Call your parents", when: "Sunday", karma: 5 },
+  { id: "donate", label: "Donate ₹51 to a temple", when: "", karma: 5 },
+  { id: "gratitude", label: "Write 3 gratitudes in your journal", when: "", karma: 5 },
+  { id: "surya", label: "Do 15-min Surya Namaskar", when: "", karma: 5 },
+  { id: "detox", label: "Skip social media for 4 hours", when: "", karma: 5 },
+];
+
+const REDEEM = [
+  { label: "5 free consultation minutes", cost: 500 },
+  { label: "30% off any ritual purchase", cost: 200 },
+  { label: "Cosmos+ 1 month free", cost: 2000 },
+];
+
+export default function MissionsPage() {
+  const app = useApp();
+  const toast = useToast();
+  const [tab, setTab] = useState<"missions" | "karma">("missions");
+  const [confetti, setConfetti] = useState(0);
+
+  return (
+    <div className="px-4 pt-3 pb-4">
+      <Confetti fire={confetti} />
+
+      {/* Streak strip */}
+      <div className="cosmic-card flex items-center justify-between p-4">
+        <div className="flex items-center gap-2">
+          <span className="animate-flame-flicker text-2xl">🔥</span>
+          <div>
+            <div className="mono text-2xl font-bold text-gold">
+              {app.streak}
+              <span className="ml-1 text-sm font-normal text-white">days</span>
+            </div>
+            <span className="text-[11px] text-text-muted">
+              Longest: {app.longestStreak} days
+            </span>
+          </div>
+        </div>
+        <span className="rounded-full bg-gold/15 px-2.5 py-1 text-[11px] font-medium text-gold">
+          Streak Insurance ✓
+        </span>
+      </div>
+
+      {/* Tabs */}
+      <div className="mt-4 flex gap-2 rounded-full bg-bg-card p-1">
+        {(["missions", "karma"] as const).map((t) => (
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            className={`flex-1 rounded-full py-2 text-sm font-medium capitalize transition ${
+              tab === t ? "bg-gold text-bg" : "text-text-muted"
+            }`}
+          >
+            {t === "karma" ? "🪙 Karma" : "Missions"}
+          </button>
+        ))}
+      </div>
+
+      {tab === "missions" ? (
+        <Missions app={app} setConfetti={setConfetti} toast={toast} />
+      ) : (
+        <Karma app={app} toast={toast} />
+      )}
+    </div>
+  );
+}
+
+function Missions({
+  app,
+  setConfetti,
+  toast,
+}: {
+  app: ReturnType<typeof useApp>;
+  setConfetti: (fn: (c: number) => number) => void;
+  toast: (t: string) => void;
+}) {
+  return (
+    <div className="mt-4">
+      <h3 className="mb-2 text-sm font-semibold text-white">Today</h3>
+      <div className="cosmic-card p-4">
+        <p className="text-[15px] text-white">Meditate 7 minutes today</p>
+        <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-white/10">
+          <div
+            className="h-full rounded-full bg-gold transition-all duration-500"
+            style={{ width: `${(app.missionProgress / 7) * 100}%` }}
+          />
+        </div>
+        <div className="mt-2 flex items-center justify-between">
+          <span className="text-xs text-text-muted">
+            {app.missionProgress} of 7 days
+          </span>
+          <button
+            disabled={app.missionProgress >= 7}
+            onClick={() => {
+              app.completeMissionDay();
+              setConfetti((c) => c + 1);
+              toast("Mission progress · +10 Karma ✨");
+            }}
+            className="rounded-btn bg-gold px-3 py-1.5 text-xs font-semibold text-bg disabled:opacity-40"
+          >
+            {app.missionProgress >= 7 ? "Completed ✓" : "Complete Today ✓"}
+          </button>
+        </div>
+      </div>
+
+      <h3 className="mb-2 mt-5 text-sm font-semibold text-white">This Week</h3>
+      <div className="space-y-2">
+        {WEEKLY.map((m) => {
+          const done = app.weeklyDone.includes(m.id);
+          return (
+            <button
+              key={m.id}
+              onClick={() => {
+                app.toggleWeekly(m.id, m.karma);
+                if (!done) toast(`+${m.karma} Karma`);
+              }}
+              className="cosmic-card flex w-full items-center gap-3 p-3.5 text-left"
+            >
+              <span
+                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${
+                  done ? "border-success bg-success text-bg" : "border-white/30"
+                }`}
+              >
+                {done && "✓"}
+              </span>
+              <span
+                className={`flex-1 text-sm ${
+                  done ? "text-text-muted line-through" : "text-white"
+                }`}
+              >
+                {m.label}
+                {m.when && (
+                  <span className="ml-1 text-xs text-text-muted">({m.when})</span>
+                )}
+              </span>
+              <span className="text-xs text-gold">+{m.karma}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <h3 className="mb-2 mt-5 flex items-center gap-1.5 text-sm font-semibold text-text-muted">
+        <Lock size={13} /> Unlocks at 20-day streak
+      </h3>
+      <div className="space-y-2 opacity-40">
+        {["Group ritual with friends", "Reserved monthly consultation", "Rare astrologer access"].map(
+          (l) => (
+            <div key={l} className="cosmic-card flex items-center gap-3 p-3.5">
+              <Lock size={16} className="text-text-muted" />
+              <span className="text-sm text-white">{l}</span>
+            </div>
+          )
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Karma({
+  app,
+  toast,
+}: {
+  app: ReturnType<typeof useApp>;
+  toast: (t: string) => void;
+}) {
+  return (
+    <div className="mt-4">
+      {/* Balance */}
+      <div className="cosmic-card flex flex-col items-center py-6">
+        <motion.span
+          key={app.karma}
+          initial={{ scale: 1.15 }}
+          animate={{ scale: 1 }}
+          className="serif text-6xl"
+          style={{
+            background: "linear-gradient(135deg,#F4C430,#8B7CFC)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}
+        >
+          {app.karma.toLocaleString("en-IN")}
+        </motion.span>
+        <span className="text-sm text-text-muted">Karma</span>
+      </div>
+
+      {/* Recent */}
+      <h3 className="mb-2 mt-5 text-sm font-semibold text-white">Recent</h3>
+      <div className="cosmic-card divide-y divide-white/[0.05]">
+        {app.karmaLog.slice(0, 6).map((e, i) => (
+          <div key={i} className="flex items-center justify-between px-4 py-2.5">
+            <div>
+              <span
+                className={`mono text-sm font-semibold ${
+                  e.delta >= 0 ? "text-success" : "text-danger"
+                }`}
+              >
+                {e.delta >= 0 ? "+" : ""}
+                {e.delta}
+              </span>
+              <span className="ml-2 text-sm text-white/80">{e.reason}</span>
+            </div>
+            <span className="text-[11px] text-text-muted">{e.at}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Redeem */}
+      <h3 className="mb-2 mt-5 text-sm font-semibold text-white">Redeem</h3>
+      <div className="space-y-2">
+        {REDEEM.map((r) => {
+          const affordable = app.karma >= r.cost;
+          return (
+            <div
+              key={r.label}
+              className="cosmic-card flex items-center justify-between p-3.5"
+            >
+              <div>
+                <p className="text-sm text-white">{r.label}</p>
+                <p className="mono text-xs text-gold">{r.cost} K</p>
+              </div>
+              <button
+                disabled={!affordable}
+                onClick={() => {
+                  app.addKarma(-r.cost, `Redeemed: ${r.label}`);
+                  toast("Redeemed ✨");
+                }}
+                className="rounded-btn bg-gold px-3 py-1.5 text-xs font-semibold text-bg disabled:opacity-30"
+              >
+                Redeem
+              </button>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Gift */}
+      <div
+        className="mt-5 rounded-card p-4"
+        style={{
+          background: "linear-gradient(145deg,#2d1b4e,#1a0b2e)",
+          border: "1px solid rgba(244,196,48,0.3)",
+        }}
+      >
+        <p className="text-sm font-semibold text-white">
+          Gift 100 Karma, get 200 back
+        </p>
+        <p className="mt-1 text-xs text-text-muted">
+          When a friend joins via your invite, you both earn Karma.
+        </p>
+        <button
+          onClick={() => toast("Invite link copied ✨")}
+          className="btn-gold mt-3 w-full rounded-btn text-sm"
+        >
+          Invite Friends
+        </button>
+      </div>
+    </div>
+  );
+}
