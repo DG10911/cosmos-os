@@ -117,8 +117,9 @@ export default function SessionSummaryPage() {
       </Card>
 
       {/* Prediction locked */}
-      <div
-        className="mt-4 rounded-card p-4"
+      <button
+        onClick={() => nav("/predictions")}
+        className="mt-4 w-full rounded-card p-4 text-left"
         style={{
           background: "linear-gradient(145deg,#1a0b2e,#161629)",
           border: "1px solid rgba(139,124,252,0.35)",
@@ -135,9 +136,10 @@ export default function SessionSummaryPage() {
           <span className="text-gold">22 Nov 2026</span>.
         </p>
         <p className="mt-1 flex items-center gap-1 text-xs text-text-muted">
-          <CalendarClock size={12} /> We'll check in with you on 23 Nov.
+          <CalendarClock size={12} /> We'll check in with you on 23 Nov. Tap to
+          track →
         </p>
-      </div>
+      </button>
 
       {/* Next */}
       <div className="mt-4 flex gap-2">

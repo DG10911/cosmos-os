@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Lock } from "lucide-react";
 import { useApp } from "../state/AppState";
 import { useToast } from "../components/Toast";
 import { Confetti } from "../components/Confetti";
+import { CountUp } from "../components/CountUp";
 
 const WEEKLY = [
   { id: "parents", label: "Call your parents", when: "Sunday", karma: 5 },
@@ -173,21 +173,16 @@ function Karma({
   return (
     <div className="mt-4">
       {/* Balance */}
-      <div className="cosmic-card flex flex-col items-center py-6">
-        <motion.span
-          key={app.karma}
-          initial={{ scale: 1.15 }}
-          animate={{ scale: 1 }}
-          className="serif text-6xl"
-          style={{
-            background: "linear-gradient(135deg,#F4C430,#8B7CFC)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-          }}
-        >
-          {app.karma.toLocaleString("en-IN")}
-        </motion.span>
-        <span className="text-sm text-text-muted">Karma</span>
+      <div className="cosmic-card relative flex flex-col items-center overflow-hidden py-7">
+        <div
+          className="pointer-events-none absolute -top-10 h-32 w-32 rounded-full opacity-40 blur-2xl"
+          style={{ background: "radial-gradient(circle,#F4C430,transparent 70%)" }}
+        />
+        <CountUp
+          value={app.karma}
+          className="serif grad-text text-6xl"
+        />
+        <span className="mt-1 text-sm text-text-muted">Karma</span>
       </div>
 
       {/* Recent */}

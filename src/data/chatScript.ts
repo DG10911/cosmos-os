@@ -3,6 +3,7 @@
 export type ChatMsg =
   | { kind: "astro"; text: string }
   | { kind: "user"; text: string }
+  | { kind: "voice"; seconds: number } // astrologer voice note
   | { kind: "ritual" } // triggers the Ritual Moment card
   | { kind: "system"; text: string };
 
@@ -15,6 +16,7 @@ export const CHAT_SCRIPT: ChatMsg[] = [
     kind: "user",
     text: "Better actually! But I'm still worried about the promotion timing.",
   },
+  { kind: "voice", seconds: 14 },
   {
     kind: "astro",
     text: "Your Rahu Mahadasha is amplifying anxiety through the Rahu–Ketu axis. Your chart shows Saturn's transit is the real driver of career timing. Let me suggest a specific remedy that aligns with your chart…",

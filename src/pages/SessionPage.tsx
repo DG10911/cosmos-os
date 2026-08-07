@@ -21,9 +21,11 @@ import {
   LIFE_SNAPSHOT,
   type ChatMsg,
 } from "../data/chatScript";
+import { CheckCheck } from "lucide-react";
 import { TrustSigil } from "./TodayPage";
 import { useApp } from "../state/AppState";
 import { Confetti } from "../components/Confetti";
+import { VoiceNote } from "../components/Waveform";
 
 export default function SessionPage() {
   const { id } = useParams();
@@ -116,11 +118,14 @@ export default function SessionPage() {
         <button onClick={() => nav(-1)} className="text-text-muted">
           <ChevronLeft size={22} />
         </button>
-        <img
-          src={avatarUrl(a.id)}
-          alt={a.name}
-          className="h-10 w-10 rounded-full bg-bg-elevated"
-        />
+        <span className="relative flex h-11 w-11 items-center justify-center">
+          <span className="absolute inset-0 rounded-full ring-2 ring-success/70" style={{ animation: "live-ring 2s ease-out infinite" }} />
+          <img
+            src={avatarUrl(a.id)}
+            alt={a.name}
+            className="h-10 w-10 rounded-full bg-bg-elevated"
+          />
+        </span>
         <div className="flex-1">
           <div className="flex items-center gap-1.5">
             <span className="text-sm font-semibold text-white">{a.name}</span>
@@ -324,12 +329,25 @@ function Bubble({
       </div>
     );
   }
+  if (msg.kind === "voice") {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex justify-start"
+      >
+        <div className="cosmic-card rounded-2xl rounded-bl-sm px-3 py-2.5">
+          <VoiceNote seconds={msg.seconds} />
+        </div>
+      </motion.div>
+    );
+  }
   const isUser = msg.kind === "user";
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`flex ${isUser ? "justify-end" : "justify-start"}`}
+      className={`flex flex-col ${isUser ? "items-end" : "items-start"}`}
     >
       <div
         className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
@@ -345,6 +363,11 @@ function Bubble({
       >
         {msg.text}
       </div>
+      {isUser && (
+        <span className="mt-1 flex items-center gap-0.5 pr-1 text-[10px] text-text-muted">
+          Read <CheckCheck size={12} className="text-cosmic" />
+        </span>
+      )}
     </motion.div>
   );
 }
