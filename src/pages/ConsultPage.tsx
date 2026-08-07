@@ -151,8 +151,8 @@ export default function ConsultPage() {
                 <MessageCircle size={14} /> Chat ₹{a.price}/min
               </button>
               <button
-                onClick={() => nav(`/session/${a.id}`)}
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-btn border border-gold/20 py-2 text-xs font-medium text-text-primary"
+                onClick={() => nav(`/call/${a.id}?type=audio`)}
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-btn border border-gold/30 py-2 text-xs font-bold text-gold"
               >
                 <Phone size={14} /> Call ₹{Math.round(a.price * 2.3)}/min
               </button>

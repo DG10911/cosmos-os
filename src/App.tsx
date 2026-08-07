@@ -9,6 +9,7 @@ import ConsultPage from "./pages/ConsultPage";
 import AstrologerPage from "./pages/AstrologerPage";
 import SessionPage from "./pages/SessionPage";
 import SessionSummaryPage from "./pages/SessionSummaryPage";
+import CallPage from "./pages/CallPage";
 import MissionsPage from "./pages/MissionsPage";
 import CirclePage from "./pages/CirclePage";
 import CompatPage from "./pages/CompatPage";
@@ -36,6 +37,7 @@ export default function App() {
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/onboarding" element={<OnboardingPage />} />
         <Route path="/session/:id" element={<SessionPage />} />
+        <Route path="/call/:id" element={<CallPage />} />
         <Route path="/replay" element={<ReplayPage />} />
         <Route path="/twin" element={<CosmosAIPage />} />
 
