@@ -26,6 +26,12 @@ import {
 import { auraScore } from "../data/planets";
 import { TODAY, ASTROLOGERS, avatarUrl } from "../data/seed";
 import { getUser } from "../data/user";
+import {
+  fetchWeather,
+  moonPhase,
+  googleCalendarUrl,
+  type Weather,
+} from "../lib/services";
 import { useApp } from "../state/AppState";
 import { useToast } from "../components/Toast";
 import { Confetti } from "../components/Confetti";
@@ -52,7 +58,13 @@ export default function TodayPage() {
   const [confetti, setConfetti] = useState(0);
   const [panchangOpen, setPanchangOpen] = useState(false);
   const [kundli, setKundli] = useState(false);
+  const [weather, setWeather] = useState<Weather | null>(null);
   const suggested = ASTROLOGERS[0];
+
+  // live weather via Open-Meteo (keyless, real)
+  useEffect(() => {
+    fetchWeather().then(setWeather).catch(() => {});
+  }, []);
 
   function onRitualDone() {
     if (app.ritualDone) return;
@@ -97,7 +109,7 @@ export default function TodayPage() {
       >
         <div className="flex items-center justify-between">
           <span className="rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-semibold backdrop-blur">
-            ☀ Auspicious day · {TODAY.dateLabel}
+            {weather ? `${weather.emoji} ${weather.temp}°C` : "☀"} · Auspicious day · {TODAY.dateLabel}
           </span>
           <button
             onClick={() => nav("/circle")}
@@ -309,6 +321,10 @@ export default function TodayPage() {
         <div className="cosmic-card mt-2 space-y-2 p-4 text-sm">
           <Row k="Tithi" v={TODAY.panchang.tithi} />
           <Row k="Nakshatra" v={TODAY.panchang.nakshatra} />
+          <Row
+            k="Moon (live)"
+            v={`${moonPhase().emoji} ${moonPhase().name} · ${moonPhase().illum}%`}
+          />
           <Row k="Rahu Kaal" v={TODAY.panchang.rahuKaal} danger />
         </div>
       )}
@@ -479,9 +495,19 @@ function MuhuratWindow() {
         </p>
       </div>
       {claimed ? (
-        <span className="rounded-full bg-success/12 px-2.5 py-1 text-[11px] font-bold text-success">
-          Claimed ✦
-        </span>
+        <a
+          href={googleCalendarUrl({
+            title: "🪔 My muhurat window — COSMOS OS",
+            details: "Tomorrow's auspicious window. Claim it in the app for 2× karma.",
+            start: new Date(Date.now() + 24 * 3600 * 1000),
+            minutes: 11,
+          })}
+          target="_blank"
+          rel="noreferrer"
+          className="rounded-full bg-success/12 px-2.5 py-1.5 text-[11px] font-bold text-success"
+        >
+          + Calendar
+        </a>
       ) : (
         <button
           onClick={() => {

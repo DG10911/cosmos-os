@@ -7,6 +7,7 @@ import { toPng } from "html-to-image";
 import { computeCompat } from "../data/compat";
 import { avatarUrl } from "../data/seed";
 import { useToast } from "../components/Toast";
+import { nativeShare } from "../lib/services";
 import { CountUp } from "../components/CountUp";
 
 export default function CompatPage() {
@@ -38,14 +39,9 @@ export default function CompatPage() {
 
   async function share() {
     await download();
-    try {
-      await navigator.clipboard.writeText(
-        "Check our cosmic compatibility — cosmos-os.app"
-      );
-    } catch {
-      /* clipboard may be blocked; ignore */
-    }
-    toast("Caption copied · share to your story!");
+    const caption = `✨ Anya × ${name} — ${compat?.score}/100 cosmic compatibility! Check yours → https://dg10911.github.io/cosmos-os/`;
+    await nativeShare("Our cosmic compatibility", caption);
+    toast("Card saved · sharing now ✦");
   }
 
   return (
