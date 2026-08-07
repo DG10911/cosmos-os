@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -21,6 +21,7 @@ import {
   Sun,
   Gauge,
   PartyPopper,
+  Puzzle,
 } from "lucide-react";
 import { auraScore } from "../data/planets";
 import { TODAY, ASTROLOGERS, avatarUrl } from "../data/seed";
@@ -34,6 +35,7 @@ import { Orb } from "./CosmosAIPage";
 
 /* Free-tools funnel (AstroTalk's #1 acquisition loop) */
 const TOOLS = [
+  { key: "graha", label: "Daily\nGraha", icon: Puzzle, bg: "#F3E8FF", fg: "#9333EA" },
   { key: "kundli", label: "Free\nKundli", icon: Sparkles, bg: "#FFE7D6", fg: "#FF6B2C" },
   { key: "match", label: "Kundli\nMatch", icon: HeartHandshake, bg: "#FFE4EC", fg: "#F43F6E" },
   { key: "love", label: "Love\nCalc", icon: Heart, bg: "#EDE9FE", fg: "#7C3AED" },
@@ -59,7 +61,8 @@ export default function TodayPage() {
   }
 
   function tapTool(k: string) {
-    if (k === "kundli") setKundli(true);
+    if (k === "graha") nav("/nakshatra");
+    else if (k === "kundli") setKundli(true);
     else if (k === "panch") setPanchangOpen(true);
     else if (k === "horo") toast("Today's horoscope: a lucky day ahead ✦");
     else toast("Opening — free forever ✦");
@@ -103,6 +106,9 @@ export default function TodayPage() {
         </button>
         <Sparkles className="absolute -bottom-3 -right-3 text-white/15" size={90} />
       </motion.div>
+
+      {/* Muhurat Window — BeReal-style daily scarcity */}
+      <MuhuratWindow />
 
       {/* Free tools funnel */}
       <div className="mt-4">
@@ -419,6 +425,65 @@ function KundliSheet({ onClose }: { onClose: () => void }) {
           Get detailed reading
         </button>
       </motion.div>
+    </motion.div>
+  );
+}
+
+/** BeReal-style daily scarcity: a personal auspicious window, once a day. */
+function MuhuratWindow() {
+  const app = useApp();
+  const toast = useToast();
+  const [claimed, setClaimed] = useState(false);
+  const [secondsLeft, setSecondsLeft] = useState(11 * 60 - 137);
+
+  useEffect(() => {
+    const t = setInterval(
+      () => setSecondsLeft((s) => Math.max(s - 1, 0)),
+      1000
+    );
+    return () => clearInterval(t);
+  }, []);
+
+  const mm = Math.floor(secondsLeft / 60);
+  const ss = String(secondsLeft % 60).padStart(2, "0");
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="aura-border mt-3 flex items-center gap-3 rounded-card p-4"
+      style={{ background: "linear-gradient(140deg,#F3E8FF,#FCE7F3)" }}
+    >
+      <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-cosmic/15 text-xl">
+        <span className="absolute inset-0 animate-flame-flicker rounded-full bg-cosmic/10" />
+        🪔
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="text-sm font-bold text-text-primary">
+          Your muhurat is OPEN
+        </p>
+        <p className="text-[11px] text-text-muted">
+          {claimed
+            ? "Blessing claimed · next window tomorrow"
+            : "A rare auspicious window, only for your chart"}
+        </p>
+      </div>
+      {claimed ? (
+        <span className="rounded-full bg-success/12 px-2.5 py-1 text-[11px] font-bold text-success">
+          Claimed ✦
+        </span>
+      ) : (
+        <button
+          onClick={() => {
+            setClaimed(true);
+            app.addKarma(20, "Muhurat claimed");
+            toast("Claimed in your muhurat · 2× karma ✦");
+          }}
+          className="btn-gold shrink-0 rounded-full px-3.5 py-2 text-xs"
+        >
+          Claim · {mm}:{ss}
+        </button>
+      )}
     </motion.div>
   );
 }
