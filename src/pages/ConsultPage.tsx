@@ -5,6 +5,7 @@ import { Search, Phone, MessageCircle, Star } from "lucide-react";
 import { ASTROLOGERS, avatarUrl } from "../data/seed";
 import { TrustSigil } from "./TodayPage";
 import { AstrologerCardSkeleton } from "../components/Skeleton";
+import { FestiveBanner } from "../components/FestiveBits";
 
 const FILTERS = ["Language", "System", "Price", "Available"];
 
@@ -25,10 +26,14 @@ export default function ConsultPage() {
 
   return (
     <div className="px-4 pt-3">
-      <h1 className="serif mb-3 text-3xl text-text-primary">Consult</h1>
+      <FestiveBanner
+        eyebrow="✓ 15,000+ verified astrologers"
+        title="Your first chat is FREE"
+        sub="Chat or call — trusted, private, 24×7"
+      />
 
       {/* Search */}
-      <div className="cosmic-card flex items-center gap-2 px-3">
+      <div className="cosmic-card mt-4 flex items-center gap-2 px-3">
         <Search size={18} className="text-text-muted" />
         <input
           value={query}

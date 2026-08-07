@@ -11,29 +11,27 @@ export default function CirclePage() {
         See how your stars connect with others
       </p>
 
-      {/* Primary: Compatibility */}
+      {/* Primary: Compatibility — bold vibrant viral card */}
       <button
         onClick={() => nav("/circle/compat")}
-        className="aura-border mt-4 w-full rounded-card p-5 text-left"
+        className="relative mt-4 w-full overflow-hidden rounded-card p-5 text-left text-white"
         style={{
-          background:
-            "radial-gradient(120% 100% at 20% 0%, rgba(251,113,133,0.18), transparent 55%), linear-gradient(150deg,#FFEBD5,#FFE9CE)",
-          boxShadow: "0 12px 40px rgba(139,124,252,0.2)",
+          background: "linear-gradient(140deg,#FF6B2C 0%,#E11D74 60%,#FF9A1F 100%)",
+          boxShadow: "0 14px 36px rgba(225,29,116,0.32)",
         }}
       >
-        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gold/15">
-          <Heart size={22} className="text-gold" />
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur">
+          <Heart size={24} className="fill-white text-white" />
         </div>
-        <h3 className="serif mt-3 text-xl text-text-primary">Check with a friend</h3>
-        <p className="mt-1 text-sm text-text-muted">
+        <h3 className="serif mt-3 text-2xl">Check with a friend</h3>
+        <p className="mt-1 text-sm text-white/90">
           Beautiful, shareable compatibility cards
         </p>
-        <span className="btn-gold mt-4 inline-flex items-center gap-1.5 rounded-full text-sm">
+        <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-bold text-[#E11D74]">
           <Spark size={14} /> Create Card
         </span>
-        <p className="mt-3 text-xs text-text-muted">
-          12,483 cards created today
-        </p>
+        <p className="mt-3 text-xs text-white/85">🔥 12,483 cards created today</p>
+        <Heart className="absolute -bottom-4 -right-3 fill-white/10 text-white/10" size={96} />
       </button>
 
       {/* Coming soon */}
