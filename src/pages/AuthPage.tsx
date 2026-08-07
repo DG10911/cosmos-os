@@ -1,18 +1,17 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Phone, ChevronLeft, ShieldCheck } from "lucide-react";
+import { Phone, ChevronLeft, ShieldCheck, ChevronRight } from "lucide-react";
 import { StarField } from "../components/StarField";
 import { Mandala, Spark } from "../components/Glyphs";
 
-type Stage = "choose" | "phone" | "otp" | "success";
+type Stage = "choose" | "phone" | "otp" | "loading" | "success";
 
 export default function AuthPage() {
   const nav = useNavigate();
   const [stage, setStage] = useState<Stage>("choose");
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const [verifying, setVerifying] = useState(false);
   const refs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
@@ -28,33 +27,37 @@ export default function AuthPage() {
     if (i === 5 && d) verify(next);
   }
 
-  function verify(code = otp) {
-    if (code.some((d) => !d)) return;
-    setVerifying(true);
+  function toSuccess() {
+    setStage("loading");
     setTimeout(() => {
-      setVerifying(false);
       setStage("success");
-      setTimeout(() => nav("/onboarding"), 1400);
-    }, 900);
+      setTimeout(() => nav("/onboarding"), 1500);
+    }, 1600);
   }
 
-  function socialLogin() {
-    // simulate instant social auth for the demo
-    setStage("success");
-    setTimeout(() => nav("/onboarding"), 1400);
+  function verify(code = otp) {
+    if (code.some((d) => !d)) return;
+    toSuccess();
   }
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-bg">
       <StarField count={90} />
-      <Mandala
-        size={420}
-        className="pointer-events-none absolute -top-24 left-1/2 z-0 -translate-x-1/2 text-gold/10"
-      />
+      {/* slow-rotating mandala crown */}
+      <div
+        className="pointer-events-none absolute -top-24 left-1/2 z-0 -translate-x-1/2"
+        style={{ animation: "mandala-spin 90s linear infinite" }}
+      >
+        <Mandala size={420} className="text-gold/15" />
+      </div>
+      <style>{`@keyframes mandala-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes orbit-a{from{transform:rotate(0deg) translateX(34px) rotate(0deg)}to{transform:rotate(360deg) translateX(34px) rotate(-360deg)}}
+@keyframes orbit-b{from{transform:rotate(120deg) translateX(48px) rotate(-120deg)}to{transform:rotate(480deg) translateX(48px) rotate(-480deg)}}
+@keyframes orbit-c{from{transform:rotate(240deg) translateX(60px) rotate(-240deg)}to{transform:rotate(600deg) translateX(60px) rotate(-600deg)}}`}</style>
 
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-[420px] flex-col px-6">
         {/* back */}
-        {stage !== "choose" && stage !== "success" && (
+        {(stage === "phone" || stage === "otp") && (
           <button
             onClick={() => setStage(stage === "otp" ? "phone" : "choose")}
             className="mt-6 flex w-fit items-center gap-1 text-sm text-text-muted"
@@ -73,49 +76,63 @@ export default function AuthPage() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -16 }}
               >
+                <motion.div
+                  initial={{ scale: 0, rotate: -30 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ type: "spring", stiffness: 180, damping: 14 }}
+                  className="mb-5 flex h-16 w-16 items-center justify-center rounded-3xl shadow-[0_10px_28px_rgba(255,107,44,0.35)]"
+                  style={{ background: "linear-gradient(135deg,#FF6B2C,#FFB423)" }}
+                >
+                  <Spark size={30} className="text-white" />
+                </motion.div>
+
                 <h1 className="serif text-4xl leading-tight text-text-primary">
                   Welcome to your
                   <br />
                   <span className="grad-text">cosmic journey</span>
                 </h1>
-                <p className="mt-3 text-sm text-text-muted">
+                <p className="mt-3 text-[15px] leading-relaxed text-text-muted">
                   Sign in to unlock your chart, your rituals, and your daily
                   guidance.
                 </p>
 
                 <div className="mt-8 space-y-3">
-                  <SocialButton
-                    label="Continue with Google"
-                    onClick={socialLogin}
-                    icon={<GoogleMark />}
-                  />
-                  <SocialButton
-                    label="Continue with Truecaller"
-                    onClick={socialLogin}
-                    icon={<TruecallerMark />}
-                  />
-                  <SocialButton
-                    label="Continue with Apple"
-                    onClick={socialLogin}
-                    icon={<AppleMark />}
-                  />
+                  {[
+                    { label: "Continue with Google", icon: <GoogleMark /> },
+                    { label: "Continue with Truecaller", icon: <TruecallerMark /> },
+                    { label: "Continue with Apple", icon: <AppleMark /> },
+                  ].map((b, i) => (
+                    <motion.div
+                      key={b.label}
+                      initial={{ opacity: 0, y: 14 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.15 + i * 0.09 }}
+                    >
+                      <SocialButton label={b.label} icon={b.icon} onClick={toSuccess} />
+                    </motion.div>
+                  ))}
                 </div>
 
                 <div className="my-6 flex items-center gap-3">
-                  <div className="h-px flex-1 bg-black/[0.05]" />
-                  <span className="text-xs text-text-muted">or</span>
-                  <div className="h-px flex-1 bg-black/[0.05]" />
+                  <div className="h-px flex-1 bg-black/10" />
+                  <span className="text-xs font-medium text-text-muted">or</span>
+                  <div className="h-px flex-1 bg-black/10" />
                 </div>
 
-                <button
+                <motion.button
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
                   onClick={() => setStage("phone")}
-                  className="btn-gold flex w-full items-center justify-center gap-2 rounded-full"
+                  className="btn-gold flex w-full items-center justify-center gap-2 rounded-full text-[15px]"
                 >
                   <Phone size={17} /> Continue with Phone
-                </button>
+                </motion.button>
 
-                <p className="mt-6 text-center text-[11px] leading-relaxed text-text-faint">
-                  By continuing you agree to our Terms & Privacy Policy.
+                <p className="mt-6 text-center text-[11px] leading-relaxed text-text-muted">
+                  By continuing you agree to our{" "}
+                  <span className="font-semibold text-gold underline decoration-gold/40">Terms</span> &{" "}
+                  <span className="font-semibold text-gold underline decoration-gold/40">Privacy Policy</span>.
                 </p>
               </motion.div>
             )}
@@ -133,8 +150,8 @@ export default function AuthPage() {
                   We'll send a one-time code to verify it's you.
                 </p>
                 <div className="mt-8 flex items-center gap-3">
-                  <div className="glass flex h-14 items-center rounded-btn px-4 text-lg text-text-primary">
-                    +91
+                  <div className="flex h-14 items-center rounded-btn border border-gold/25 bg-white px-4 text-lg font-semibold text-text-primary shadow-[0_4px_14px_rgba(191,105,30,0.08)]">
+                    🇮🇳 +91
                   </div>
                   <input
                     autoFocus
@@ -145,16 +162,19 @@ export default function AuthPage() {
                       setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))
                     }
                     placeholder="98765 43210"
-                    className="glass h-14 flex-1 rounded-btn px-4 text-lg text-text-primary outline-none placeholder:text-text-muted/50 focus:ring-2 focus:ring-gold/60"
+                    className="h-14 flex-1 rounded-btn border border-gold/25 bg-white px-4 text-lg font-semibold tracking-wide text-text-primary shadow-[0_4px_14px_rgba(191,105,30,0.08)] outline-none placeholder:font-normal placeholder:text-text-muted/50 focus:border-gold focus:ring-2 focus:ring-gold/30"
                   />
                 </div>
                 <button
                   disabled={phone.length !== 10}
                   onClick={() => setStage("otp")}
-                  className="btn-gold mt-8 w-full rounded-full disabled:opacity-40"
+                  className="btn-gold mt-8 flex w-full items-center justify-center gap-1.5 rounded-full disabled:opacity-40"
                 >
-                  Send OTP
+                  Send OTP <ChevronRight size={16} />
                 </button>
+                <p className="mt-4 flex items-center justify-center gap-1.5 text-center text-[11px] text-text-muted">
+                  <ShieldCheck size={12} className="text-success" /> We never share your number
+                </p>
               </motion.div>
             )}
 
@@ -185,37 +205,77 @@ export default function AuthPage() {
                       }}
                       inputMode="numeric"
                       maxLength={1}
-                      animate={
-                        d
-                          ? { scale: [1, 1.15, 1], borderColor: "#F4C430" }
-                          : { scale: 1 }
-                      }
+                      animate={d ? { scale: [1, 1.15, 1] } : { scale: 1 }}
                       transition={{ duration: 0.25 }}
-                      className="glass h-14 w-12 rounded-btn text-center text-2xl font-semibold text-text-primary outline-none focus:ring-2 focus:ring-gold/60"
+                      className="h-14 w-12 rounded-btn border-2 bg-white text-center text-2xl font-bold text-text-primary outline-none focus:ring-2 focus:ring-gold/40"
                       style={{
-                        borderColor: d ? "#F4C430" : "rgba(255,255,255,0.08)",
-                        boxShadow: d ? "0 0 16px rgba(244,196,48,0.3)" : "none",
+                        borderColor: d ? "#FF6B2C" : "rgba(255,154,31,0.25)",
+                        boxShadow: d
+                          ? "0 4px 16px rgba(255,107,44,0.25)"
+                          : "0 4px 14px rgba(191,105,30,0.06)",
                       }}
                     />
                   ))}
                 </div>
                 <button
-                  disabled={otp.some((d) => !d) || verifying}
+                  disabled={otp.some((d) => !d)}
                   onClick={() => verify()}
                   className="btn-gold mt-8 flex w-full items-center justify-center gap-2 rounded-full disabled:opacity-40"
                 >
-                  {verifying ? (
-                    <>
-                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-bg/40 border-t-bg" />
-                      Verifying…
-                    </>
-                  ) : (
-                    "Verify & Continue"
-                  )}
+                  Verify & Continue
                 </button>
                 <p className="mt-4 text-center text-xs text-text-muted">
-                  Didn't get it? <span className="text-gold">Resend in 30s</span>
+                  Didn't get it? <span className="font-semibold text-gold">Resend in 30s</span>
                 </p>
+              </motion.div>
+            )}
+
+            {/* ---------- LOADING — orbiting planets ---------- */}
+            {stage === "loading" && (
+              <motion.div
+                key="loading"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0, scale: 1.05 }}
+                className="flex flex-col items-center text-center"
+              >
+                <div className="relative flex h-36 w-36 items-center justify-center">
+                  {/* orbit rings */}
+                  <span className="absolute h-[68px] w-[68px] rounded-full border border-gold/25" />
+                  <span className="absolute h-[96px] w-[96px] rounded-full border border-cosmic/20" />
+                  <span className="absolute h-[120px] w-[120px] rounded-full border border-rose/20" />
+                  {/* sun core */}
+                  <span
+                    className="h-9 w-9 rounded-full"
+                    style={{
+                      background: "radial-gradient(circle at 35% 30%,#FFC53D,#FF6B2C)",
+                      boxShadow: "0 0 24px rgba(255,154,31,0.7)",
+                      animation: "flame-flicker 1.6s ease-in-out infinite",
+                    }}
+                  />
+                  {/* orbiting planets */}
+                  <span
+                    className="absolute h-3 w-3 rounded-full bg-cosmic"
+                    style={{ animation: "orbit-a 1.6s linear infinite", boxShadow: "0 0 10px rgba(124,58,237,0.8)" }}
+                  />
+                  <span
+                    className="absolute h-2.5 w-2.5 rounded-full bg-rose"
+                    style={{ animation: "orbit-b 2.4s linear infinite", boxShadow: "0 0 10px rgba(244,63,110,0.8)" }}
+                  />
+                  <span
+                    className="absolute h-2 w-2 rounded-full bg-amber"
+                    style={{ animation: "orbit-c 3.2s linear infinite", boxShadow: "0 0 10px rgba(255,197,61,0.9)" }}
+                  />
+                </div>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.5, 1, 0.5] }}
+                  transition={{ repeat: Infinity, duration: 1.8 }}
+                  className="serif mt-6 text-xl text-text-primary"
+                >
+                  Aligning your stars…
+                </motion.p>
+                <p className="mt-1 text-xs text-text-muted">reading today's sky for you</p>
               </motion.div>
             )}
 
@@ -233,7 +293,7 @@ export default function AuthPage() {
                   transition={{ type: "spring", stiffness: 200, damping: 12 }}
                   className="relative flex h-24 w-24 items-center justify-center rounded-full"
                   style={{
-                    background: "radial-gradient(circle,#4ADE80,#166534)",
+                    background: "radial-gradient(circle at 35% 30%,#4ADE80,#16A34A)",
                     boxShadow: "0 0 40px rgba(74,222,128,0.5)",
                   }}
                 >
@@ -256,17 +316,15 @@ export default function AuthPage() {
                   />
                 </motion.div>
                 <h2 className="serif mt-6 text-3xl text-text-primary">You're in ✦</h2>
-                <p className="mt-1 text-sm text-text-muted">
-                  Let's map your stars.
-                </p>
+                <p className="mt-1 text-sm text-text-muted">Let's map your stars.</p>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
         {stage === "choose" && (
-          <div className="flex items-center justify-center gap-1.5 pb-8 text-[11px] text-text-faint">
-            <ShieldCheck size={13} /> Bank-grade encryption · Your data stays private
+          <div className="flex items-center justify-center gap-1.5 pb-8 text-[11px] text-text-muted">
+            <ShieldCheck size={13} className="text-success" /> Bank-grade encryption · Your data stays private
           </div>
         )}
       </div>
@@ -286,10 +344,11 @@ function SocialButton({
   return (
     <button
       onClick={onClick}
-      className="glass flex w-full items-center gap-3 rounded-btn px-4 py-3.5 text-sm font-medium text-text-primary transition-transform active:scale-[0.98]"
+      className="flex w-full items-center gap-3 rounded-btn border border-gold/20 bg-white px-4 py-3.5 text-sm font-semibold text-text-primary shadow-[0_4px_16px_rgba(191,105,30,0.08)] transition-all active:scale-[0.98] active:shadow-none"
     >
       <span className="flex h-6 w-6 items-center justify-center">{icon}</span>
       {label}
+      <ChevronRight size={16} className="ml-auto text-text-muted/50" />
     </button>
   );
 }
@@ -315,7 +374,7 @@ function TruecallerMark() {
 }
 function AppleMark() {
   return (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="#fff">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="#000">
       <path d="M16 12.5c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.8-3.5.8s-1.8-.8-3-.8c-1.5 0-2.9.9-3.7 2.3-1.6 2.7-.4 6.8 1.1 9 .7 1.1 1.6 2.3 2.8 2.2 1.1 0 1.5-.7 2.9-.7s1.7.7 2.9.7 2-1.1 2.7-2.1c.9-1.2 1.2-2.4 1.2-2.5-.1 0-2.3-.9-2.3-3.5ZM13.8 5.6c.6-.8 1-1.8.9-2.9-.9 0-2 .6-2.6 1.3-.6.7-1.1 1.7-1 2.7 1 .1 2-.4 2.7-1.1Z" />
     </svg>
   );
