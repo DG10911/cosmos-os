@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { ChevronLeft, MessageCircle, Phone, Check } from "lucide-react";
+import { ChevronLeft, MessageCircle, Phone, Check, Video } from "lucide-react";
 import { ASTROLOGERS, avatarUrl } from "../data/seed";
 import { TrustSigil } from "./TodayPage";
 import { CountUp } from "../components/CountUp";
@@ -94,19 +94,28 @@ export default function AstrologerPage() {
         ))}
       </div>
 
-      {/* Sticky CTA */}
+      {/* Sticky CTA — chat / call / video */}
       <div className="fixed bottom-16 left-1/2 z-20 flex w-full max-w-[420px] -translate-x-1/2 gap-2 border-t border-gold/15 bg-bg/90 p-3 backdrop-blur-xl">
         <button
           onClick={() => nav(`/session/${a.id}`)}
-          className="flex flex-1 items-center justify-center gap-1.5 rounded-btn bg-gold py-3 text-sm font-semibold text-white"
+          className="flex flex-1 flex-col items-center justify-center gap-0.5 rounded-btn bg-gold py-2.5 text-white active:scale-95"
         >
-          <MessageCircle size={16} /> Start Chat ₹{a.price}/min
+          <MessageCircle size={17} />
+          <span className="text-[11px] font-bold">Chat ₹{a.price}</span>
         </button>
         <button
-          onClick={() => nav(`/session/${a.id}`)}
-          className="flex flex-1 items-center justify-center gap-1.5 rounded-btn border border-gold/20 py-3 text-sm font-medium text-text-primary"
+          onClick={() => nav(`/call/${a.id}?type=audio`)}
+          className="flex flex-1 flex-col items-center justify-center gap-0.5 rounded-btn border border-gold/30 py-2.5 text-gold active:scale-95"
         >
-          <Phone size={16} /> Call ₹{Math.round(a.price * 2.3)}/min
+          <Phone size={17} />
+          <span className="text-[11px] font-bold">Call ₹{Math.round(a.price * 2.3)}</span>
+        </button>
+        <button
+          onClick={() => nav(`/call/${a.id}`)}
+          className="flex flex-1 flex-col items-center justify-center gap-0.5 rounded-btn border border-cosmic/30 py-2.5 text-cosmic active:scale-95"
+        >
+          <Video size={17} />
+          <span className="text-[11px] font-bold">Video ₹{Math.round(a.price * 3.2)}</span>
         </button>
       </div>
     </div>
