@@ -87,11 +87,11 @@ h4,
    ============================================================ */
 .cosmic-card {
   background: #ffffff;
-  border: 1px solid rgba(255, 154, 31, 0.14);
+  border: 1.5px solid rgba(255, 140, 31, 0.24);
   border-radius: 20px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 6px 22px rgba(191, 105, 30, 0.08);
+  box-shadow: 0 8px 26px rgba(214, 108, 22, 0.14);
   transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1),
     box-shadow 260ms cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -100,10 +100,10 @@ h4,
 }
 
 .glass {
-  background: rgba(255, 246, 236, 0.82);
-  backdrop-filter: blur(16px) saturate(150%);
-  -webkit-backdrop-filter: blur(16px) saturate(150%);
-  border: 1px solid rgba(255, 154, 31, 0.16);
+  background: rgba(255, 244, 230, 0.9);
+  backdrop-filter: blur(16px) saturate(170%);
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
+  border: 1px solid rgba(255, 140, 31, 0.26);
 }
 
 /* animated warm gradient border for hero/feature cards */
