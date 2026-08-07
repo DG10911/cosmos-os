@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import {
   CalendarRange,
   Clapperboard,
+  Plug,
   Crown,
   Flame,
   Coins,
@@ -118,6 +119,14 @@ export default function MePage() {
           title="Destiny Replay 2026"
           sub="Your cosmic year, wrapped"
           onClick={() => nav("/replay")}
+        />
+        <Row
+          icon={<Plug size={18} />}
+          tint="#DCFCE7"
+          fg="#16A34A"
+          title="API Connections"
+          sub="Live weather, moon engine, AI & more"
+          onClick={() => nav("/connect")}
         />
       </div>
 

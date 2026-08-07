@@ -23,6 +23,7 @@ import MorningBriefPage from "./pages/MorningBriefPage";
 import FestivalPage from "./pages/FestivalPage";
 import ScrollPage from "./pages/ScrollPage";
 import NakshatraPage from "./pages/NakshatraPage";
+import ConnectPage from "./pages/ConnectPage";
 
 /** Redirect first-time users to the splash/onboarding flow. */
 function HomeGate() {
@@ -67,6 +68,7 @@ export default function App() {
           <Route path="/aura" element={<AuraPage />} />
           <Route path="/festival" element={<FestivalPage />} />
           <Route path="/nakshatra" element={<NakshatraPage />} />
+          <Route path="/connect" element={<ConnectPage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
