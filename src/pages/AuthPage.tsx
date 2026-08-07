@@ -73,7 +73,7 @@ export default function AuthPage() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -16 }}
               >
-                <h1 className="serif text-4xl leading-tight text-white">
+                <h1 className="serif text-4xl leading-tight text-text-primary">
                   Welcome to your
                   <br />
                   <span className="grad-text">cosmic journey</span>
@@ -102,9 +102,9 @@ export default function AuthPage() {
                 </div>
 
                 <div className="my-6 flex items-center gap-3">
-                  <div className="h-px flex-1 bg-white/10" />
+                  <div className="h-px flex-1 bg-black/[0.05]" />
                   <span className="text-xs text-text-muted">or</span>
-                  <div className="h-px flex-1 bg-white/10" />
+                  <div className="h-px flex-1 bg-black/[0.05]" />
                 </div>
 
                 <button
@@ -128,12 +128,12 @@ export default function AuthPage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -24 }}
               >
-                <h2 className="serif text-3xl text-white">Enter your number</h2>
+                <h2 className="serif text-3xl text-text-primary">Enter your number</h2>
                 <p className="mt-2 text-sm text-text-muted">
                   We'll send a one-time code to verify it's you.
                 </p>
                 <div className="mt-8 flex items-center gap-3">
-                  <div className="glass flex h-14 items-center rounded-btn px-4 text-lg text-white">
+                  <div className="glass flex h-14 items-center rounded-btn px-4 text-lg text-text-primary">
                     +91
                   </div>
                   <input
@@ -145,7 +145,7 @@ export default function AuthPage() {
                       setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))
                     }
                     placeholder="98765 43210"
-                    className="glass h-14 flex-1 rounded-btn px-4 text-lg text-white outline-none placeholder:text-text-muted/50 focus:ring-2 focus:ring-gold/60"
+                    className="glass h-14 flex-1 rounded-btn px-4 text-lg text-text-primary outline-none placeholder:text-text-muted/50 focus:ring-2 focus:ring-gold/60"
                   />
                 </div>
                 <button
@@ -166,7 +166,7 @@ export default function AuthPage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -24 }}
               >
-                <h2 className="serif text-3xl text-white">Verify your code</h2>
+                <h2 className="serif text-3xl text-text-primary">Verify your code</h2>
                 <p className="mt-2 text-sm text-text-muted">
                   Sent to +91 {phone.slice(0, 5)} {phone.slice(5)}
                 </p>
@@ -191,7 +191,7 @@ export default function AuthPage() {
                           : { scale: 1 }
                       }
                       transition={{ duration: 0.25 }}
-                      className="glass h-14 w-12 rounded-btn text-center text-2xl font-semibold text-white outline-none focus:ring-2 focus:ring-gold/60"
+                      className="glass h-14 w-12 rounded-btn text-center text-2xl font-semibold text-text-primary outline-none focus:ring-2 focus:ring-gold/60"
                       style={{
                         borderColor: d ? "#F4C430" : "rgba(255,255,255,0.08)",
                         boxShadow: d ? "0 0 16px rgba(244,196,48,0.3)" : "none",
@@ -255,7 +255,7 @@ export default function AuthPage() {
                     style={{ animation: "twinkle 1.5s ease-in-out infinite" }}
                   />
                 </motion.div>
-                <h2 className="serif mt-6 text-3xl text-white">You're in ✦</h2>
+                <h2 className="serif mt-6 text-3xl text-text-primary">You're in ✦</h2>
                 <p className="mt-1 text-sm text-text-muted">
                   Let's map your stars.
                 </p>
@@ -286,7 +286,7 @@ function SocialButton({
   return (
     <button
       onClick={onClick}
-      className="glass flex w-full items-center gap-3 rounded-btn px-4 py-3.5 text-sm font-medium text-white transition-transform active:scale-[0.98]"
+      className="glass flex w-full items-center gap-3 rounded-btn px-4 py-3.5 text-sm font-medium text-text-primary transition-transform active:scale-[0.98]"
     >
       <span className="flex h-6 w-6 items-center justify-center">{icon}</span>
       {label}

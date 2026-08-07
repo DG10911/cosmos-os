@@ -84,7 +84,7 @@ export default function OnboardingPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="serif mt-6 text-2xl text-white/90"
+            className="serif mt-6 text-2xl text-text-primary"
           >
             Aligning your stars…
           </motion.p>
@@ -106,7 +106,7 @@ export default function OnboardingPage() {
               <div
                 key={i}
                 className={`h-2.5 rounded-full transition-all duration-300 ${
-                  i <= step ? "w-6 bg-gold" : "w-2.5 border border-white/25"
+                  i <= step ? "w-6 bg-gold" : "w-2.5 border border-gold/25"
                 }`}
               />
             );
@@ -150,7 +150,7 @@ export default function OnboardingPage() {
         <div className="flex flex-col items-center gap-3 pb-8">
           {step > 1 && (
             <button
-              className="flex items-center gap-1 text-sm text-text-muted hover:text-white"
+              className="flex items-center gap-1 text-sm text-text-muted hover:text-text-primary"
               onClick={() => setStep((s) => s - 1)}
             >
               <ChevronLeft size={16} /> Back
@@ -172,7 +172,7 @@ export default function OnboardingPage() {
 function Question({ title, sub }: { title: string; sub?: string }) {
   return (
     <div className="text-center">
-      <h2 className="serif text-[28px] leading-tight text-white">{title}</h2>
+      <h2 className="serif text-[28px] leading-tight text-text-primary">{title}</h2>
       {sub && <p className="mt-2 text-sm text-text-muted">{sub}</p>}
     </div>
   );
@@ -187,7 +187,7 @@ function StepBirth(props: {
   setBirthPlace: (v: string) => void;
 }) {
   const inputCls =
-    "glass mt-1.5 h-13 w-full rounded-btn px-4 py-3 text-base text-white outline-none focus:ring-2 focus:ring-gold/60 [color-scheme:dark]";
+    "glass mt-1.5 h-13 w-full rounded-btn px-4 py-3 text-base text-text-primary outline-none focus:ring-2 focus:ring-gold/60 [color-scheme:light]";
   return (
     <>
       <Question
@@ -253,7 +253,7 @@ function StepGoals({
               className={`rounded-full border px-4 py-3.5 text-sm font-medium transition-all duration-200 active:scale-95 ${
                 active
                   ? "border-2 border-gold bg-gold/10 text-gold"
-                  : "border-white/15 bg-bg-card text-white"
+                  : "border-gold/20 bg-bg-card text-text-primary"
               }`}
             >
               {g}
@@ -290,13 +290,13 @@ function StepNotify({
           type="time"
           value={notifyTime}
           onChange={(e) => setNotifyTime(e.target.value)}
-          className="glass w-48 rounded-btn px-4 py-4 text-center text-3xl text-gold outline-none [color-scheme:dark] focus:ring-2 focus:ring-gold/60"
+          className="glass w-48 rounded-btn px-4 py-4 text-center text-3xl text-gold outline-none [color-scheme:light] focus:ring-2 focus:ring-gold/60"
         />
         <button
           onClick={() => setWhatsapp(!whatsapp)}
           className="mt-8 flex w-full items-center justify-between rounded-card bg-bg-card px-4 py-4"
         >
-          <span className="text-sm text-white">
+          <span className="text-sm text-text-primary">
             Also send WhatsApp digest to my phone
           </span>
           <span

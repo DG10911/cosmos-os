@@ -45,7 +45,7 @@ export default function SplashPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="serif mt-6 text-[22px] italic text-white/90"
+            className="serif mt-6 text-[22px] italic text-text-primary"
           >
             Your Life Operating System
           </motion.p>

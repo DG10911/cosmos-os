@@ -38,7 +38,7 @@ export default function MissionsPage() {
           <div>
             <div className="mono text-2xl font-bold text-gold">
               {app.streak}
-              <span className="ml-1 text-sm font-normal text-white">days</span>
+              <span className="ml-1 text-sm font-normal text-text-primary">days</span>
             </div>
             <span className="text-[11px] text-text-muted">
               Longest: {app.longestStreak} days
@@ -57,7 +57,7 @@ export default function MissionsPage() {
             key={t}
             onClick={() => setTab(t)}
             className={`flex flex-1 items-center justify-center gap-1.5 rounded-full py-2 text-sm font-medium capitalize transition ${
-              tab === t ? "bg-gold text-bg" : "text-text-muted"
+              tab === t ? "bg-gold text-white" : "text-text-muted"
             }`}
           >
             {t === "karma" && <KarmaCoin size={16} />}
@@ -86,10 +86,10 @@ function Missions({
 }) {
   return (
     <div className="mt-4">
-      <h3 className="mb-2 text-sm font-semibold text-white">Today</h3>
+      <h3 className="mb-2 text-sm font-semibold text-text-primary">Today</h3>
       <div className="cosmic-card p-4">
-        <p className="text-[15px] text-white">Meditate 7 minutes today</p>
-        <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-white/10">
+        <p className="text-[15px] text-text-primary">Meditate 7 minutes today</p>
+        <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-black/[0.05]">
           <div
             className="h-full rounded-full bg-gold transition-all duration-500"
             style={{ width: `${(app.missionProgress / 7) * 100}%` }}
@@ -112,7 +112,7 @@ function Missions({
         </div>
       </div>
 
-      <h3 className="mb-2 mt-5 text-sm font-semibold text-white">This Week</h3>
+      <h3 className="mb-2 mt-5 text-sm font-semibold text-text-primary">This Week</h3>
       <div className="space-y-2">
         {WEEKLY.map((m) => {
           const done = app.weeklyDone.includes(m.id);
@@ -128,7 +128,7 @@ function Missions({
               <DrawTick checked={done} />
               <span
                 className={`flex-1 text-sm ${
-                  done ? "text-text-muted line-through" : "text-white"
+                  done ? "text-text-muted line-through" : "text-text-primary"
                 }`}
               >
                 {m.label}
@@ -150,7 +150,7 @@ function Missions({
           (l) => (
             <div key={l} className="cosmic-card flex items-center gap-3 p-3.5">
               <Lock size={16} className="text-text-muted" />
-              <span className="text-sm text-white">{l}</span>
+              <span className="text-sm text-text-primary">{l}</span>
             </div>
           )
         )}
@@ -182,8 +182,8 @@ function Karma({
       </div>
 
       {/* Recent */}
-      <h3 className="mb-2 mt-5 text-sm font-semibold text-white">Recent</h3>
-      <div className="cosmic-card divide-y divide-white/[0.05]">
+      <h3 className="mb-2 mt-5 text-sm font-semibold text-text-primary">Recent</h3>
+      <div className="cosmic-card divide-y divide-gold/10">
         {app.karmaLog.slice(0, 6).map((e, i) => (
           <div key={i} className="flex items-center justify-between px-4 py-2.5">
             <div>
@@ -195,7 +195,7 @@ function Karma({
                 {e.delta >= 0 ? "+" : ""}
                 {e.delta}
               </span>
-              <span className="ml-2 text-sm text-white/80">{e.reason}</span>
+              <span className="ml-2 text-sm text-text-primary">{e.reason}</span>
             </div>
             <span className="text-[11px] text-text-muted">{e.at}</span>
           </div>
@@ -203,7 +203,7 @@ function Karma({
       </div>
 
       {/* Redeem */}
-      <h3 className="mb-2 mt-5 text-sm font-semibold text-white">Redeem</h3>
+      <h3 className="mb-2 mt-5 text-sm font-semibold text-text-primary">Redeem</h3>
       <div className="space-y-2">
         {REDEEM.map((r) => {
           const affordable = app.karma >= r.cost;
@@ -213,7 +213,7 @@ function Karma({
               className="cosmic-card flex items-center justify-between p-3.5"
             >
               <div>
-                <p className="text-sm text-white">{r.label}</p>
+                <p className="text-sm text-text-primary">{r.label}</p>
                 <p className="mono text-xs text-gold">{r.cost} K</p>
               </div>
               <button
@@ -222,7 +222,7 @@ function Karma({
                   app.addKarma(-r.cost, `Redeemed: ${r.label}`);
                   toast("Redeemed successfully");
                 }}
-                className="rounded-btn bg-gold px-3 py-1.5 text-xs font-semibold text-bg disabled:opacity-30"
+                className="rounded-btn bg-gold px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-30"
               >
                 Redeem
               </button>
@@ -235,11 +235,11 @@ function Karma({
       <div
         className="mt-5 rounded-card p-4"
         style={{
-          background: "linear-gradient(145deg,#2d1b4e,#1a0b2e)",
+          background: "linear-gradient(145deg,#FFF2E2,#FFE9CE)",
           border: "1px solid rgba(244,196,48,0.3)",
         }}
       >
-        <p className="text-sm font-semibold text-white">
+        <p className="text-sm font-semibold text-text-primary">
           Gift 100 Karma, get 200 back
         </p>
         <p className="mt-1 text-xs text-text-muted">

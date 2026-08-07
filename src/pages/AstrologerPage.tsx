@@ -49,7 +49,7 @@ export default function AstrologerPage() {
           alt={a.name}
           className="h-24 w-24 rounded-full bg-bg-elevated"
         />
-        <h1 className="serif mt-3 text-2xl text-white">{a.name}</h1>
+        <h1 className="serif mt-3 text-2xl text-text-primary">{a.name}</h1>
         <div className="mt-1 flex items-center gap-2">
           <TrustSigil score={a.trust} />
           <span className="text-xs text-text-muted">{a.origin}</span>
@@ -63,7 +63,7 @@ export default function AstrologerPage() {
               {s}
             </span>
           ))}
-          <span className="rounded-full bg-white/8 px-2 py-0.5 text-[11px] text-text-muted">
+          <span className="rounded-full bg-black/[0.04] px-2 py-0.5 text-[11px] text-text-muted">
             {a.languages}
           </span>
         </div>
@@ -84,27 +84,27 @@ export default function AstrologerPage() {
       </div>
 
       {/* Recent predictions */}
-      <h3 className="serif mt-6 text-lg text-white">Recent Predictions</h3>
+      <h3 className="serif mt-6 text-lg text-text-primary">Recent Predictions</h3>
       <div className="mt-2 space-y-2">
         {recentPredictions.map((p, i) => (
           <div key={i} className="cosmic-card flex items-start gap-2 p-3">
             <Check size={16} className="mt-0.5 shrink-0 text-success" />
-            <span className="text-sm text-white/90">{p}</span>
+            <span className="text-sm text-text-primary">{p}</span>
           </div>
         ))}
       </div>
 
       {/* Sticky CTA */}
-      <div className="fixed bottom-16 left-1/2 z-20 flex w-full max-w-[420px] -translate-x-1/2 gap-2 border-t border-white/[0.06] bg-bg/90 p-3 backdrop-blur-xl">
+      <div className="fixed bottom-16 left-1/2 z-20 flex w-full max-w-[420px] -translate-x-1/2 gap-2 border-t border-gold/15 bg-bg/90 p-3 backdrop-blur-xl">
         <button
           onClick={() => nav(`/session/${a.id}`)}
-          className="flex flex-1 items-center justify-center gap-1.5 rounded-btn bg-gold py-3 text-sm font-semibold text-bg"
+          className="flex flex-1 items-center justify-center gap-1.5 rounded-btn bg-gold py-3 text-sm font-semibold text-white"
         >
           <MessageCircle size={16} /> Start Chat ₹{a.price}/min
         </button>
         <button
           onClick={() => nav(`/session/${a.id}`)}
-          className="flex flex-1 items-center justify-center gap-1.5 rounded-btn border border-white/15 py-3 text-sm font-medium text-white"
+          className="flex flex-1 items-center justify-center gap-1.5 rounded-btn border border-gold/20 py-3 text-sm font-medium text-text-primary"
         >
           <Phone size={16} /> Call ₹{Math.round(a.price * 2.3)}/min
         </button>

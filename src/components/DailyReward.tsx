@@ -30,7 +30,7 @@ export function DailyReward() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <KarmaCoin size={18} />
-          <span className="text-sm font-semibold text-white">Daily Reward</span>
+          <span className="text-sm font-semibold text-text-primary">Daily Reward</span>
         </div>
         <span className="text-[11px] text-text-muted">
           Day {Math.min(7, todayIdx + (app.rewardClaimed ? 0 : 1))} of 7
@@ -50,7 +50,7 @@ export function DailyReward() {
                     ? "border-success/50 bg-success/10"
                     : isToday
                     ? "border-gold bg-gold/15"
-                    : "border-white/10 bg-white/[0.03]"
+                    : "border-gold/20 bg-black/[0.04]"
                 }`}
                 style={
                   isToday

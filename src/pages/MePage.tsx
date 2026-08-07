@@ -47,7 +47,7 @@ export default function MePage() {
         <div className="-mb-2 -mt-2">
           <ChartWheel size={200} />
         </div>
-        <h1 className="serif mt-1 text-2xl text-white">Anya Sharma</h1>
+        <h1 className="serif mt-1 text-2xl text-text-primary">Anya Sharma</h1>
         <p className="text-xs text-text-muted">
           Cancer · Rohini · Rahu Mahadasha
         </p>
@@ -55,7 +55,7 @@ export default function MePage() {
           {stats.map((s) => (
             <div key={s.label} className="rounded-xl bg-bg/40 py-3">
               <div className="flex justify-center">{s.icon}</div>
-              <div className="mono mt-1 text-base font-bold text-white">
+              <div className="mono mt-1 text-base font-bold text-text-primary">
                 {s.node}
               </div>
               <div className="text-[10px] text-text-muted">{s.label}</div>
@@ -69,11 +69,11 @@ export default function MePage() {
         <button
           onClick={() => nav("/twin")}
           className="aura-border flex w-full items-center gap-3 rounded-card p-4 text-left"
-          style={{ background: "linear-gradient(150deg,#1e0d38,#12081f)" }}
+          style={{ background: "linear-gradient(150deg,#FFF0DC,#FFEAD2)" }}
         >
           <Orb size={40} />
           <div className="flex-1">
-            <p className="text-sm font-semibold text-white">Cosmos Twin</p>
+            <p className="text-sm font-semibold text-text-primary">Cosmos Twin</p>
             <p className="text-xs text-text-muted">
               Your AI companion · knows your whole chart
             </p>
@@ -104,15 +104,15 @@ export default function MePage() {
       <div
         className="mt-4 rounded-card p-5"
         style={{
-          background: "linear-gradient(145deg,#2d1b4e,#1a0b2e)",
+          background: "linear-gradient(145deg,#FFF2E2,#FFE9CE)",
           border: "1px solid rgba(244,196,48,0.4)",
         }}
       >
         <div className="flex items-center gap-2">
           <Crown size={20} className="text-gold" />
-          <span className="serif text-xl text-white">Cosmos+</span>
+          <span className="serif text-xl text-text-primary">Cosmos+</span>
         </div>
-        <ul className="mt-3 space-y-2 text-sm text-white/85">
+        <ul className="mt-3 space-y-2 text-sm text-text-primary">
           {[
             "Unlimited AI Twin conversations",
             "Full Destiny Timeline & Prediction Tracker",
@@ -125,7 +125,7 @@ export default function MePage() {
           ))}
         </ul>
         <div className="mt-4 flex items-center justify-between">
-          <span className="text-sm text-white">
+          <span className="text-sm text-text-primary">
             <span className="text-lg font-bold text-gold">₹199</span>/mo
           </span>
           <button className="btn-gold rounded-btn text-sm">
@@ -165,11 +165,11 @@ function Row({
       onClick={onClick}
       className="cosmic-card flex w-full items-center gap-3 p-4 text-left"
     >
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5">
+      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black/[0.04]">
         {icon}
       </div>
       <div className="flex-1">
-        <p className="text-sm font-semibold text-white">{title}</p>
+        <p className="text-sm font-semibold text-text-primary">{title}</p>
         <p className="text-xs text-text-muted">{sub}</p>
       </div>
       <ChevronRight size={18} className="text-text-muted" />

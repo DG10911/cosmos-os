@@ -42,7 +42,7 @@ export default function ReplayPage() {
       className="relative flex h-screen w-full flex-col overflow-hidden"
       style={{
         background:
-          "linear-gradient(160deg,#0B0B14 0%,#4c1d95 50%,#1a0b2e 100%)",
+          "linear-gradient(160deg,#FF6B2C 0%,#E11D74 52%,#FF9A1F 100%)",
       }}
       onClick={advance}
     >
@@ -65,7 +65,7 @@ export default function ReplayPage() {
           e.stopPropagation();
           nav("/me");
         }}
-        className="absolute right-3 top-8 z-20 text-white/70"
+        className="absolute right-3 top-8 z-20 text-white/80"
       >
         <X size={22} />
       </button>
@@ -77,7 +77,7 @@ export default function ReplayPage() {
               <h1 className="serif text-5xl leading-tight text-white">
                 Your Cosmic Year 2026
               </h1>
-              <p className="mt-6 text-lg text-white/80">
+              <p className="mt-6 text-lg text-white">
                 47 rituals · 4 astrologers · 118-day streak
               </p>
             </Slide>
@@ -90,14 +90,14 @@ export default function ReplayPage() {
               <div className="mt-8 flex items-center justify-center gap-8">
                 <div>
                   <div className="serif text-6xl text-white">12</div>
-                  <div className="text-xs text-white/60">made</div>
+                  <div className="text-xs text-white/80">made</div>
                 </div>
                 <div>
-                  <div className="serif text-6xl text-gold gold-glow">8</div>
-                  <div className="text-xs text-white/60">came true</div>
+                  <div className="serif text-6xl text-amber" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.25)" }}>8</div>
+                  <div className="text-xs text-white/80">came true</div>
                 </div>
               </div>
-              <div className="mt-8 flex items-center gap-2 rounded-full bg-white/10 px-4 py-2">
+              <div className="mt-8 flex items-center gap-2 rounded-full bg-black/[0.05] px-4 py-2">
                 <img src={avatarUrl(1)} className="h-8 w-8 rounded-full" alt="" />
                 <span className="text-sm text-white">
                   Astrologer of the Year: Pt. Suresh · 94%
@@ -111,7 +111,7 @@ export default function ReplayPage() {
               <div className="mt-4">
                 <AuraChart data={AXES} size={280} />
               </div>
-              <p className="-mt-1 text-xs text-white/60">
+              <p className="-mt-1 text-xs text-white/80">
                 Every axis grew this year · Top 12% on Confidence
               </p>
               <button
@@ -129,7 +129,7 @@ export default function ReplayPage() {
       </div>
 
       {slide < 2 && (
-        <div className="relative z-10 flex items-center justify-center pb-8 text-white/50">
+        <div className="relative z-10 flex items-center justify-center pb-8 text-white/60">
           <ChevronUp size={16} className="animate-bounce" />
           <span className="ml-1 text-xs">tap to continue</span>
         </div>
@@ -143,8 +143,8 @@ export default function ReplayPage() {
             animate={{ opacity: 1 }}
             className="absolute inset-0 z-30 flex items-center justify-center bg-black/80 px-8"
           >
-            <div className="rounded-2xl border border-gold/30 bg-bg-elevated p-6 text-center">
-              <h3 className="serif text-2xl text-white">
+            <div className="rounded-2xl border border-gold/30 bg-white p-6 text-center">
+              <h3 className="serif text-2xl text-text-primary">
                 Unlock the full 12-slide Replay
               </h3>
               <p className="mt-2 text-sm text-text-muted">

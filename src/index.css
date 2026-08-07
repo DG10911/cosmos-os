@@ -1,11 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html,
@@ -14,9 +14,9 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
-  background: #0b0b14;
-  color: #f5f5f7;
-  font-family: "Inter", system-ui, sans-serif;
+  background: #fff6ec;
+  color: #2a1b10;
+  font-family: "Poppins", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overscroll-behavior: none;
@@ -28,9 +28,9 @@ h2,
 h3,
 h4,
 .serif {
-  font-family: "Instrument Serif", "Fraunces", serif;
+  font-family: "Baloo 2", "Poppins", cursive;
   letter-spacing: -0.01em;
-  font-weight: 400;
+  font-weight: 700;
 }
 
 .mono {
@@ -47,7 +47,8 @@ h4,
 }
 
 /* ============================================================
-   AMBIENT BACKGROUND — deep space + drifting aurora + grain
+   AMBIENT BACKGROUND — warm cream + soft festive blooms
+   (StarField renders this class; kept name for compatibility)
    ============================================================ */
 .star-bg {
   position: fixed;
@@ -56,130 +57,56 @@ h4,
   pointer-events: none;
   overflow: hidden;
   background:
-    radial-gradient(1200px 800px at 12% -10%, rgba(139, 124, 252, 0.10), transparent 55%),
-    radial-gradient(1000px 700px at 100% 20%, rgba(244, 196, 48, 0.06), transparent 50%),
-    radial-gradient(900px 900px at 50% 120%, rgba(76, 29, 149, 0.18), transparent 60%),
-    #0b0b14;
-}
-
-/* slow-drifting aurora blob layered over the base */
-.star-bg::after {
-  content: "";
-  position: absolute;
-  inset: -20%;
-  background:
-    radial-gradient(600px 400px at 30% 30%, rgba(139, 124, 252, 0.12), transparent 60%),
-    radial-gradient(500px 500px at 70% 60%, rgba(192, 38, 211, 0.08), transparent 60%);
-  filter: blur(30px);
-  animation: aurora-drift 24s ease-in-out infinite alternate;
-}
-
-@keyframes aurora-drift {
-  0% { transform: translate3d(-4%, -2%, 0) scale(1); }
-  50% { transform: translate3d(4%, 3%, 0) scale(1.08); }
-  100% { transform: translate3d(-2%, 4%, 0) scale(1.03); }
-}
-
-/* film grain overlay — the single biggest "premium" cue */
-.grain {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.05;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    radial-gradient(900px 600px at 8% -8%, rgba(255, 154, 31, 0.14), transparent 55%),
+    radial-gradient(800px 600px at 100% 4%, rgba(255, 107, 44, 0.10), transparent 52%),
+    radial-gradient(700px 700px at 50% 118%, rgba(124, 58, 237, 0.06), transparent 60%),
+    #fff6ec;
 }
 
 .star {
   position: absolute;
-  background: #fff;
   border-radius: 50%;
   animation: twinkle 3s ease-in-out infinite;
-}
-@keyframes twinkle {
-  0%, 100% { opacity: 0.18; }
-  50% { opacity: 1; }
-}
-@keyframes flame-flicker {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.09); }
-}
-.animate-flame-flicker { animation: flame-flicker 2s ease-in-out infinite; }
-
-/* live pulsing ring around an active astrologer avatar */
-@keyframes live-ring {
-  0% { transform: scale(1); opacity: 0.9; }
-  70% { transform: scale(1.35); opacity: 0; }
-  100% { opacity: 0; }
-}
-
-@keyframes shooting {
-  0% { transform: translate3d(0, 0, 0) rotate(-18deg); opacity: 0; }
-  8% { opacity: 1; }
-  22% { opacity: 0; }
-  100% { transform: translate3d(220px, 90px, 0) rotate(-18deg); opacity: 0; }
-}
-.shooting-star {
-  position: absolute;
-  width: 90px;
-  height: 1.5px;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.9), transparent);
-  border-radius: 2px;
-  animation: shooting 6s ease-in infinite;
 }
 
 /* ============================================================
    TYPOGRAPHY EFFECTS
    ============================================================ */
 .gold-glow {
-  text-shadow: 0 0 30px rgba(244, 196, 48, 0.5), 0 0 60px rgba(244, 196, 48, 0.2);
+  text-shadow: 0 2px 10px rgba(255, 107, 44, 0.25);
 }
 .grad-text {
-  background: linear-gradient(135deg, #f4c430, #8b7cfc);
+  background: linear-gradient(120deg, #ff6b2c, #ff9a1f 60%, #ffc53d);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 /* ============================================================
-   CARDS — glass, glow, top highlight, press lift
+   CARDS — clean white, warm shadow, chunky rounded
    ============================================================ */
 .cosmic-card {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)) ,
-    #161629;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid rgba(255, 154, 31, 0.14);
+  border-radius: 20px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.35);
-  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 300ms;
-}
-/* top light catch */
-.cosmic-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 15%;
-  right: 15%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+  box-shadow: 0 6px 22px rgba(191, 105, 30, 0.08);
+  transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 260ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .cosmic-card:active {
   transform: scale(0.985);
 }
 
 .glass {
-  background: rgba(22, 22, 41, 0.55);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 246, 236, 0.82);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  border: 1px solid rgba(255, 154, 31, 0.16);
 }
 
-/* animated gradient border (used on feature/hero cards) */
+/* animated warm gradient border for hero/feature cards */
 .aura-border {
   position: relative;
 }
@@ -188,8 +115,8 @@ h4,
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(130deg, rgba(244, 196, 48, 0.5), rgba(139, 124, 252, 0.5), rgba(244, 196, 48, 0.2));
+  padding: 1.5px;
+  background: linear-gradient(130deg, #ff6b2c, #ffc53d, #ff9a1f);
   background-size: 200% 200%;
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
@@ -203,76 +130,59 @@ h4,
 }
 
 /* ============================================================
-   BUTTONS — gradient, glow, tactile compress, sheen
+   BUTTONS — saffron gradient, chunky, tactile
    ============================================================ */
 .btn-gold {
   position: relative;
-  background: linear-gradient(180deg, #f6cf47, #d4a520);
-  color: #0b0b14;
+  background: linear-gradient(180deg, #ff8038, #ff6b2c);
+  color: #ffffff;
   font-weight: 600;
-  padding: 14px 28px;
-  border-radius: 12px;
+  padding: 14px 26px;
+  border-radius: 14px;
   overflow: hidden;
   transition: transform 180ms cubic-bezier(0.34, 1.3, 0.64, 1), box-shadow 220ms;
-  box-shadow: 0 6px 26px rgba(244, 196, 48, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.45);
-}
-.btn-gold::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -60%;
-  width: 40%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
-  transform: skewX(-20deg);
-  animation: sheen 5s ease-in-out infinite;
-}
-@keyframes sheen {
-  0%, 70% { left: -60%; }
-  85% { left: 120%; }
-  100% { left: 120%; }
+  box-shadow: 0 8px 22px rgba(255, 107, 44, 0.32);
 }
 .btn-gold:hover {
   transform: translateY(-1px);
-  box-shadow: 0 10px 34px rgba(244, 196, 48, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  box-shadow: 0 12px 28px rgba(255, 107, 44, 0.42);
 }
 .btn-gold:active {
   transform: scale(0.96);
 }
 
 .btn-outline {
-  background: rgba(255, 255, 255, 0.02);
-  color: #f5f5f7;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  padding: 14px 28px;
-  border-radius: 12px;
-  font-weight: 500;
+  background: #ffffff;
+  color: #ff6b2c;
+  border: 1.5px solid rgba(255, 107, 44, 0.4);
+  padding: 13px 26px;
+  border-radius: 14px;
+  font-weight: 600;
   transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .btn-outline:hover {
-  border-color: rgba(244, 196, 48, 0.5);
-  color: #f4c430;
-  background: rgba(244, 196, 48, 0.05);
+  background: rgba(255, 107, 44, 0.06);
+  border-color: #ff6b2c;
 }
 .btn-outline:active {
   transform: scale(0.97);
 }
 
 /* ============================================================
-   SKELETON SHIMMER
+   SKELETON SHIMMER (warm)
    ============================================================ */
 .skeleton {
   position: relative;
   overflow: hidden;
-  background: #191930;
-  border-radius: 12px;
+  background: #f7ecdd;
+  border-radius: 14px;
 }
 .skeleton::after {
   content: "";
   position: absolute;
   inset: 0;
   transform: translateX(-100%);
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
   animation: shimmer 1.6s infinite;
 }
 @keyframes shimmer {
@@ -280,8 +190,24 @@ h4,
 }
 
 /* ============================================================
-   UTILITY
+   KEYFRAMES reused across the app
    ============================================================ */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.85; }
+}
+@keyframes flame-flicker {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.09); }
+}
+.animate-flame-flicker { animation: flame-flicker 2s ease-in-out infinite; }
+
+@keyframes live-ring {
+  0% { transform: scale(1); opacity: 0.9; }
+  70% { transform: scale(1.35); opacity: 0; }
+  100% { opacity: 0; }
+}
+
 button,
 nav {
   user-select: none;
@@ -289,11 +215,5 @@ nav {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .star,
-  .star-bg::after,
-  .shooting-star,
-  .btn-gold::after,
-  .aura-border::after {
-    animation: none !important;
-  }
+  .star, .aura-border::after { animation: none !important; }
 }

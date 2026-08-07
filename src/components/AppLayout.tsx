@@ -69,7 +69,7 @@ function greeting() {
 function TopBar() {
   const { streak } = useApp();
   return (
-    <header className="glass fixed left-1/2 top-0 z-20 flex h-14 w-full max-w-[420px] -translate-x-1/2 items-center justify-between border-b border-white/[0.06] px-4">
+    <header className="glass fixed left-1/2 top-0 z-20 flex h-14 w-full max-w-[420px] -translate-x-1/2 items-center justify-between border-b border-gold/15 px-4">
       <span className="serif text-lg text-text-primary">{greeting()}, Anya</span>
       <span className="mono flex items-center gap-1.5 rounded-full bg-gold/10 px-2.5 py-1 text-gold ring-1 ring-gold/20">
         <Flame size={16} className="animate-flame-flicker" />
@@ -81,7 +81,7 @@ function TopBar() {
 
 function TabBar() {
   return (
-    <nav className="glass fixed bottom-0 left-1/2 z-20 flex h-[68px] w-full max-w-[420px] -translate-x-1/2 items-start justify-around border-t border-white/[0.07] pt-2.5">
+    <nav className="glass fixed bottom-0 left-1/2 z-20 flex h-[68px] w-full max-w-[420px] -translate-x-1/2 items-start justify-around border-t border-gold/15 pt-2.5">
       {TABS.map((tab) => (
         <NavLink
           key={tab.to}
@@ -89,23 +89,18 @@ function TabBar() {
           className={({ isActive }) =>
             cn(
               "relative flex flex-col items-center gap-1 px-3 py-1 transition-all duration-300 ease-smooth active:scale-90",
-              isActive ? "text-gold" : "text-text-muted hover:text-white"
+              isActive ? "text-gold" : "text-text-muted hover:text-text-primary"
             )
           }
         >
           {({ isActive }) => (
             <>
               {isActive && (
-                <span className="absolute -top-2.5 h-1 w-1 rounded-full bg-gold shadow-[0_0_8px_2px_rgba(244,196,48,0.6)]" />
+                <span className="absolute -top-2.5 h-1.5 w-1.5 rounded-full bg-gold shadow-[0_0_8px_2px_rgba(255,107,44,0.5)]" />
               )}
               <tab.icon
                 size={22}
-                strokeWidth={isActive ? 2.3 : 1.7}
-                style={
-                  isActive
-                    ? { filter: "drop-shadow(0 0 6px rgba(244,196,48,0.5))" }
-                    : undefined
-                }
+                strokeWidth={isActive ? 2.4 : 1.8}
               />
               <span className="text-[10px] font-medium tracking-wide">
                 {tab.label}
