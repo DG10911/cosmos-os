@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, Send, UserRound } from "lucide-react";
+import { ChevronLeft, Send, UserRound, Zap, X } from "lucide-react";
+import { askTwin, hasLiveAi, setAiKey } from "../lib/ai";
 
 type Msg = { role: "ai" | "user"; text: string };
 
@@ -41,21 +42,43 @@ export default function CosmosAIPage() {
   ]);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
+  const [live, setLive] = useState(hasLiveAi());
+  const [keySheet, setKeySheet] = useState(false);
+  const [keyDraft, setKeyDraft] = useState("");
   const scroller = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     scroller.current?.scrollTo({ top: scroller.current.scrollHeight, behavior: "smooth" });
   }, [msgs, typing]);
 
-  function send(text: string) {
-    if (!text.trim()) return;
-    setMsgs((m) => [...m, { role: "user", text }]);
+  async function send(text: string) {
+    if (!text.trim() || typing) return;
+    const history = [...msgs, { role: "user" as const, text }];
+    setMsgs(history);
     setInput("");
     setTyping(true);
+
+    if (live) {
+      try {
+        const answer = await askTwin(history);
+        setTyping(false);
+        setMsgs((m) => [...m, { role: "ai", text: answer }]);
+        return;
+      } catch {
+        // fall through to offline guidance below
+      }
+    }
     setTimeout(() => {
       setTyping(false);
       setMsgs((m) => [...m, { role: "ai", text: reply(text) }]);
-    }, 1300);
+    }, 1100);
+  }
+
+  function saveKey() {
+    setAiKey(keyDraft);
+    setLive(hasLiveAi());
+    setKeySheet(false);
+    setKeyDraft("");
   }
 
   const showSuggestions = msgs.length === 1;
@@ -73,8 +96,21 @@ export default function CosmosAIPage() {
         <Orb size={30} />
         <div className="flex-1">
           <p className="text-sm font-semibold text-text-primary">Cosmos Twin</p>
-          <p className="text-[11px] text-cosmic">Always here · knows your chart</p>
+          <p className="text-[11px] text-cosmic">
+            {live ? "Live AI · knows your chart" : "Always here · knows your chart"}
+          </p>
         </div>
+        <button
+          onClick={() => setKeySheet(true)}
+          className={`flex items-center gap-1 rounded-full px-2.5 py-1.5 text-[11px] font-bold ${
+            live
+              ? "bg-success/12 text-success"
+              : "bg-cosmic/10 text-cosmic ring-1 ring-cosmic/25"
+          }`}
+        >
+          <Zap size={12} className={live ? "fill-current" : ""} />
+          {live ? "Live" : "Go live"}
+        </button>
       </header>
 
       {/* messages */}
@@ -181,6 +217,68 @@ export default function CosmosAIPage() {
           Cosmos Twin offers guidance, not medical or financial advice.
         </p>
       </div>
+
+      {/* Connect live AI sheet */}
+      <AnimatePresence>
+        {keySheet && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setKeySheet(false)}
+            className="absolute inset-0 z-40 flex items-end bg-black/50 px-4 pb-6"
+          >
+            <motion.div
+              initial={{ y: 60 }}
+              animate={{ y: 0 }}
+              exit={{ y: 60 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full rounded-2xl bg-white p-5"
+            >
+              <div className="flex items-start justify-between">
+                <h3 className="serif text-xl text-text-primary">
+                  {live ? "Live AI connected ✦" : "Connect live AI"}
+                </h3>
+                <button onClick={() => setKeySheet(false)} className="text-text-muted">
+                  <X size={18} />
+                </button>
+              </div>
+              <p className="mt-2 text-xs leading-relaxed text-text-muted">
+                Paste your OpenAI API key to make the Twin answer for real
+                (gpt-4o-mini, ~₹0.05 per question). The key stays only in{" "}
+                <b>your browser</b> — never uploaded, never in our code. Without
+                it, the Twin uses built-in guidance.
+              </p>
+              <input
+                type="password"
+                value={keyDraft}
+                onChange={(e) => setKeyDraft(e.target.value)}
+                placeholder="sk-…"
+                className="mt-4 h-12 w-full rounded-btn border border-gold/25 bg-white px-4 text-sm text-text-primary outline-none focus:border-gold focus:ring-2 focus:ring-gold/30"
+              />
+              <button
+                disabled={keyDraft.trim().length < 20}
+                onClick={saveKey}
+                className="btn-gold mt-4 w-full rounded-full text-sm disabled:opacity-40"
+              >
+                Connect
+              </button>
+              {live && (
+                <button
+                  onClick={() => {
+                    setAiKey("");
+                    setLive(false);
+                    setKeySheet(false);
+                  }}
+                  className="mt-3 w-full text-center text-xs text-danger"
+                >
+                  Disconnect & forget key
+                </button>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <style>{`@keyframes typing {0%,60%,100%{opacity:0.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}`}</style>
     </div>
