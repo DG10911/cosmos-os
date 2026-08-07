@@ -13,6 +13,7 @@ import {
   Gauge,
 } from "lucide-react";
 import { useApp } from "../state/AppState";
+import { useToast } from "../components/Toast";
 import { clearUser } from "../data/user";
 import { store } from "../lib/utils";
 import { ChartWheel } from "../components/ChartWheel";
@@ -22,6 +23,7 @@ import { Orb } from "./CosmosAIPage";
 export default function MePage() {
   const nav = useNavigate();
   const app = useApp();
+  const toast = useToast();
 
   const stats: { icon: React.ReactNode; label: string; node: React.ReactNode }[] = [
     {
@@ -147,7 +149,10 @@ export default function MePage() {
           <span className="text-sm">
             <span className="text-xl font-bold">₹199</span>/mo
           </span>
-          <button className="rounded-btn bg-white px-4 py-2.5 text-sm font-bold text-[#E11D74] active:scale-95">
+          <button
+            onClick={() => toast("Cosmos+ trial started — 7 days on us ✦")}
+            className="rounded-btn bg-white px-4 py-2.5 text-sm font-bold text-[#E11D74] active:scale-95"
+          >
             Try Free 7 Days
           </button>
         </div>

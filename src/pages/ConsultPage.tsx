@@ -7,12 +7,25 @@ import { TrustSigil } from "./TodayPage";
 import { AstrologerCardSkeleton } from "../components/Skeleton";
 import { FestiveBanner } from "../components/FestiveBits";
 
-const FILTERS = ["Language", "System", "Price", "Available"];
+const FILTERS = [
+  { key: "online", label: "Online now" },
+  { key: "hindi", label: "Hindi" },
+  { key: "vedic", label: "Vedic" },
+  { key: "cheap", label: "Under ₹20" },
+] as const;
+
+const SORTS = [
+  { key: "trust", label: "Trust Score ↓" },
+  { key: "price", label: "Price ↑" },
+  { key: "rating", label: "Rating ↓" },
+] as const;
 
 export default function ConsultPage() {
   const nav = useNavigate();
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
+  const [active, setActive] = useState<string[]>([]);
+  const [sortI, setSortI] = useState(0);
 
   // brief simulated load to show the premium skeleton state
   useEffect(() => {
@@ -20,9 +33,24 @@ export default function ConsultPage() {
     return () => clearTimeout(t);
   }, []);
 
-  const list = ASTROLOGERS.filter((a) =>
-    a.name.toLowerCase().includes(query.toLowerCase())
-  ).sort((a, b) => b.trust - a.trust);
+  function toggleFilter(k: string) {
+    setActive((f) => (f.includes(k) ? f.filter((x) => x !== k) : [...f, k]));
+  }
+
+  const sort = SORTS[sortI];
+  const list = ASTROLOGERS.filter((a) => {
+    if (!a.name.toLowerCase().includes(query.toLowerCase())) return false;
+    if (active.includes("online") && !a.online) return false;
+    if (active.includes("hindi") && !a.languages.toLowerCase().includes("hindi"))
+      return false;
+    if (active.includes("vedic") && !a.systems.includes("Vedic")) return false;
+    if (active.includes("cheap") && a.price >= 20) return false;
+    return true;
+  }).sort((a, b) => {
+    if (sort.key === "price") return a.price - b.price;
+    if (sort.key === "rating") return b.accuracy - a.accuracy;
+    return b.trust - a.trust;
+  });
 
   return (
     <div className="px-4 pt-3">
@@ -82,23 +110,37 @@ export default function ConsultPage() {
         />
       </div>
 
-      {/* Filter chips */}
+      {/* Filter chips — tap to apply */}
       <div className="no-scrollbar mt-3 flex gap-2 overflow-x-auto">
-        {FILTERS.map((f) => (
-          <button
-            key={f}
-            className="whitespace-nowrap rounded-full border border-gold/20 bg-bg-card px-3 py-1.5 text-xs text-text-muted"
-          >
-            {f}
-          </button>
-        ))}
+        {FILTERS.map((f) => {
+          const on = active.includes(f.key);
+          return (
+            <button
+              key={f.key}
+              onClick={() => toggleFilter(f.key)}
+              className={`whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-medium transition ${
+                on
+                  ? "border-gold bg-gold text-white shadow-[0_4px_12px_rgba(255,107,44,0.3)]"
+                  : "border-gold/20 bg-bg-card text-text-muted"
+              }`}
+            >
+              {on ? "✓ " : ""}
+              {f.label}
+            </button>
+          );
+        })}
       </div>
 
       <div className="mt-3 flex items-center justify-between px-1">
         <span className="text-xs text-text-muted">
           {loading ? "Finding your best matches…" : `${list.length} astrologers`}
         </span>
-        <span className="text-xs font-medium text-gold">Sort: Trust Score ↓</span>
+        <button
+          onClick={() => setSortI((i) => (i + 1) % SORTS.length)}
+          className="rounded-full bg-gold/10 px-2.5 py-1 text-xs font-semibold text-gold active:scale-95"
+        >
+          Sort: {sort.label}
+        </button>
       </div>
 
       {/* Loading skeletons */}
@@ -114,12 +156,17 @@ export default function ConsultPage() {
       {!loading && list.length === 0 && (
         <div className="cosmic-card mt-6 flex flex-col items-center gap-2 p-8 text-center">
           <Search size={24} className="text-text-muted" />
-          <p className="text-sm text-text-primary">No astrologers match "{query}"</p>
+          <p className="text-sm text-text-primary">
+            No astrologers match{query ? ` "${query}"` : " these filters"}
+          </p>
           <button
-            onClick={() => setQuery("")}
+            onClick={() => {
+              setQuery("");
+              setActive([]);
+            }}
             className="mt-1 text-xs font-semibold text-gold"
           >
-            Clear search
+            Clear search & filters
           </button>
         </div>
       )}

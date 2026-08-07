@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { auraScore } from "../data/planets";
 import { TODAY, ASTROLOGERS, avatarUrl } from "../data/seed";
+import { getUser } from "../data/user";
 import { useApp } from "../state/AppState";
 import { useToast } from "../components/Toast";
 import { Confetti } from "../components/Confetti";
@@ -64,8 +65,17 @@ export default function TodayPage() {
     if (k === "graha") nav("/nakshatra");
     else if (k === "kundli") setKundli(true);
     else if (k === "panch") setPanchangOpen(true);
-    else if (k === "horo") toast("Today's horoscope: a lucky day ahead ✦");
-    else toast("Opening — free forever ✦");
+    else if (k === "match" || k === "love") nav("/circle/compat");
+    else if (k === "num") {
+      // life-path number from the user's birth date
+      const digits = (getUser()?.birthDate ?? "1999-03-14").replace(/\D/g, "");
+      let n = digits.split("").reduce((a, d) => a + Number(d), 0);
+      while (n > 9 && n !== 11 && n !== 22) {
+        n = String(n).split("").reduce((a, d) => a + Number(d), 0);
+      }
+      toast(`Your Life Path number is ${n} — the seeker's path ✦`);
+    } else if (k === "horo")
+      toast("Moon favours you today — best window 2:00–3:30 PM ✦");
   }
 
   return (

@@ -155,7 +155,10 @@ export default function TimelinePage() {
                     {active.reason}
                   </p>
                   <button
-                    onClick={() => setActive(null)}
+                    onClick={() => {
+                      toast("We'll remind you when this window opens ✦");
+                      setActive(null);
+                    }}
                     className="btn-gold mt-5 w-full rounded-btn text-sm"
                   >
                     Set reminder
