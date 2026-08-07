@@ -363,11 +363,11 @@ function RitualCard({
       initial={{ opacity: 0, y: 40, scale: 0.96 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.55, ease: [0.34, 1.3, 0.64, 1] }}
-      className="overflow-hidden rounded-2xl p-4"
+      className="aura-border overflow-hidden rounded-2xl p-4"
       style={{
-        background: "linear-gradient(145deg, #2d1b4e, #1a0b2e)",
-        boxShadow: "0 0 30px rgba(139,124,252,0.35)",
-        border: "1px solid rgba(139,124,252,0.4)",
+        background:
+          "radial-gradient(120% 100% at 100% 0%, rgba(244,196,48,0.18), transparent 55%), linear-gradient(150deg, #331e57, #1a0b2e)",
+        boxShadow: "0 14px 40px rgba(139,124,252,0.42)",
       }}
     >
       <div className="flex items-center gap-1.5">

@@ -13,11 +13,11 @@ export default function CirclePage() {
       {/* Primary: Compatibility */}
       <button
         onClick={() => nav("/circle/compat")}
-        className="mt-4 w-full rounded-card p-5 text-left"
+        className="aura-border mt-4 w-full rounded-card p-5 text-left"
         style={{
-          background: "linear-gradient(145deg,#2d1b4e,#1a0b2e)",
-          border: "1px solid rgba(244,196,48,0.4)",
-          boxShadow: "0 0 30px rgba(139,124,252,0.15)",
+          background:
+            "radial-gradient(120% 100% at 20% 0%, rgba(251,113,133,0.18), transparent 55%), linear-gradient(150deg,#331e57,#1a0b2e)",
+          boxShadow: "0 12px 40px rgba(139,124,252,0.2)",
         }}
       >
         <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gold/15">
