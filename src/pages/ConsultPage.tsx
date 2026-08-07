@@ -32,6 +32,45 @@ export default function ConsultPage() {
         sub="Chat or call — trusted, private, 24×7"
       />
 
+      {/* Live story rings — Instagram-style */}
+      <div className="no-scrollbar -mx-4 mt-4 flex gap-3 overflow-x-auto px-4">
+        {ASTROLOGERS.filter((a) => a.online)
+          .concat(ASTROLOGERS.filter((a) => !a.online))
+          .slice(0, 8)
+          .map((a) => (
+            <button
+              key={a.id}
+              onClick={() => nav(a.online ? `/call/${a.id}?type=video` : `/astrologer/${a.id}`)}
+              className="flex w-[64px] shrink-0 flex-col items-center gap-1"
+            >
+              <span
+                className="relative rounded-full p-[2.5px]"
+                style={{
+                  background: a.online
+                    ? "conic-gradient(from 0deg,#FF6B2C,#E11D74,#7C3AED,#FF9A1F,#FF6B2C)"
+                    : "rgba(140,122,104,0.25)",
+                }}
+              >
+                <img
+                  src={avatarUrl(a.id)}
+                  alt={a.name}
+                  className="h-14 w-14 rounded-full border-2 border-bg bg-bg-elevated"
+                />
+                {a.online && (
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2">
+                    <span className="inline-block animate-flame-flicker rounded-[4px] bg-danger px-1.5 py-[1px] text-[8px] font-black tracking-wide text-white shadow">
+                      LIVE
+                    </span>
+                  </span>
+                )}
+              </span>
+              <span className="w-full truncate text-center text-[10px] text-text-muted">
+                {a.name.split(" ")[1] ?? a.name}
+              </span>
+            </button>
+          ))}
+      </div>
+
       {/* Search */}
       <div className="cosmic-card mt-4 flex items-center gap-2 px-3">
         <Search size={18} className="text-text-muted" />
