@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Search, Phone, MessageCircle } from "lucide-react";
+import { Search, Phone, MessageCircle, Star } from "lucide-react";
 import { ASTROLOGERS, avatarUrl } from "../data/seed";
 import { TrustSigil } from "./TodayPage";
 import { AstrologerCardSkeleton } from "../components/Skeleton";
@@ -117,18 +117,20 @@ export default function ConsultPage() {
                     {a.languages}
                   </span>
                 </div>
-                <div className="mt-1.5 flex items-center gap-1.5 text-[11px]">
-                  <span
-                    className={`h-1.5 w-1.5 rounded-full ${
-                      a.online ? "bg-success" : "bg-white/25"
-                    }`}
-                  />
-                  <span className={a.online ? "text-success" : "text-text-muted"}>
-                    {a.online ? "Online" : "Offline"}
+                <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[11px]">
+                  <span className="flex items-center gap-1">
+                    <span className={`h-1.5 w-1.5 rounded-full ${a.online ? "bg-success" : "bg-black/20"}`} />
+                    <span className={a.online ? "font-semibold text-success" : "text-text-muted"}>
+                      {a.online ? "Online" : "Offline"}
+                    </span>
                   </span>
-                  <span className="text-text-muted">
-                    · {a.accuracy}% ✓ · {(a.sessions / 1000).toFixed(1)}k sessions
+                  <span className="flex items-center gap-0.5 rounded-full bg-amber/20 px-1.5 py-0.5 font-bold text-[#B45309]">
+                    <Star size={9} className="fill-current" /> {(a.accuracy / 20).toFixed(1)}
                   </span>
+                  <span className="rounded-full bg-success/12 px-1.5 py-0.5 font-bold text-success">
+                    1st chat FREE
+                  </span>
+                  <span className="text-text-muted">{(a.sessions / 1000).toFixed(0)}k+ consults</span>
                 </div>
               </div>
             </div>

@@ -21,8 +21,8 @@ export function CheckButton({
     <button
       onClick={onClick}
       disabled={done}
-      className={`relative inline-flex items-center justify-center gap-1.5 rounded-btn px-3 py-1.5 text-xs font-semibold transition-all duration-300 active:scale-95 ${
-        done ? "bg-success/15 text-success" : "bg-gold text-bg"
+      className={`relative inline-flex items-center justify-center gap-1.5 rounded-btn px-3 py-1.5 text-xs font-bold transition-all duration-300 active:scale-95 ${
+        done ? "bg-success/15 text-success" : "bg-gold text-white shadow-[0_4px_12px_rgba(255,107,44,0.3)]"
       } ${className}`}
     >
       {done && (
