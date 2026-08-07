@@ -9,6 +9,7 @@ import {
   RotateCcw,
   ChevronRight,
   Sparkles,
+  Check,
 } from "lucide-react";
 import { useApp } from "../state/AppState";
 import { clearUser } from "../data/user";
@@ -111,10 +112,17 @@ export default function MePage() {
           <Crown size={20} className="text-gold" />
           <span className="serif text-xl text-white">Cosmos+</span>
         </div>
-        <ul className="mt-3 space-y-1.5 text-sm text-white/85">
-          <li>✨ Unlimited AI Twin conversations</li>
-          <li>🔮 Full Destiny Timeline & Prediction Tracker</li>
-          <li>🛡️ Streak Insurance + 10% off consultations</li>
+        <ul className="mt-3 space-y-2 text-sm text-white/85">
+          {[
+            "Unlimited AI Twin conversations",
+            "Full Destiny Timeline & Prediction Tracker",
+            "Streak Insurance + 10% off consultations",
+          ].map((b) => (
+            <li key={b} className="flex items-center gap-2">
+              <Check size={15} className="shrink-0 text-gold" />
+              {b}
+            </li>
+          ))}
         </ul>
         <div className="mt-4 flex items-center justify-between">
           <span className="text-sm text-white">

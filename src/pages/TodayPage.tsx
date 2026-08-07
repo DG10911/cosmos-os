@@ -17,6 +17,8 @@ import { useApp } from "../state/AppState";
 import { useToast } from "../components/Toast";
 import { Confetti } from "../components/Confetti";
 import { ChartWheel } from "../components/ChartWheel";
+import { CheckButton } from "../components/CheckButton";
+import { DailyReward } from "../components/DailyReward";
 import { Orb } from "./CosmosAIPage";
 
 export default function TodayPage() {
@@ -31,7 +33,7 @@ export default function TodayPage() {
     if (app.ritualDone) return;
     app.completeRitual();
     setConfetti((c) => c + 1);
-    toast("Ritual complete · +10 Karma ✨");
+    toast("Ritual complete · +10 Karma");
   }
 
   return (
@@ -74,6 +76,11 @@ export default function TodayPage() {
         </button>
       </motion.div>
 
+      {/* Daily reward — retention loop */}
+      <div className="mt-4">
+        <DailyReward />
+      </div>
+
       {/* Weather grid */}
       <div className="mt-4 grid grid-cols-2 gap-3">
         <Tile
@@ -112,17 +119,13 @@ export default function TodayPage() {
           <p className="mt-1 text-[13px] font-medium leading-snug text-white">
             {TODAY.ritual}
           </p>
-          <button
+          <CheckButton
+            done={app.ritualDone}
+            label="Mark done · +10"
+            doneLabel="Done · +10 Karma"
             onClick={onRitualDone}
-            disabled={app.ritualDone}
-            className={`mt-2 rounded-btn px-2 py-1.5 text-xs font-semibold transition ${
-              app.ritualDone
-                ? "bg-success/15 text-success"
-                : "bg-gold text-bg"
-            }`}
-          >
-            {app.ritualDone ? "Done ✓ +10 Karma" : "Done ✓ +10 Karma"}
-          </button>
+            className="mt-2 w-full"
+          />
         </div>
       </div>
 

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronUp } from "lucide-react";
 import { StarField } from "../components/StarField";
 import { AuraChart } from "../components/AuraChart";
+import { Spark } from "../components/Glyphs";
 import { avatarUrl } from "../data/seed";
 import { useToast } from "../components/Toast";
 
@@ -116,11 +117,11 @@ export default function ReplayPage() {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  toast("Cosmic Year card saved ✨");
+                  toast("Cosmic Year card saved");
                 }}
-                className="btn-gold mt-6 rounded-full text-sm"
+                className="btn-gold mt-6 flex items-center gap-2 rounded-full text-sm"
               >
-                Share Your Cosmic Year ✨
+                <Spark size={15} /> Share Your Cosmic Year
               </button>
             </Slide>
           )}

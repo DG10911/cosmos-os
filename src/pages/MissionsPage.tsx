@@ -4,6 +4,8 @@ import { useApp } from "../state/AppState";
 import { useToast } from "../components/Toast";
 import { Confetti } from "../components/Confetti";
 import { CountUp } from "../components/CountUp";
+import { Flame, KarmaCoin } from "../components/Glyphs";
+import { CheckButton, DrawTick } from "../components/CheckButton";
 
 const WEEKLY = [
   { id: "parents", label: "Call your parents", when: "Sunday", karma: 5 },
@@ -31,8 +33,8 @@ export default function MissionsPage() {
 
       {/* Streak strip */}
       <div className="cosmic-card flex items-center justify-between p-4">
-        <div className="flex items-center gap-2">
-          <span className="animate-flame-flicker text-2xl">🔥</span>
+        <div className="flex items-center gap-2.5">
+          <Flame size={30} className="animate-flame-flicker" />
           <div>
             <div className="mono text-2xl font-bold text-gold">
               {app.streak}
@@ -54,11 +56,12 @@ export default function MissionsPage() {
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`flex-1 rounded-full py-2 text-sm font-medium capitalize transition ${
+            className={`flex flex-1 items-center justify-center gap-1.5 rounded-full py-2 text-sm font-medium capitalize transition ${
               tab === t ? "bg-gold text-bg" : "text-text-muted"
             }`}
           >
-            {t === "karma" ? "🪙 Karma" : "Missions"}
+            {t === "karma" && <KarmaCoin size={16} />}
+            {t === "karma" ? "Karma" : "Missions"}
           </button>
         ))}
       </div>
@@ -96,17 +99,16 @@ function Missions({
           <span className="text-xs text-text-muted">
             {app.missionProgress} of 7 days
           </span>
-          <button
-            disabled={app.missionProgress >= 7}
+          <CheckButton
+            done={app.missionProgress >= 7}
+            label="Complete Today"
+            doneLabel="Completed"
             onClick={() => {
               app.completeMissionDay();
               setConfetti((c) => c + 1);
-              toast("Mission progress · +10 Karma ✨");
+              toast("Mission progress · +10 Karma");
             }}
-            className="rounded-btn bg-gold px-3 py-1.5 text-xs font-semibold text-bg disabled:opacity-40"
-          >
-            {app.missionProgress >= 7 ? "Completed ✓" : "Complete Today ✓"}
-          </button>
+          />
         </div>
       </div>
 
@@ -123,13 +125,7 @@ function Missions({
               }}
               className="cosmic-card flex w-full items-center gap-3 p-3.5 text-left"
             >
-              <span
-                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${
-                  done ? "border-success bg-success text-bg" : "border-white/30"
-                }`}
-              >
-                {done && "✓"}
-              </span>
+              <DrawTick checked={done} />
               <span
                 className={`flex-1 text-sm ${
                   done ? "text-text-muted line-through" : "text-white"
@@ -224,7 +220,7 @@ function Karma({
                 disabled={!affordable}
                 onClick={() => {
                   app.addKarma(-r.cost, `Redeemed: ${r.label}`);
-                  toast("Redeemed ✨");
+                  toast("Redeemed successfully");
                 }}
                 className="rounded-btn bg-gold px-3 py-1.5 text-xs font-semibold text-bg disabled:opacity-30"
               >
@@ -250,7 +246,7 @@ function Karma({
           When a friend joins via your invite, you both earn Karma.
         </p>
         <button
-          onClick={() => toast("Invite link copied ✨")}
+          onClick={() => toast("Invite link copied")}
           className="btn-gold mt-3 w-full rounded-btn text-sm"
         >
           Invite Friends

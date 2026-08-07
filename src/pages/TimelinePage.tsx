@@ -111,7 +111,7 @@ export default function TimelinePage() {
       </div>
 
       <button
-        onClick={() => toast("Timeline image saved ✨")}
+        onClick={() => toast("Timeline image saved")}
         className="btn-gold mt-2 flex w-full items-center justify-center gap-2 rounded-btn"
       >
         <Share2 size={16} /> Share your Timeline

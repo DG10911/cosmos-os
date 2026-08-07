@@ -2,6 +2,7 @@ import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AppLayout } from "./components/AppLayout";
 import { hasOnboarded } from "./data/user";
 import SplashPage from "./pages/SplashPage";
+import AuthPage from "./pages/AuthPage";
 import OnboardingPage from "./pages/OnboardingPage";
 import TodayPage from "./pages/TodayPage";
 import ConsultPage from "./pages/ConsultPage";
@@ -32,6 +33,7 @@ export default function App() {
       <Routes>
         {/* Immersive routes (no app chrome) */}
         <Route path="/splash" element={<SplashPage />} />
+        <Route path="/auth" element={<AuthPage />} />
         <Route path="/onboarding" element={<OnboardingPage />} />
         <Route path="/session/:id" element={<SessionPage />} />
         <Route path="/replay" element={<ReplayPage />} />

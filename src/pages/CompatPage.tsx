@@ -1,7 +1,8 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ChevronLeft, Share2, Download, Sparkles } from "lucide-react";
+import { ChevronLeft, Share2, Download } from "lucide-react";
+import { Spark } from "../components/Glyphs";
 import { toPng } from "html-to-image";
 import { computeCompat } from "../data/compat";
 import { avatarUrl } from "../data/seed";
@@ -29,7 +30,7 @@ export default function CompatPage() {
       link.download = `cosmos-compat-anya-${name.toLowerCase()}.png`;
       link.href = url;
       link.click();
-      toast("Card saved ✨");
+      toast("Card saved");
     } catch {
       toast("Export failed — try again");
     }
@@ -39,7 +40,7 @@ export default function CompatPage() {
     await download();
     try {
       await navigator.clipboard.writeText(
-        "Check our cosmic compatibility ✨ cosmos-os.app"
+        "Check our cosmic compatibility — cosmos-os.app"
       );
     } catch {
       /* clipboard may be blocked; ignore */
@@ -89,9 +90,9 @@ export default function CompatPage() {
           <button
             disabled={!name || !dob}
             onClick={() => setStage("card")}
-            className="btn-gold mt-8 w-full rounded-full disabled:opacity-40"
+            className="btn-gold mt-8 flex w-full items-center justify-center gap-2 rounded-full disabled:opacity-40"
           >
-            Generate Card ✨
+            <Spark size={16} /> Generate Card
           </button>
         </div>
       )}
@@ -175,7 +176,7 @@ export default function CompatPage() {
               </div>
 
               <div className="mt-auto flex items-center gap-1 pt-6 text-[10px] text-white/40">
-                <Sparkles size={10} /> cosmos-os.app
+                <Spark size={10} /> cosmos-os.app
               </div>
             </div>
           </motion.div>
@@ -203,7 +204,7 @@ export default function CompatPage() {
             New Reading
           </button>
           <p className="mt-4 text-center text-[11px] text-text-muted">
-            Yours joins 12,483 cards shared today ✨
+            Yours joins 12,483 cards shared today
           </p>
         </div>
       )}
