@@ -15,6 +15,7 @@ import MePage from "./pages/MePage";
 import TimelinePage from "./pages/TimelinePage";
 import ReplayPage from "./pages/ReplayPage";
 import CosmosAIPage from "./pages/CosmosAIPage";
+import PredictionsPage from "./pages/PredictionsPage";
 
 /** Redirect first-time users to the splash/onboarding flow. */
 function HomeGate() {
@@ -51,6 +52,7 @@ export default function App() {
           <Route path="/circle/compat" element={<CompatPage />} />
           <Route path="/me" element={<MePage />} />
           <Route path="/timeline" element={<TimelinePage />} />
+          <Route path="/predictions" element={<PredictionsPage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

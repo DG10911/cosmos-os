@@ -6,6 +6,7 @@ import { toPng } from "html-to-image";
 import { computeCompat } from "../data/compat";
 import { avatarUrl } from "../data/seed";
 import { useToast } from "../components/Toast";
+import { CountUp } from "../components/CountUp";
 
 export default function CompatPage() {
   const nav = useNavigate();
@@ -151,12 +152,13 @@ export default function CompatPage() {
 
               {/* score */}
               <div className="mt-8 flex flex-col items-center">
-                <span
+                <CountUp
+                  value={compat.score}
+                  duration={1100}
+                  format={(n) => `${Math.round(n)}`}
                   className="serif leading-none text-gold"
                   style={{ fontSize: "88px", textShadow: "0 0 30px rgba(244,196,48,0.5)" }}
-                >
-                  {compat.score}
-                </span>
+                />
                 <span className="text-xs text-white/50">/ 100</span>
                 <span className="mt-1 text-[11px] uppercase tracking-[0.2em] text-white/70">
                   Cosmic Compatibility

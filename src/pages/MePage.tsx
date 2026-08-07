@@ -14,16 +14,29 @@ import { useApp } from "../state/AppState";
 import { clearUser } from "../data/user";
 import { store } from "../lib/utils";
 import { ChartWheel } from "../components/ChartWheel";
+import { CountUp } from "../components/CountUp";
 import { Orb } from "./CosmosAIPage";
 
 export default function MePage() {
   const nav = useNavigate();
   const app = useApp();
 
-  const stats = [
-    { icon: <Flame size={18} className="text-gold" />, label: "Streak", value: `${app.streak}d` },
-    { icon: <Coins size={18} className="text-gold" />, label: "Karma", value: app.karma.toLocaleString("en-IN") },
-    { icon: <Target size={18} className="text-cosmic" />, label: "Predictions", value: "12" },
+  const stats: { icon: React.ReactNode; label: string; node: React.ReactNode }[] = [
+    {
+      icon: <Flame size={18} className="text-gold" />,
+      label: "Streak",
+      node: <CountUp value={app.streak} format={(n) => `${Math.round(n)}d`} />,
+    },
+    {
+      icon: <Coins size={18} className="text-gold" />,
+      label: "Karma",
+      node: <CountUp value={app.karma} />,
+    },
+    {
+      icon: <Target size={18} className="text-cosmic" />,
+      label: "Predictions",
+      node: <CountUp value={12} />,
+    },
   ];
 
   return (
@@ -42,7 +55,7 @@ export default function MePage() {
             <div key={s.label} className="rounded-xl bg-bg/40 py-3">
               <div className="flex justify-center">{s.icon}</div>
               <div className="mono mt-1 text-base font-bold text-white">
-                {s.value}
+                {s.node}
               </div>
               <div className="text-[10px] text-text-muted">{s.label}</div>
             </div>
@@ -66,6 +79,12 @@ export default function MePage() {
           </div>
           <Sparkles size={16} className="text-cosmic" />
         </button>
+        <Row
+          icon={<Target size={18} className="text-gold" />}
+          title="Prediction Tracker"
+          sub="Every prediction, held accountable"
+          onClick={() => nav("/predictions")}
+        />
         <Row
           icon={<CalendarRange size={18} className="text-cosmic" />}
           title="Destiny Timeline"

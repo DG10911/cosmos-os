@@ -1,15 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Search, Phone, MessageCircle } from "lucide-react";
 import { ASTROLOGERS, avatarUrl } from "../data/seed";
 import { TrustSigil } from "./TodayPage";
+import { AstrologerCardSkeleton } from "../components/Skeleton";
 
 const FILTERS = ["Language", "System", "Price", "Available"];
 
 export default function ConsultPage() {
   const nav = useNavigate();
   const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  // brief simulated load to show the premium skeleton state
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 650);
+    return () => clearTimeout(t);
+  }, []);
 
   const list = ASTROLOGERS.filter((a) =>
     a.name.toLowerCase().includes(query.toLowerCase())
@@ -43,12 +51,37 @@ export default function ConsultPage() {
       </div>
 
       <div className="mt-3 flex items-center justify-between px-1">
-        <span className="text-xs text-text-muted">{list.length} astrologers</span>
+        <span className="text-xs text-text-muted">
+          {loading ? "Finding your best matches…" : `${list.length} astrologers`}
+        </span>
         <span className="text-xs font-medium text-gold">Sort: Trust Score ↓</span>
       </div>
 
+      {/* Loading skeletons */}
+      {loading && (
+        <div className="mt-2 space-y-3">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <AstrologerCardSkeleton key={i} />
+          ))}
+        </div>
+      )}
+
+      {/* Empty state */}
+      {!loading && list.length === 0 && (
+        <div className="cosmic-card mt-6 flex flex-col items-center gap-2 p-8 text-center">
+          <Search size={24} className="text-text-muted" />
+          <p className="text-sm text-white">No astrologers match "{query}"</p>
+          <button
+            onClick={() => setQuery("")}
+            className="mt-1 text-xs font-semibold text-gold"
+          >
+            Clear search
+          </button>
+        </div>
+      )}
+
       {/* Cards */}
-      <div className="mt-2 space-y-3 pb-4">
+      <div className={`mt-2 space-y-3 pb-4 ${loading ? "hidden" : ""}`}>
         {list.map((a, i) => (
           <motion.div
             key={a.id}

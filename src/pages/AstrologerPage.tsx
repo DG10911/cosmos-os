@@ -2,17 +2,29 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ChevronLeft, MessageCircle, Phone, Check } from "lucide-react";
 import { ASTROLOGERS, avatarUrl } from "../data/seed";
 import { TrustSigil } from "./TodayPage";
+import { CountUp } from "../components/CountUp";
 
 export default function AstrologerPage() {
   const { id } = useParams();
   const nav = useNavigate();
   const a = ASTROLOGERS.find((x) => x.id === Number(id)) ?? ASTROLOGERS[0];
 
-  const stats = [
-    { label: "Prediction Accuracy", value: `${a.accuracy}%` },
-    { label: "Total Sessions", value: `${(a.sessions / 1000).toFixed(1)}k` },
-    { label: "Repeat Rate", value: `${a.repeat}%` },
-    { label: "Response Time", value: a.online ? "< 1 min" : "~ 2 hrs" },
+  const stats: { label: string; node: React.ReactNode }[] = [
+    {
+      label: "Prediction Accuracy",
+      node: <CountUp value={a.accuracy} format={(n) => `${Math.round(n)}%`} />,
+    },
+    {
+      label: "Total Sessions",
+      node: (
+        <CountUp value={a.sessions} format={(n) => `${(n / 1000).toFixed(1)}k`} />
+      ),
+    },
+    {
+      label: "Repeat Rate",
+      node: <CountUp value={a.repeat} format={(n) => `${Math.round(n)}%`} />,
+    },
+    { label: "Response Time", node: a.online ? "< 1 min" : "~ 2 hrs" },
   ];
 
   const recentPredictions = [
@@ -65,7 +77,7 @@ export default function AstrologerPage() {
       <div className="mt-5 grid grid-cols-2 gap-3">
         {stats.map((s) => (
           <div key={s.label} className="cosmic-card p-4 text-center">
-            <div className="serif text-2xl text-gold">{s.value}</div>
+            <div className="serif text-2xl text-gold">{s.node}</div>
             <div className="mt-1 text-[11px] text-text-muted">{s.label}</div>
           </div>
         ))}
