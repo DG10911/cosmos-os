@@ -16,6 +16,8 @@ import { TODAY, ASTROLOGERS, avatarUrl } from "../data/seed";
 import { useApp } from "../state/AppState";
 import { useToast } from "../components/Toast";
 import { Confetti } from "../components/Confetti";
+import { ChartWheel } from "../components/ChartWheel";
+import { Orb } from "./CosmosAIPage";
 
 export default function TodayPage() {
   const nav = useNavigate();
@@ -176,6 +178,25 @@ export default function TodayPage() {
         </button>
       </div>
 
+      {/* My Chart card */}
+      <div className="cosmic-card mt-4 flex items-center gap-3 overflow-hidden p-4">
+        <div className="-my-2 shrink-0">
+          <ChartWheel size={96} />
+        </div>
+        <div className="flex-1">
+          <p className="text-sm font-semibold text-white">Your Birth Chart</p>
+          <p className="mt-0.5 text-xs text-text-muted">
+            Cancer Asc · Rohini · Rahu Mahadasha
+          </p>
+          <button
+            onClick={() => nav("/me")}
+            className="mt-2 text-xs font-semibold text-gold"
+          >
+            Explore chart →
+          </button>
+        </div>
+      </div>
+
       {/* Panchang strip */}
       <button
         onClick={() => setPanchangOpen((o) => !o)}
@@ -198,6 +219,17 @@ export default function TodayPage() {
       )}
 
       <div className="h-4" />
+
+      {/* Floating Cosmos Twin (aligned to phone frame) */}
+      <div className="pointer-events-none fixed bottom-24 left-1/2 z-30 flex w-full max-w-[420px] -translate-x-1/2 justify-end px-4">
+        <button
+          onClick={() => nav("/twin")}
+          className="glass pointer-events-auto flex items-center gap-2 rounded-full border border-cosmic/30 py-2 pl-2 pr-3.5 shadow-[0_8px_28px_rgba(139,124,252,0.35)] transition-transform duration-200 active:scale-95"
+        >
+          <Orb size={30} />
+          <span className="text-xs font-semibold text-white">Ask Twin</span>
+        </button>
+      </div>
     </div>
   );
 }

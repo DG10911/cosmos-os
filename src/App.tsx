@@ -14,6 +14,7 @@ import CompatPage from "./pages/CompatPage";
 import MePage from "./pages/MePage";
 import TimelinePage from "./pages/TimelinePage";
 import ReplayPage from "./pages/ReplayPage";
+import CosmosAIPage from "./pages/CosmosAIPage";
 
 /** Redirect first-time users to the splash/onboarding flow. */
 function HomeGate() {
@@ -33,6 +34,7 @@ export default function App() {
         <Route path="/onboarding" element={<OnboardingPage />} />
         <Route path="/session/:id" element={<SessionPage />} />
         <Route path="/replay" element={<ReplayPage />} />
+        <Route path="/twin" element={<CosmosAIPage />} />
 
         {/* App shell routes */}
         <Route element={<AppLayout />}>

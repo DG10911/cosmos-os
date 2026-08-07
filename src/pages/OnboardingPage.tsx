@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Phone, Shield, Calendar, Target, Bell, ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { StarField } from "../components/StarField";
+import { ONBOARDING_ART } from "../components/CelestialArt";
+import { ChartWheel } from "../components/ChartWheel";
 import { saveUser } from "../data/user";
 
 const GOALS = [
@@ -15,8 +17,6 @@ const GOALS = [
   "Business",
   "Family",
 ];
-
-const STEP_ICONS = [Phone, Shield, Calendar, Target, Bell];
 
 export default function OnboardingPage() {
   const nav = useNavigate();
@@ -33,7 +33,7 @@ export default function OnboardingPage() {
   const [notifyTime, setNotifyTime] = useState("08:30");
   const [whatsapp, setWhatsapp] = useState(true);
 
-  const Icon = STEP_ICONS[step - 1];
+  const Art = ONBOARDING_ART[step - 1];
 
   const canContinue =
     (step === 1 && phone.length === 10) ||
@@ -81,22 +81,23 @@ export default function OnboardingPage() {
   if (finishing) {
     return (
       <div className="relative flex min-h-screen w-full flex-col items-center justify-center bg-bg">
-        <StarField count={110} />
-        <div className="relative z-10 flex flex-col items-center">
-          <svg className="h-20 w-20 animate-spin" viewBox="0 0 50 50">
-            <circle
-              cx="25"
-              cy="25"
-              r="20"
-              fill="none"
-              stroke="#F4C430"
-              strokeWidth="3"
-              strokeDasharray="90 40"
-              strokeLinecap="round"
-            />
-          </svg>
-          <p className="serif mt-6 text-2xl text-white/90">Aligning your stars…</p>
-        </div>
+        <StarField count={120} />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: [0.34, 1.3, 0.64, 1] }}
+          className="relative z-10 flex flex-col items-center"
+        >
+          <ChartWheel size={230} />
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="serif mt-6 text-2xl text-white/90"
+          >
+            Aligning your stars…
+          </motion.p>
+        </motion.div>
       </div>
     );
   }
@@ -129,11 +130,9 @@ export default function OnboardingPage() {
             transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
             className="flex flex-1 flex-col"
           >
-            {/* Illustration */}
-            <div className="flex h-[120px] items-center justify-center pt-8">
-              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gold/10">
-                <Icon size={40} className="text-gold" strokeWidth={1.5} />
-              </div>
+            {/* Celestial illustration */}
+            <div className="flex h-[170px] items-center justify-center pt-4">
+              <Art />
             </div>
 
             {/* Step content */}
