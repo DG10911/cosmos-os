@@ -3,18 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronUp } from "lucide-react";
 import { StarField } from "../components/StarField";
+import { AuraChart } from "../components/AuraChart";
 import { avatarUrl } from "../data/seed";
 import { useToast } from "../components/Toast";
 
 const AXES = [
-  { label: "Career", delta: "+18%" },
-  { label: "Finance", delta: "+12%" },
-  { label: "Love", delta: "+9%" },
-  { label: "Health", delta: "+21%" },
-  { label: "Spirituality", delta: "+27%" },
-  { label: "Confidence", delta: "+24%" },
-  { label: "Learning", delta: "+15%" },
-  { label: "Goals", delta: "+19%" },
+  { label: "Career", delta: "+18%", value: 0.78 },
+  { label: "Finance", delta: "+12%", value: 0.62 },
+  { label: "Love", delta: "+9%", value: 0.55 },
+  { label: "Health", delta: "+21%", value: 0.83 },
+  { label: "Spirit", delta: "+27%", value: 0.9 },
+  { label: "Confidence", delta: "+24%", value: 0.86 },
+  { label: "Learning", delta: "+15%", value: 0.7 },
+  { label: "Goals", delta: "+19%", value: 0.75 },
 ];
 
 export default function ReplayPage() {
@@ -106,21 +107,11 @@ export default function ReplayPage() {
           {slide === 2 && (
             <Slide key={2}>
               <h2 className="serif text-4xl text-white">Your Growth Story</h2>
-              <div className="mt-6 grid w-full max-w-[300px] grid-cols-2 gap-x-6 gap-y-2.5">
-                {AXES.map((a) => (
-                  <div
-                    key={a.label}
-                    className="flex items-center justify-between border-b border-white/10 pb-1"
-                  >
-                    <span className="text-sm text-white/80">{a.label}</span>
-                    <span className="mono text-sm font-semibold text-gold">
-                      {a.delta}
-                    </span>
-                  </div>
-                ))}
+              <div className="mt-4">
+                <AuraChart data={AXES} size={280} />
               </div>
-              <p className="mt-5 text-xs text-white/60">
-                Top 12% on the Confidence axis
+              <p className="-mt-1 text-xs text-white/60">
+                Every axis grew this year · Top 12% on Confidence
               </p>
               <button
                 onClick={(e) => {

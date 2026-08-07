@@ -8,11 +8,13 @@ import {
   Target,
   RotateCcw,
   ChevronRight,
+  Sparkles,
 } from "lucide-react";
-import { avatarUrl } from "../data/seed";
 import { useApp } from "../state/AppState";
 import { clearUser } from "../data/user";
 import { store } from "../lib/utils";
+import { ChartWheel } from "../components/ChartWheel";
+import { Orb } from "./CosmosAIPage";
 
 export default function MePage() {
   const nav = useNavigate();
@@ -26,14 +28,12 @@ export default function MePage() {
 
   return (
     <div className="px-4 pt-3 pb-4">
-      {/* Passport header */}
-      <div className="cosmic-card flex flex-col items-center p-5 text-center">
-        <img
-          src={avatarUrl(99)}
-          alt="Anya"
-          className="h-20 w-20 rounded-full border-2 border-gold/50 bg-bg-elevated"
-        />
-        <h1 className="serif mt-3 text-2xl text-white">Anya Sharma</h1>
+      {/* Passport header with live natal chart */}
+      <div className="cosmic-card flex flex-col items-center overflow-hidden p-5 text-center">
+        <div className="-mb-2 -mt-2">
+          <ChartWheel size={200} />
+        </div>
+        <h1 className="serif mt-1 text-2xl text-white">Anya Sharma</h1>
         <p className="text-xs text-text-muted">
           Cancer · Rohini · Rahu Mahadasha
         </p>
@@ -52,6 +52,20 @@ export default function MePage() {
 
       {/* Nav rows */}
       <div className="mt-4 space-y-2">
+        <button
+          onClick={() => nav("/twin")}
+          className="aura-border flex w-full items-center gap-3 rounded-card p-4 text-left"
+          style={{ background: "linear-gradient(150deg,#1e0d38,#12081f)" }}
+        >
+          <Orb size={40} />
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-white">Cosmos Twin</p>
+            <p className="text-xs text-text-muted">
+              Your AI companion · knows your whole chart
+            </p>
+          </div>
+          <Sparkles size={16} className="text-cosmic" />
+        </button>
         <Row
           icon={<CalendarRange size={18} className="text-cosmic" />}
           title="Destiny Timeline"
