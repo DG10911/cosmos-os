@@ -41,12 +41,12 @@ export default function TodayPage() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="relative overflow-hidden rounded-card border border-cosmic/30 p-5"
+        className="aura-border relative overflow-hidden rounded-card p-5"
         style={{
           background:
-            "linear-gradient(145deg, #1a0b2e 0%, #0B0B14 70%)",
-          minHeight: 210,
-          boxShadow: "0 0 40px rgba(139,124,252,0.15)",
+            "radial-gradient(120% 100% at 80% 0%, rgba(139,124,252,0.28), transparent 60%), linear-gradient(150deg, #1e0d38 0%, #0B0B14 72%)",
+          minHeight: 214,
+          boxShadow: "0 12px 40px rgba(139,124,252,0.22)",
         }}
       >
         <Sparkles
