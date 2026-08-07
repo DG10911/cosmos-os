@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AppLayout } from "./components/AppLayout";
 import { hasOnboarded } from "./data/user";
 import SplashPage from "./pages/SplashPage";
@@ -26,7 +26,7 @@ function HomeGate() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         {/* Immersive routes (no app chrome) */}
         <Route path="/splash" element={<SplashPage />} />
@@ -53,6 +53,6 @@ export default function App() {
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
