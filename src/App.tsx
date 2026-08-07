@@ -18,6 +18,9 @@ import TimelinePage from "./pages/TimelinePage";
 import ReplayPage from "./pages/ReplayPage";
 import CosmosAIPage from "./pages/CosmosAIPage";
 import PredictionsPage from "./pages/PredictionsPage";
+import AuraPage from "./pages/AuraPage";
+import MorningBriefPage from "./pages/MorningBriefPage";
+import FestivalPage from "./pages/FestivalPage";
 
 /** Redirect first-time users to the splash/onboarding flow. */
 function HomeGate() {
@@ -40,6 +43,7 @@ export default function App() {
         <Route path="/call/:id" element={<CallPage />} />
         <Route path="/replay" element={<ReplayPage />} />
         <Route path="/twin" element={<CosmosAIPage />} />
+        <Route path="/brief" element={<MorningBriefPage />} />
 
         {/* App shell routes */}
         <Route element={<AppLayout />}>
@@ -57,6 +61,8 @@ export default function App() {
           <Route path="/me" element={<MePage />} />
           <Route path="/timeline" element={<TimelinePage />} />
           <Route path="/predictions" element={<PredictionsPage />} />
+          <Route path="/aura" element={<AuraPage />} />
+          <Route path="/festival" element={<FestivalPage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

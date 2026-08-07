@@ -117,7 +117,7 @@ export default function ReplayPage() {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  toast("Cosmic Year card saved");
+                  toast("Your cosmic year, sealed ✦");
                 }}
                 className="btn-gold mt-6 flex items-center gap-2 rounded-full text-sm"
               >

@@ -10,6 +10,7 @@ import {
   ChevronRight,
   Sparkles,
   Check,
+  Gauge,
 } from "lucide-react";
 import { useApp } from "../state/AppState";
 import { clearUser } from "../data/user";
@@ -84,6 +85,14 @@ export default function MePage() {
           </div>
           <Sparkles size={16} className="text-cosmic" />
         </button>
+        <Row
+          icon={<Gauge size={18} />}
+          tint="#EDE9FE"
+          fg="#7C3AED"
+          title="Aura & Navagraha"
+          sub="Level up your 9 planets"
+          onClick={() => nav("/aura")}
+        />
         <Row
           icon={<Target size={18} />}
           tint="#FFE7D6"
