@@ -21,6 +21,7 @@ import PredictionsPage from "./pages/PredictionsPage";
 import AuraPage from "./pages/AuraPage";
 import MorningBriefPage from "./pages/MorningBriefPage";
 import FestivalPage from "./pages/FestivalPage";
+import ScrollPage from "./pages/ScrollPage";
 
 /** Redirect first-time users to the splash/onboarding flow. */
 function HomeGate() {
@@ -49,6 +50,7 @@ export default function App() {
         <Route element={<AppLayout />}>
           <Route path="/" element={<HomeGate />} />
           <Route path="/today" element={<TodayPage />} />
+          <Route path="/scroll" element={<ScrollPage />} />
           <Route path="/consult" element={<ConsultPage />} />
           <Route path="/astrologer/:id" element={<AstrologerPage />} />
           <Route

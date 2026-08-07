@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { Home, Sparkles, Target, Users, User } from "lucide-react";
+import { Home, Sparkles, Target, Users, User, Film } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { StarField } from "./StarField";
 import { cn } from "../lib/utils";
@@ -8,6 +8,7 @@ import { Flame } from "./Glyphs";
 
 const TABS = [
   { to: "/today", icon: Home, label: "Today" },
+  { to: "/scroll", icon: Film, label: "Scroll" },
   { to: "/consult", icon: Sparkles, label: "Consult" },
   { to: "/missions", icon: Target, label: "Missions" },
   { to: "/circle", icon: Users, label: "Circle" },
@@ -25,6 +26,8 @@ export function AppLayout() {
     pathname.startsWith("/session/") && !pathname.endsWith("/summary");
   const hideChrome =
     HIDE_CHROME_ROUTES.some((r) => pathname.startsWith(r)) || isLiveSession;
+  // Reels-style feed: full-bleed under the floating dock, no top bar.
+  const isScroll = pathname.startsWith("/scroll");
 
   return (
     <div className="min-h-screen w-full bg-bg text-text-primary">
@@ -32,12 +35,12 @@ export function AppLayout() {
 
       {/* Phone-frame wrapper (mobile-first, centered on desktop with cosmic wash) */}
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-[420px] flex-col">
-        {!hideChrome && <TopBar />}
+        {!hideChrome && !isScroll && <TopBar />}
 
         <main
           className={cn(
             "flex-1 overflow-y-auto no-scrollbar",
-            !hideChrome && "pt-14 pb-24"
+            !hideChrome && !isScroll && "pt-14 pb-24"
           )}
         >
           <AnimatePresence mode="wait">
