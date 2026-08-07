@@ -294,19 +294,19 @@ function StepNotify({
         />
         <button
           onClick={() => setWhatsapp(!whatsapp)}
-          className="mt-8 flex w-full items-center justify-between rounded-card bg-bg-card px-4 py-4"
+          className="cosmic-card mt-8 flex w-full items-center justify-between gap-3 px-4 py-4"
         >
-          <span className="text-sm text-text-primary">
+          <span className="text-sm font-medium text-text-primary">
             Also send WhatsApp digest to my phone
           </span>
           <span
-            className={`relative h-6 w-11 rounded-full transition-colors ${
-              whatsapp ? "bg-gold" : "bg-white/20"
+            className={`relative inline-flex h-7 w-[52px] shrink-0 items-center rounded-full px-0.5 transition-colors duration-300 ${
+              whatsapp ? "bg-gold" : "bg-black/15"
             }`}
           >
             <span
-              className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
-                whatsapp ? "translate-x-5" : "translate-x-0.5"
+              className={`h-6 w-6 rounded-full bg-white shadow-[0_1px_4px_rgba(0,0,0,0.25)] transition-transform duration-300 ${
+                whatsapp ? "translate-x-[24px]" : "translate-x-0"
               }`}
             />
           </span>
