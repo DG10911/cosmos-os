@@ -66,7 +66,11 @@ export default function AuthPage() {
           </button>
         )}
 
-        <div className="flex flex-1 flex-col justify-center">
+        <div
+          className={`flex flex-1 flex-col ${
+            stage === "choose" ? "justify-start pt-16" : "justify-center"
+          }`}
+        >
           <AnimatePresence mode="wait">
             {/* ---------- CHOOSE ---------- */}
             {stage === "choose" && (
