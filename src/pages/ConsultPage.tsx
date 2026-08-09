@@ -6,6 +6,7 @@ import { ASTROLOGERS, avatarUrl } from "../data/seed";
 import { TrustSigil } from "./TodayPage";
 import { AstrologerCardSkeleton } from "../components/Skeleton";
 import { FestiveBanner } from "../components/FestiveBits";
+import { EmptyState } from "../components/States";
 
 const FILTERS = [
   { key: "online", label: "Online now" },
@@ -175,21 +176,20 @@ export default function ConsultPage() {
 
       {/* Empty state */}
       {!loading && list.length === 0 && (
-        <div className="cosmic-card mt-6 flex flex-col items-center gap-2 p-8 text-center">
-          <Search size={24} className="text-text-muted" />
-          <p className="text-sm text-text-primary">
-            No astrologers match{query ? ` "${query}"` : " these filters"}
-          </p>
-          <button
-            onClick={() => {
-              setQuery("");
-              setActive([]);
-            }}
-            className="mt-1 text-xs font-semibold text-gold"
-          >
-            Clear search & filters
-          </button>
-        </div>
+        <EmptyState
+          emoji="🔭"
+          title="No astrologers match"
+          sub={
+            query
+              ? `Nobody fits "${query}" with these filters. Try widening your search.`
+              : "Try removing a filter to see more specialists."
+          }
+          action="Clear search & filters"
+          onAction={() => {
+            setQuery("");
+            setActive([]);
+          }}
+        />
       )}
 
       {/* Cards */}

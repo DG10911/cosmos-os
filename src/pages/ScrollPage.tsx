@@ -180,6 +180,9 @@ function FeedCard({ card, index }: { card: Card; index: number }) {
             <p className="mt-3 max-w-[260px] text-[15px] leading-relaxed text-white/90">
               {card.body}
             </p>
+            <span className="mt-4 inline-flex items-center gap-1 rounded-full bg-black/15 px-2.5 py-1 text-[11px] font-semibold text-white/90 backdrop-blur">
+              ✦ Why you? Your Cancer Moon feels this strongly
+            </span>
           </>
         )}
 
