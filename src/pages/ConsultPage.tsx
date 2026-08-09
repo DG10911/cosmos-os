@@ -21,12 +21,30 @@ const SORTS = [
   { key: "rating", label: "Rating ↓" },
 ] as const;
 
+const CONCERNS = [
+  { key: "love", label: "Love", emoji: "❤️" },
+  { key: "career", label: "Career", emoji: "💼" },
+  { key: "money", label: "Money", emoji: "🪙" },
+  { key: "family", label: "Family", emoji: "🏠" },
+  { key: "health", label: "Health", emoji: "🌿" },
+  { key: "spirit", label: "Spirituality", emoji: "🕉️" },
+] as const;
+
+/** Deterministic per-concern match score so recommendations feel responsive. */
+function concernMatch(id: number, concern: string): number {
+  let h = 0;
+  const s = `${id}:${concern}`;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  return 78 + (h % 20); // 78–97%
+}
+
 export default function ConsultPage() {
   const nav = useNavigate();
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [active, setActive] = useState<string[]>([]);
   const [sortI, setSortI] = useState(0);
+  const [concern, setConcern] = useState<string | null>(null);
 
   // brief simulated load to show the premium skeleton state
   useEffect(() => {
@@ -48,6 +66,8 @@ export default function ConsultPage() {
     if (active.includes("cheap") && a.price >= 20) return false;
     return true;
   }).sort((a, b) => {
+    // When a concern is picked, rank by concern match first.
+    if (concern) return concernMatch(b.id, concern) - concernMatch(a.id, concern);
     if (sort.key === "price") return a.price - b.price;
     if (sort.key === "rating") return b.accuracy - a.accuracy;
     return b.trust - a.trust;
@@ -81,6 +101,30 @@ export default function ConsultPage() {
           Match me
         </span>
       </button>
+
+      {/* Concern selector — "What are you dealing with?" */}
+      <p className="mb-2 mt-4 px-1 text-[13px] font-semibold text-text-primary">
+        What's on your mind today?
+      </p>
+      <div className="no-scrollbar flex gap-2 overflow-x-auto pb-1">
+        {CONCERNS.map((c) => {
+          const on = concern === c.key;
+          return (
+            <button
+              key={c.key}
+              onClick={() => setConcern(on ? null : c.key)}
+              className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-2 text-xs font-semibold transition active:scale-95 ${
+                on
+                  ? "border-cosmic bg-cosmic text-white shadow-[0_4px_12px_rgba(124,58,237,0.3)]"
+                  : "border-cosmic/20 bg-bg-card text-text-primary"
+              }`}
+            >
+              <span>{c.emoji}</span>
+              {c.label}
+            </button>
+          );
+        })}
+      </div>
 
       {/* Live story rings — Instagram-style */}
       <div className="no-scrollbar -mx-4 mt-4 flex gap-3 overflow-x-auto px-4">
@@ -155,7 +199,11 @@ export default function ConsultPage() {
 
       <div className="mt-3 flex items-center justify-between px-1">
         <span className="text-xs text-text-muted">
-          {loading ? "Finding your best matches…" : `${list.length} astrologers`}
+          {loading
+            ? "Finding your best matches…"
+            : concern
+              ? `Best for ${CONCERNS.find((c) => c.key === concern)?.label} · ${list.length}`
+              : `${list.length} astrologers`}
         </span>
         <button
           onClick={() => setSortI((i) => (i + 1) % SORTS.length)}
@@ -215,6 +263,11 @@ export default function ConsultPage() {
                     {a.name}
                   </span>
                   <TrustSigil score={a.trust} />
+                  {concern && (
+                    <span className="ml-auto shrink-0 rounded-full bg-cosmic/12 px-1.5 py-0.5 text-[10px] font-bold text-cosmic">
+                      {concernMatch(a.id, concern)}% match
+                    </span>
+                  )}
                 </div>
                 <div className="mt-1 flex flex-wrap gap-1">
                   {a.systems.map((s) => (

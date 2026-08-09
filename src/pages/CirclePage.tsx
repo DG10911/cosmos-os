@@ -151,6 +151,11 @@ export default function CirclePage() {
         </span>
       </div>
 
+      {/* ── Share the cosmos ── */}
+      <h3 className="mt-6 px-1 text-sm font-semibold text-text-primary">
+        Share the cosmos
+      </h3>
+
       {/* ── Ask My Stars (NGL-style) ── */}
       <button
         onClick={() => toast("Your link is copied — post it on your Story ✦")}
