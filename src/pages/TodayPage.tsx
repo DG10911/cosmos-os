@@ -22,7 +22,12 @@ import {
   Gauge,
   PartyPopper,
   Puzzle,
+  Hourglass,
+  Compass,
+  MessageCircle,
 } from "lucide-react";
+import { Section } from "../components/Section";
+import { useLang, tr } from "../lib/lang";
 import { auraScore } from "../data/planets";
 import { TODAY, ASTROLOGERS, avatarUrl } from "../data/seed";
 import { getUser } from "../data/user";
@@ -62,6 +67,7 @@ export default function TodayPage() {
   const [panchangOpen, setPanchangOpen] = useState(false);
   const [kundli, setKundli] = useState(false);
   const [weather, setWeather] = useState<Weather | null>(null);
+  const lang = useLang();
   const suggested = ASTROLOGERS[0];
 
   // live weather via Open-Meteo (keyless, real)
@@ -113,7 +119,7 @@ export default function TodayPage() {
       >
         <div className="flex items-center justify-between">
           <span className="rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-semibold backdrop-blur">
-            {weather ? `${weather.emoji} ${weather.temp}°C` : "☀"} · Auspicious day · {TODAY.dateLabel}
+            {weather ? `${weather.emoji} ${weather.temp}°C` : "☀"} · {tr("auspicious", lang)} · {TODAY.dateLabel}
           </span>
           <button
             onClick={() => nav("/circle")}
@@ -128,26 +134,130 @@ export default function TodayPage() {
           onClick={() => nav("/brief")}
           className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-[13px] font-bold text-[#FF6B2C] active:scale-95"
         >
-          <Sun size={14} /> Read your Morning Brief →
+          <Sun size={14} /> {tr("readBrief", lang)} →
         </button>
         <Sparkles className="absolute -bottom-3 -right-3 text-white/15" size={90} />
       </motion.div>
 
-      {/* Muhurat Window — BeReal-style daily scarcity */}
-      <MuhuratWindow />
+      {/* ── SECTION: Your Moment (time-sensitive) ── */}
+      <Section
+        first
+        icon={<Hourglass size={18} />}
+        tint="#F3E8FF"
+        fg="#9333EA"
+        title={tr("secMoment", lang)}
+        sub={tr("secMomentSub", lang)}
+      >
+        <MuhuratWindow />
+      </Section>
 
-      {/* Live transits — real sidereal ephemeris */}
-      <LiveTransits />
-
-      {/* Daily Sanskrit wisdom */}
-      <SanskritCard />
-
-      {/* Free tools funnel */}
-      <div className="mt-4">
-        <div className="mb-2 flex items-center justify-between px-1">
-          <span className="serif text-[15px] text-text-primary">Free for you</span>
-          <span className="text-[11px] font-medium text-text-muted">no charges ✦</span>
+      {/* ── SECTION: Today's Sky (your cosmic state) ── */}
+      <Section
+        icon={<Sun size={18} />}
+        tint="#FFF3D6"
+        fg="#F59E0B"
+        title={tr("secSky", lang)}
+        sub={tr("secSkySub", lang)}
+      >
+        <div className="grid grid-cols-2 gap-3">
+          <Tile tint="#FFF3D6" fg="#F59E0B" icon={<Sparkles size={18} />} label="Mood" value={TODAY.mood} />
+          <Tile tint="#E0F2FE" fg="#0EA5E9" icon={<Clock size={18} />} label="Lucky Hour" value={TODAY.luckyHour} mono />
+          <Tile tint="#EDE9FE" fg="#7C3AED" icon={<Laptop size={18} />} label="Best Work" value={TODAY.bestWork} mono />
+          <Tile tint="#DCFCE7" fg="#16A34A" icon={<TrendingUp size={18} />} label="Money Energy" value={`${TODAY.moneyEnergy} ↑`} />
         </div>
+        <div className="mt-3">
+          <LiveTransits />
+        </div>
+        {/* Panchang accordion */}
+        <button
+          onClick={() => setPanchangOpen((o) => !o)}
+          className="cosmic-card mt-3 flex w-full items-center justify-between p-4"
+        >
+          <span className="flex items-center gap-2 text-sm font-semibold text-text-primary">
+            <CalendarDays size={16} className="text-cosmic" /> {tr("panchang", lang)}
+          </span>
+          <ChevronDown
+            size={18}
+            className={`text-text-muted transition-transform ${panchangOpen ? "rotate-180" : ""}`}
+          />
+        </button>
+        {panchangOpen && (
+          <div className="cosmic-card mt-2 space-y-2 p-4 text-sm">
+            <Row k="Tithi" v={TODAY.panchang.tithi} />
+            <Row k="Nakshatra" v={TODAY.panchang.nakshatra} />
+            <Row
+              k="Moon (live)"
+              v={`${moonPhase().emoji} ${moonPhase().name} · ${moonPhase().illum}%`}
+            />
+            <Row k="Rahu Kaal" v={TODAY.panchang.rahuKaal} danger />
+          </div>
+        )}
+      </Section>
+
+      {/* ── SECTION: Daily Practice (habit actions) ── */}
+      <Section
+        icon={<Flame size={18} />}
+        tint="#FFE7D6"
+        fg="#FF6B2C"
+        title={tr("secPractice", lang)}
+        sub={tr("secPracticeSub", lang)}
+      >
+        {/* Today's Ritual */}
+        <div className="cosmic-card p-4">
+          <div className="flex items-center gap-2">
+            <Flame size={17} className="text-gold" />
+            <span className="text-sm font-semibold text-text-primary">{tr("ritual", lang)}</span>
+          </div>
+          <p className="mt-1.5 text-[15px] leading-snug text-text-primary">{TODAY.ritual}</p>
+          <CheckButton
+            done={app.ritualDone}
+            label="Mark done · +10"
+            doneLabel="Done · +10 Karma"
+            onClick={onRitualDone}
+            className="mt-3 w-full"
+          />
+        </div>
+
+        {/* Mission of the day */}
+        <div className="cosmic-card mt-3 p-4">
+          <div className="flex items-center gap-2">
+            <Target size={17} className="text-cosmic" />
+            <span className="text-sm font-semibold text-text-primary">{tr("mission", lang)}</span>
+          </div>
+          <p className="mt-2 text-[15px] text-text-primary">Meditate 7 minutes today</p>
+          <div className="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-black/[0.06]">
+            <div
+              className="h-full rounded-full transition-all duration-500"
+              style={{
+                width: `${(app.missionProgress / 7) * 100}%`,
+                background: "linear-gradient(90deg,#FF6B2C,#FFB423)",
+              }}
+            />
+          </div>
+          <div className="mt-2 flex items-center justify-between">
+            <span className="text-xs text-text-muted">
+              {app.missionProgress} of 7 days · +10 Karma/day
+            </span>
+            <button onClick={() => nav("/missions")} className="text-xs font-bold text-gold">
+              {tr("view", lang)} →
+            </button>
+          </div>
+        </div>
+
+        {/* Daily reward */}
+        <div className="mt-3">
+          <DailyReward />
+        </div>
+      </Section>
+
+      {/* ── SECTION: Free Tools ── */}
+      <Section
+        icon={<Sparkles size={18} />}
+        tint="#DCFCE7"
+        fg="#16A34A"
+        title={tr("secTools", lang)}
+        sub={tr("secToolsSub", lang)}
+      >
         <div className="no-scrollbar flex gap-3 overflow-x-auto pb-1">
           {TOOLS.map((t) => (
             <button
@@ -167,177 +277,108 @@ export default function TodayPage() {
             </button>
           ))}
         </div>
-      </div>
-
-      {/* Aura + Festival */}
-      <div className="mt-4 grid grid-cols-2 gap-3">
+        {/* Free Kundli / My Chart */}
         <button
-          onClick={() => nav("/aura")}
-          className="tint-tile flex flex-col justify-between p-4 text-left"
-          style={{ background: "linear-gradient(150deg,#7C3AED,#E11D74)" }}
+          onClick={() => setKundli(true)}
+          className="cosmic-card mt-3 flex w-full items-center gap-3 overflow-hidden p-4 text-left active:scale-[0.99]"
         >
-          <div className="flex items-center justify-between text-white">
-            <Gauge size={18} />
-            <span className="mono text-xl font-bold">{auraScore(app.streak, app.karma)}</span>
+          <div className="-my-2 shrink-0">
+            <ChartWheel size={92} />
           </div>
-          <span className="mt-2 text-[12px] font-bold text-white">Your Aura Score →</span>
-          <span className="text-[10px] text-white/80">level up your 9 planets</span>
-        </button>
-        <button
-          onClick={() => nav("/festival")}
-          className="tint-tile flex flex-col justify-between p-4 text-left"
-          style={{ background: "linear-gradient(150deg,#FF6B2C,#FFB423)" }}
-        >
-          <PartyPopper size={18} className="text-white" />
-          <span className="mt-2 text-[12px] font-bold text-white">Festival cards →</span>
-          <span className="text-[10px] text-white/85">bless a friend, get shared</span>
-        </button>
-      </div>
-
-      {/* Daily reward */}
-      <div className="mt-4">
-        <DailyReward />
-      </div>
-
-      {/* Cosmic Weather — colored tiles */}
-      <div className="mb-2 mt-5 px-1">
-        <span className="serif text-[15px] text-text-primary">Your Cosmic Weather</span>
-      </div>
-      <div className="grid grid-cols-2 gap-3">
-        <Tile tint="#FFF3D6" fg="#F59E0B" icon={<Sparkles size={18} />} label="Mood" value={TODAY.mood} />
-        <Tile tint="#E0F2FE" fg="#0EA5E9" icon={<Clock size={18} />} label="Lucky Hour" value={TODAY.luckyHour} mono />
-        <Tile tint="#EDE9FE" fg="#7C3AED" icon={<Laptop size={18} />} label="Best Work" value={TODAY.bestWork} mono />
-        <Tile tint="#DCFCE7" fg="#16A34A" icon={<TrendingUp size={18} />} label="Money Energy" value={`${TODAY.moneyEnergy} ↑`} />
-        <Tile tint="#FFE4EC" fg="#F43F6E" icon={<Heart size={18} />} label="Love Energy" value={`${TODAY.loveEnergy} ↑`} />
-        {/* Ritual tile */}
-        <div className="tint-tile flex flex-col justify-between p-4" style={{ background: "#FFE7D6" }}>
-          <div className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-white" style={{ color: "#FF6B2C" }}>
-              <Flame size={17} />
-            </span>
-            <span className="text-[11px] font-medium text-text-muted">Today's Ritual</span>
-          </div>
-          <p className="mt-1.5 text-[13px] font-semibold leading-snug text-text-primary">
-            {TODAY.ritual}
-          </p>
-          <CheckButton
-            done={app.ritualDone}
-            label="Mark done · +10"
-            doneLabel="Done · +10 Karma"
-            onClick={onRitualDone}
-            className="mt-2 w-full"
-          />
-        </div>
-      </div>
-
-      {/* Mission of the day */}
-      <div className="cosmic-card mt-4 p-4">
-        <div className="flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-cosmic/12 text-cosmic">
-            <Target size={17} />
-          </span>
-          <span className="text-sm font-semibold text-text-primary">Mission of the Day</span>
-        </div>
-        <p className="mt-2 text-[15px] text-text-primary">Meditate 7 minutes today</p>
-        <div className="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-black/[0.06]">
-          <div
-            className="h-full rounded-full transition-all duration-500"
-            style={{
-              width: `${(app.missionProgress / 7) * 100}%`,
-              background: "linear-gradient(90deg,#FF6B2C,#FFB423)",
-            }}
-          />
-        </div>
-        <div className="mt-2 flex items-center justify-between">
-          <span className="text-xs text-text-muted">
-            {app.missionProgress} of 7 days · +10 Karma/day
-          </span>
-          <button onClick={() => nav("/missions")} className="text-xs font-bold text-gold">
-            View →
-          </button>
-        </div>
-      </div>
-
-      {/* Suggested astrologer — trust badges */}
-      <div className="mb-2 mt-5 flex items-center justify-between px-1">
-        <span className="serif text-[15px] text-text-primary">Talk to an expert</span>
-        <button onClick={() => nav("/consult")} className="text-[11px] font-bold text-gold">
-          See all →
-        </button>
-      </div>
-      <div className="cosmic-card flex items-center gap-3 p-4">
-        <div className="relative">
-          <img src={avatarUrl(suggested.id)} alt={suggested.name} className="h-14 w-14 rounded-full bg-bg-elevated" />
-          <span className="absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full border-2 border-white bg-success" />
-        </div>
-        <div className="flex-1">
-          <div className="flex items-center gap-1.5">
-            <span className="text-sm font-bold text-text-primary">{suggested.name}</span>
-            <BadgeCheck size={15} className="text-success" />
-          </div>
-          <div className="mt-0.5 flex items-center gap-1.5">
-            <span className="flex items-center gap-0.5 rounded-full bg-amber/20 px-1.5 py-0.5 text-[10px] font-bold text-[#B45309]">
-              <Star size={9} className="fill-current" /> {(suggested.accuracy / 20).toFixed(1)}
-            </span>
-            <span className="text-[11px] text-text-muted">
-              {(suggested.sessions / 1000).toFixed(0)}k+ consults
+          <div className="flex-1">
+            <p className="text-sm font-bold text-text-primary">{tr("freeKundli", lang)}</p>
+            <p className="mt-0.5 text-xs text-text-muted">Cancer Asc · Rohini · Rahu Mahadasha</p>
+            <span className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-gold">
+              View full chart <ChevronRight size={13} />
             </span>
           </div>
+        </button>
+      </Section>
+
+      {/* ── SECTION: Talk to an Expert ── */}
+      <Section
+        icon={<MessageCircle size={18} />}
+        tint="#E0F2FE"
+        fg="#0EA5E9"
+        title={tr("secExpert", lang)}
+        sub={tr("secExpertSub", lang)}
+        action={tr("seeAll", lang)}
+        onAction={() => nav("/consult")}
+      >
+        <div className="cosmic-card flex items-center gap-3 p-4">
+          <div className="relative">
+            <img src={avatarUrl(suggested.id)} alt={suggested.name} className="h-14 w-14 rounded-full bg-bg-elevated" />
+            <span className="absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full border-2 border-white bg-success" />
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm font-bold text-text-primary">{suggested.name}</span>
+              <BadgeCheck size={15} className="text-success" />
+            </div>
+            <div className="mt-0.5 flex items-center gap-1.5">
+              <span className="flex items-center gap-0.5 rounded-full bg-amber/20 px-1.5 py-0.5 text-[10px] font-bold text-[#B45309]">
+                <Star size={9} className="fill-current" /> {(suggested.accuracy / 20).toFixed(1)}
+              </span>
+              <span className="text-[11px] text-text-muted">
+                {(suggested.sessions / 1000).toFixed(0)}k+ consults
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-end gap-1">
+            <span className="rounded-full bg-success/12 px-2 py-0.5 text-[9px] font-bold text-success">
+              1st chat FREE
+            </span>
+            <button
+              onClick={() => nav(`/session/${suggested.id}`)}
+              className="rounded-btn bg-gold px-3 py-1.5 text-xs font-bold text-white active:scale-95"
+            >
+              Chat ₹{suggested.price}/min
+            </button>
+          </div>
         </div>
-        <div className="flex flex-col items-end gap-1">
-          <span className="rounded-full bg-success/12 px-2 py-0.5 text-[9px] font-bold text-success">
-            1st chat FREE
-          </span>
+      </Section>
+
+      {/* ── SECTION: Explore More ── */}
+      <Section
+        icon={<Compass size={18} />}
+        tint="#EDE9FE"
+        fg="#7C3AED"
+        title={tr("secExplore", lang)}
+      >
+        <div className="grid grid-cols-2 gap-3">
           <button
-            onClick={() => nav(`/session/${suggested.id}`)}
-            className="rounded-btn bg-gold px-3 py-1.5 text-xs font-bold text-white active:scale-95"
+            onClick={() => nav("/aura")}
+            className="tint-tile flex flex-col justify-between p-4 text-left"
+            style={{ background: "linear-gradient(150deg,#7C3AED,#E11D74)" }}
           >
-            Chat ₹{suggested.price}/min
+            <div className="flex items-center justify-between text-white">
+              <Gauge size={18} />
+              <span className="mono text-xl font-bold">{auraScore(app.streak, app.karma)}</span>
+            </div>
+            <span className="mt-2 text-[12px] font-bold text-white">Your Aura Score →</span>
+            <span className="text-[10px] text-white/80">level up your 9 planets</span>
+          </button>
+          <button
+            onClick={() => nav("/festival")}
+            className="tint-tile flex flex-col justify-between p-4 text-left"
+            style={{ background: "linear-gradient(150deg,#FF6B2C,#FFB423)" }}
+          >
+            <PartyPopper size={18} className="text-white" />
+            <span className="mt-2 text-[12px] font-bold text-white">Festival cards →</span>
+            <span className="text-[10px] text-white/85">bless a friend, get shared</span>
           </button>
         </div>
-      </div>
+      </Section>
 
-      {/* Free Kundli / My Chart */}
-      <button
-        onClick={() => setKundli(true)}
-        className="cosmic-card mt-4 flex w-full items-center gap-3 overflow-hidden p-4 text-left active:scale-[0.99]"
+      {/* ── SECTION: Today's Wisdom ── */}
+      <Section
+        icon={<Sparkles size={18} />}
+        tint="#F3E8FF"
+        fg="#9333EA"
+        title={tr("secWisdom", lang)}
       >
-        <div className="-my-2 shrink-0">
-          <ChartWheel size={92} />
-        </div>
-        <div className="flex-1">
-          <p className="text-sm font-bold text-text-primary">Your Free Kundli</p>
-          <p className="mt-0.5 text-xs text-text-muted">Cancer Asc · Rohini · Rahu Mahadasha</p>
-          <span className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-gold">
-            View full chart <ChevronRight size={13} />
-          </span>
-        </div>
-      </button>
-
-      {/* Panchang strip */}
-      <button
-        onClick={() => setPanchangOpen((o) => !o)}
-        className="cosmic-card mt-4 flex w-full items-center justify-between p-4"
-      >
-        <span className="flex items-center gap-2 text-sm font-semibold text-text-primary">
-          <CalendarDays size={16} className="text-cosmic" /> Today's Panchang
-        </span>
-        <ChevronDown
-          size={18}
-          className={`text-text-muted transition-transform ${panchangOpen ? "rotate-180" : ""}`}
-        />
-      </button>
-      {panchangOpen && (
-        <div className="cosmic-card mt-2 space-y-2 p-4 text-sm">
-          <Row k="Tithi" v={TODAY.panchang.tithi} />
-          <Row k="Nakshatra" v={TODAY.panchang.nakshatra} />
-          <Row
-            k="Moon (live)"
-            v={`${moonPhase().emoji} ${moonPhase().name} · ${moonPhase().illum}%`}
-          />
-          <Row k="Rahu Kaal" v={TODAY.panchang.rahuKaal} danger />
-        </div>
-      )}
+        <SanskritCard />
+      </Section>
 
       <div className="h-4" />
 
