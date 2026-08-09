@@ -577,36 +577,40 @@ function MuhuratWindow() {
 
 /** Live sidereal transits — real math, updates by the day. Beats "NASA JPL synced" claims because judges can verify against any panchang. */
 function LiveTransits() {
+  const nav = useNavigate();
   const sun = sunPosition();
   const moon = moonPosition();
   const phase = moonPhase();
+  // Each card follows: WHAT is happening · WHY it matters · WHAT you can do.
   const events = [
     {
       chip: "LIVE NOW",
       chipBg: "#DCFCE7",
       chipFg: "#16A34A",
-      title: `Sun in ${sun.sign} ${sun.deg}°`,
-      sub: "core identity energized",
+      what: `Sun in ${sun.sign} ${sun.deg}°`,
+      why: "Your confidence runs high today — a good day to be seen.",
     },
     {
       chip: `${phase.emoji} ${phase.illum}%`,
       chipBg: "#EDE9FE",
       chipFg: "#7C3AED",
-      title: `Moon in ${moon.sign} ${moon.deg}°`,
-      sub: phase.name,
+      what: `Moon in ${moon.sign} ${moon.deg}°`,
+      why: `${phase.name} — emotions feel ${phase.illum > 60 ? "full and expressive" : "quiet and inward"}.`,
     },
     {
       chip: "IN 12 DAYS",
       chipBg: "#FFE4EC",
       chipFg: "#F43F6E",
-      title: "Jupiter crosses your Moon",
-      sub: "emotional expansion window",
+      what: "Jupiter crosses your Moon",
+      why: "A window for family, home & emotional growth is opening.",
     },
   ];
   return (
-    <div className="mt-4">
+    <div>
       <div className="mb-2 flex items-center justify-between px-1">
-        <span className="serif text-[15px] text-text-primary">Live Transits</span>
+        <span className="text-[13px] font-semibold text-text-primary">
+          What the sky is doing
+        </span>
         <span className="flex items-center gap-1 text-[10px] font-bold text-success">
           <span className="h-1.5 w-1.5 animate-flame-flicker rounded-full bg-success" />
           real ephemeris
@@ -614,18 +618,25 @@ function LiveTransits() {
       </div>
       <div className="no-scrollbar flex gap-2.5 overflow-x-auto pb-1">
         {events.map((e) => (
-          <div key={e.title} className="cosmic-card w-[168px] shrink-0 p-3.5">
+          <button
+            key={e.what}
+            onClick={() => nav("/twin")}
+            className="cosmic-card flex w-[190px] shrink-0 flex-col p-3.5 text-left active:scale-[0.98]"
+          >
             <span
-              className="rounded-full px-2 py-0.5 text-[9px] font-black tracking-wide"
+              className="w-fit rounded-full px-2 py-0.5 text-[9px] font-black tracking-wide"
               style={{ background: e.chipBg, color: e.chipFg }}
             >
               {e.chip}
             </span>
             <p className="mt-2 text-[13px] font-bold leading-snug text-text-primary">
-              {e.title}
+              {e.what}
             </p>
-            <p className="mt-0.5 text-[10px] text-text-muted">{e.sub}</p>
-          </div>
+            <p className="mt-1 text-[11px] leading-snug text-text-muted">{e.why}</p>
+            <span className="mt-2 inline-flex items-center gap-1 text-[11px] font-bold text-cosmic">
+              Ask why → <Orb size={13} />
+            </span>
+          </button>
         ))}
       </div>
     </div>

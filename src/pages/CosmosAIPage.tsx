@@ -7,22 +7,22 @@ import { askTwin, hasLiveAi, setAiKey } from "../lib/ai";
 type Msg = { role: "ai" | "user"; text: string };
 
 const SUGGESTED = [
-  "How's my week looking?",
-  "Best day to ask for a raise?",
-  "Why do I feel restless lately?",
-  "Is it a good time to travel?",
+  "Why am I feeling stuck lately?",
+  "What does this week look like?",
+  "Should I change jobs?",
+  "What does my relationship chart say?",
 ];
 
 /** Canned, chart-aware responses so the demo feels intelligent & personal. */
 const ANSWERS: Record<string, string> = {
-  "How's my week looking?":
+  "Why am I feeling stuck lately?":
+    "Your mood log has drifted below baseline for 7 days, and Rahu periods often amplify that stuck, restless feeling. It's a signal, not a flaw. Try today's ritual — lighting a diya at sunset — and a 10-minute grounding meditation. Want me to add it to your Missions?",
+  "What does this week look like?":
     "Your Rahu Mahadasha keeps energy high but scattered this week. Tuesday and Friday afternoons (your Lucky Hours) are strongest for decisions. Guard against overcommitting on Wednesday — Mercury is retrograde-adjacent for your Moon.",
-  "Best day to ask for a raise?":
-    "Thursday, between 10:00–12:30 — your Best Work window aligns with Jupiter's aspect on your 10th house of career. Pt. Suresh also flagged Nov 2026 as your promotion window, so framing it as a longer-term ask lands well.",
-  "Why do I feel restless lately?":
-    "Your mood log has drifted below baseline for 7 days, and Rahu periods often amplify inner restlessness. It's a signal, not a flaw. Try today's ritual — lighting a diya at sunset — and a 10-minute grounding meditation. Want me to add it to your Missions?",
-  "Is it a good time to travel?":
-    "Short trips are favored after the 14th, when the Moon transits your 3rd house. Avoid long-haul on the 9th–11th. Shall I check auspicious departure muhurats for a specific date?",
+  "Should I change jobs?":
+    "Thursday's Best Work window aligns with Jupiter's aspect on your 10th house of career, so conversations land well then. Pt. Suresh flagged Nov 2026 as your promotion aperture — if you can, time a move to ride that, rather than jumping in a rush.",
+  "What does my relationship chart say?":
+    "Venus sits favorably for your Moon sign right now — warmth comes easily, but Rahu can make you crave intensity over stability. After the 14th, when the Moon transits your 3rd house, honest conversations flow. Want a compatibility card for someone specific?",
 };
 
 function reply(q: string) {
