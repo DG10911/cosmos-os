@@ -56,6 +56,27 @@ export default function MissionsPage() {
         </button>
       </div>
 
+      {/* Growth loop — makes the whole system legible at a glance */}
+      <div className="mt-3 flex items-center justify-between rounded-card bg-gradient-to-r from-cosmic/8 to-gold/10 px-3 py-3">
+        {[
+          { e: "🎯", l: "Do", s: "a mission" },
+          { e: "🪙", l: "Earn", s: "Karma" },
+          { e: "🔥", l: "Keep", s: "your streak" },
+          { e: "🎁", l: "Unlock", s: "rewards" },
+        ].map((step, i, arr) => (
+          <div key={step.l} className="flex flex-1 items-center">
+            <div className="flex flex-1 flex-col items-center text-center">
+              <span className="text-lg">{step.e}</span>
+              <span className="text-[11px] font-bold text-text-primary">{step.l}</span>
+              <span className="text-[9px] leading-tight text-text-muted">{step.s}</span>
+            </div>
+            {i < arr.length - 1 && (
+              <span className="px-0.5 text-sm text-cosmic/50">→</span>
+            )}
+          </div>
+        ))}
+      </div>
+
       {/* Tabs */}
       <div className="mt-4 flex gap-2 rounded-full bg-bg-card p-1">
         {(["missions", "karma"] as const).map((t) => (

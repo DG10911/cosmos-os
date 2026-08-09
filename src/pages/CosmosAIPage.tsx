@@ -122,8 +122,19 @@ export default function CosmosAIPage() {
               Ask your Twin anything
             </p>
             <p className="mt-1 text-center text-xs text-text-muted">
-              Grounded in your exact chart & history
+              Grounded in your exact chart &amp; history
             </p>
+            {/* chart-aware identity — proves it knows YOUR chart */}
+            <div className="mt-3 flex flex-wrap justify-center gap-1.5">
+              {["Cancer Asc", "Rohini Nakshatra", "Rahu Mahadasha"].map((c) => (
+                <span
+                  key={c}
+                  className="rounded-full bg-cosmic/10 px-2.5 py-1 text-[11px] font-semibold text-cosmic ring-1 ring-cosmic/20"
+                >
+                  {c}
+                </span>
+              ))}
+            </div>
           </div>
         )}
 
