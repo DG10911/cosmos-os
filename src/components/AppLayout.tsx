@@ -5,6 +5,7 @@ import { StarField } from "./StarField";
 import { cn } from "../lib/utils";
 import { useApp } from "../state/AppState";
 import { Flame } from "./Glyphs";
+import { useLang, setLang, tr } from "../lib/lang";
 
 const TABS = [
   { to: "/today", icon: Home, label: "Today" },
@@ -62,22 +63,31 @@ export function AppLayout() {
   );
 }
 
-function greeting() {
-  const h = new Date().getHours();
-  if (h < 12) return "Good morning";
-  if (h < 17) return "Good afternoon";
-  return "Good evening";
-}
-
 function TopBar() {
   const { streak } = useApp();
+  const lang = useLang();
+  const h = new Date().getHours();
+  const greetKey =
+    h < 12 ? "greetMorning" : h < 17 ? "greetAfternoon" : "greetEvening";
   return (
     <header className="glass fixed left-1/2 top-0 z-20 flex h-14 w-full max-w-[420px] -translate-x-1/2 items-center justify-between border-b border-gold/15 px-4">
-      <span className="serif text-lg text-text-primary">{greeting()}, Anya</span>
-      <span className="mono flex items-center gap-1.5 rounded-full bg-gold/10 px-2.5 py-1 text-gold ring-1 ring-gold/20">
-        <Flame size={16} className="animate-flame-flicker" />
-        <span className="text-base font-semibold">{streak}</span>
+      <span className="serif truncate text-lg text-text-primary">
+        {tr(greetKey, lang)}, Anya
       </span>
+      <div className="flex items-center gap-2">
+        {/* Language toggle — English / Hindi for mass Indian reach */}
+        <button
+          onClick={() => setLang(lang === "en" ? "hi" : "en")}
+          className="rounded-full bg-cosmic/10 px-2.5 py-1 text-[11px] font-bold text-cosmic ring-1 ring-cosmic/20 active:scale-95"
+          aria-label="Switch language"
+        >
+          {lang === "en" ? "अ / A" : "A / अ"}
+        </button>
+        <span className="mono flex items-center gap-1.5 rounded-full bg-gold/10 px-2.5 py-1 text-gold ring-1 ring-gold/20">
+          <Flame size={16} className="animate-flame-flicker" />
+          <span className="text-base font-semibold">{streak}</span>
+        </span>
+      </div>
     </header>
   );
 }
