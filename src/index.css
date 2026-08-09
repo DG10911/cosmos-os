@@ -86,17 +86,20 @@ h4,
    CARDS — clean white, warm shadow, chunky rounded
    ============================================================ */
 .cosmic-card {
-  background: #ffffff;
-  border: 1.5px solid rgba(255, 140, 31, 0.24);
+  background: linear-gradient(180deg, #ffffff, #fffaf3);
+  border: 1.5px solid rgba(255, 140, 31, 0.22);
   border-radius: 20px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 8px 26px rgba(214, 108, 22, 0.14);
+  box-shadow: 0 8px 26px rgba(214, 108, 22, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
   transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1),
     box-shadow 260ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .cosmic-card:active {
   transform: scale(0.985);
+  box-shadow: 0 4px 14px rgba(214, 108, 22, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 .glass {
