@@ -1,13 +1,12 @@
-import { useNavigate } from "react-router-dom";
+import { PageHeader } from "../components/PageHeader";
 import { motion } from "framer-motion";
-import { ChevronLeft, Share2, TrendingUp } from "lucide-react";
+import { Share2, TrendingUp } from "lucide-react";
 import { NAVAGRAHA, auraScore } from "../data/planets";
 import { useApp } from "../state/AppState";
 import { CountUp } from "../components/CountUp";
 import { useToast } from "../components/Toast";
 
 export default function AuraPage() {
-  const nav = useNavigate();
   const app = useApp();
   const toast = useToast();
   const score = auraScore(app.streak, app.karma);
@@ -19,9 +18,7 @@ export default function AuraPage() {
 
   return (
     <div className="px-4 pt-3 pb-6">
-      <button onClick={() => nav(-1)} className="mb-2 flex items-center gap-1 text-sm text-text-muted">
-        <ChevronLeft size={16} /> Back
-      </button>
+      <PageHeader title="Aura & Navagraha" sub="Your energy across the 9 planets" />
 
       {/* Aura Score hero */}
       <div

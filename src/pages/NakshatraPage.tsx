@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { PageHeader } from "../components/PageHeader";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, Share2, HelpCircle } from "lucide-react";
+import { Share2, HelpCircle } from "lucide-react";
 import { useApp } from "../state/AppState";
 import { useToast } from "../components/Toast";
 import { Confetti } from "../components/Confetti";
@@ -21,7 +21,6 @@ const PUZZLE = {
 };
 
 export default function NakshatraPage() {
-  const nav = useNavigate();
   const app = useApp();
   const toast = useToast();
   const [revealed, setRevealed] = useState(1);
@@ -66,23 +65,15 @@ export default function NakshatraPage() {
   return (
     <div className="px-4 pt-3 pb-8">
       <Confetti fire={confetti} />
-      <button
-        onClick={() => nav(-1)}
-        className="mb-2 flex items-center gap-1 text-sm text-text-muted"
-      >
-        <ChevronLeft size={16} /> Back
-      </button>
-
-      <div className="flex items-center justify-between">
-        <h1 className="serif text-2xl text-text-primary">Daily Graha</h1>
-        <span className="mono rounded-full bg-cosmic/10 px-2.5 py-1 text-xs font-bold text-cosmic">
-          #{PUZZLE.number}
-        </span>
-      </div>
-      <p className="mt-1 text-sm text-text-muted">
-        One planet. Five clues. Everyone in India gets the same puzzle — fewer
-        clues, more karma.
-      </p>
+      <PageHeader
+        title="Daily Graha"
+        sub="One planet · five clues · same for all India"
+        right={
+          <span className="mono rounded-full bg-cosmic/10 px-2.5 py-1 text-xs font-bold text-cosmic">
+            #{PUZZLE.number}
+          </span>
+        }
+      />
 
       {/* Clues */}
       <div className="mt-4 space-y-2">

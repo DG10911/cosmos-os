@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { PageHeader } from "../components/PageHeader";
 import { motion } from "framer-motion";
-import { ChevronLeft, ShieldCheck, Check, X, Minus, Target } from "lucide-react";
+import { ShieldCheck, Check, X, Minus, Target } from "lucide-react";
 import { PREDICTIONS, type Prediction } from "../data/predictions";
 import { ASTROLOGERS } from "../data/seed";
 import { CountUp } from "../components/CountUp";
@@ -9,7 +9,6 @@ import { useToast } from "../components/Toast";
 import { Confetti } from "../components/Confetti";
 
 export default function PredictionsPage() {
-  const nav = useNavigate();
   const toast = useToast();
   const [preds, setPreds] = useState<Prediction[]>(PREDICTIONS);
   const [confetti, setConfetti] = useState(0);
@@ -59,17 +58,10 @@ export default function PredictionsPage() {
   return (
     <div className="px-4 pt-3 pb-6">
       <Confetti fire={confetti} />
-      <button
-        onClick={() => nav(-1)}
-        className="mb-2 flex items-center gap-1 text-sm text-text-muted"
-      >
-        <ChevronLeft size={16} /> Back
-      </button>
-
-      <h1 className="serif text-2xl text-text-primary">Prediction Tracker</h1>
-      <p className="mt-1 text-sm text-text-muted">
-        Every prediction, held accountable. This is our promise.
-      </p>
+      <PageHeader
+        title="Prediction Tracker"
+        sub="Every prediction, held accountable — our promise"
+      />
 
       {/* Accuracy hero */}
       <div

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { PageHeader } from "../components/PageHeader";
 import { motion } from "framer-motion";
-import { ChevronLeft, Plug, Check, ShieldCheck, Server } from "lucide-react";
+import { Plug, Check, ShieldCheck, Server } from "lucide-react";
 import {
   SERVICES,
   getServiceKey,
@@ -13,7 +13,6 @@ import { setAiKey } from "../lib/ai";
 import { useToast } from "../components/Toast";
 
 export default function ConnectPage() {
-  const nav = useNavigate();
   const toast = useToast();
   const [open, setOpen] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
@@ -43,16 +42,10 @@ export default function ConnectPage() {
 
   return (
     <div className="px-4 pt-3 pb-8">
-      <button
-        onClick={() => nav(-1)}
-        className="mb-2 flex items-center gap-1 text-sm text-text-muted"
-      >
-        <ChevronLeft size={16} /> Back
-      </button>
-      <h1 className="serif text-2xl text-text-primary">API Connections</h1>
-      <p className="mt-1 text-sm text-text-muted">
-        Keys stay in <b>your browser only</b> — never uploaded, never in our code.
-      </p>
+      <PageHeader
+        title="API Connections"
+        sub="Keys stay in your browser only — never uploaded"
+      />
 
       {/* Always-live keyless services */}
       <h3 className="mt-5 px-1 text-sm font-semibold text-text-primary">
