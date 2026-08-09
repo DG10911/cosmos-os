@@ -19,6 +19,7 @@ import { clearUser } from "../data/user";
 import { store } from "../lib/utils";
 import { ChartWheel } from "../components/ChartWheel";
 import { CountUp } from "../components/CountUp";
+import { Section } from "../components/Section";
 import { Orb } from "./CosmosAIPage";
 
 export default function MePage() {
@@ -72,54 +73,86 @@ export default function MePage() {
         </div>
       </div>
 
-      {/* Nav rows */}
-      <div className="mt-4 space-y-2">
-        <button
-          onClick={() => nav("/twin")}
-          className="aura-border flex w-full items-center gap-3 rounded-card p-4 text-left"
-          style={{ background: "linear-gradient(150deg,#FFF0DC,#FFEAD2)" }}
-        >
-          <Orb size={40} />
-          <div className="flex-1">
-            <p className="text-sm font-semibold text-text-primary">Cosmos Twin</p>
-            <p className="text-xs text-text-muted">
-              Your AI companion · knows your whole chart
-            </p>
-          </div>
-          <Sparkles size={16} className="text-cosmic" />
-        </button>
-        <Row
-          icon={<Gauge size={18} />}
-          tint="#EDE9FE"
-          fg="#7C3AED"
-          title="Aura & Navagraha"
-          sub="Level up your 9 planets"
-          onClick={() => nav("/aura")}
-        />
-        <Row
-          icon={<Target size={18} />}
-          tint="#FFE7D6"
-          fg="#FF6B2C"
-          title="Prediction Tracker"
-          sub="Every prediction, held accountable"
-          onClick={() => nav("/predictions")}
-        />
-        <Row
-          icon={<CalendarRange size={18} />}
-          tint="#E0F2FE"
-          fg="#0EA5E9"
-          title="Destiny Timeline"
-          sub="Your past & predicted future"
-          onClick={() => nav("/timeline")}
-        />
-        <Row
-          icon={<Clapperboard size={18} />}
-          tint="#FFE4EC"
-          fg="#F43F6E"
-          title="Destiny Replay 2026"
-          sub="Your cosmic year, wrapped"
-          onClick={() => nav("/replay")}
-        />
+      {/* AI companion — hero row */}
+      <button
+        onClick={() => nav("/twin")}
+        className="aura-border mt-4 flex w-full items-center gap-3 rounded-card p-4 text-left"
+        style={{ background: "linear-gradient(150deg,#FFF0DC,#FFEAD2)" }}
+      >
+        <Orb size={40} />
+        <div className="flex-1">
+          <p className="text-sm font-semibold text-text-primary">Cosmos Twin</p>
+          <p className="text-xs text-text-muted">
+            Your AI companion · knows your whole chart
+          </p>
+        </div>
+        <Sparkles size={16} className="text-cosmic" />
+      </button>
+
+      {/* SECTION: Chart & Growth */}
+      <Section
+        icon={<Gauge size={18} />}
+        tint="#EDE9FE"
+        fg="#7C3AED"
+        title="Chart & Growth"
+        sub="Where you stand today"
+      >
+        <div className="space-y-2">
+          <Row
+            icon={<Gauge size={18} />}
+            tint="#EDE9FE"
+            fg="#7C3AED"
+            title="Aura & Navagraha"
+            sub="Level up your 9 planets"
+            onClick={() => nav("/aura")}
+          />
+          <Row
+            icon={<Target size={18} />}
+            tint="#FFE7D6"
+            fg="#FF6B2C"
+            title="Prediction Tracker"
+            sub="Every prediction, held accountable"
+            onClick={() => nav("/predictions")}
+          />
+        </div>
+      </Section>
+
+      {/* SECTION: Your Journey */}
+      <Section
+        icon={<CalendarRange size={18} />}
+        tint="#E0F2FE"
+        fg="#0EA5E9"
+        title="Your Journey"
+        sub="Past, future & your year wrapped"
+      >
+        <div className="space-y-2">
+          <Row
+            icon={<CalendarRange size={18} />}
+            tint="#E0F2FE"
+            fg="#0EA5E9"
+            title="Destiny Timeline"
+            sub="Your past & predicted future"
+            onClick={() => nav("/timeline")}
+          />
+          <Row
+            icon={<Clapperboard size={18} />}
+            tint="#FFE4EC"
+            fg="#F43F6E"
+            title="Destiny Replay 2026"
+            sub="Your cosmic year, wrapped"
+            onClick={() => nav("/replay")}
+          />
+        </div>
+      </Section>
+
+      {/* SECTION: App & Data */}
+      <Section
+        icon={<Plug size={18} />}
+        tint="#DCFCE7"
+        fg="#16A34A"
+        title="App & Data"
+        sub="Integrations & your privacy"
+      >
         <Row
           icon={<Plug size={18} />}
           tint="#DCFCE7"
@@ -128,7 +161,7 @@ export default function MePage() {
           sub="Live weather, moon engine, AI & more"
           onClick={() => nav("/connect")}
         />
-      </div>
+      </Section>
 
       {/* Cosmos+ upsell — bold premium */}
       <div
