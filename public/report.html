@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AstroLive — COSMOS OS Project Report</title>
+<style>
+  /* ===== PRINT / A4 ===== */
+  @page { size: A4; margin: 18mm 16mm; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #241a12; line-height: 1.5; font-size: 11pt; margin: 0;
+    background: #fff;
+  }
+  .page { padding: 0 8mm; max-width: 800px; margin: 0 auto; }
+  .pb { page-break-after: always; }
+  h1,h2,h3 { color: #b8481a; line-height: 1.2; }
+  h1 { font-size: 26pt; margin: 0 0 4px; }
+  h2 { font-size: 16pt; margin: 26px 0 8px; border-bottom: 2px solid #ffd8b0; padding-bottom: 4px; }
+  h3 { font-size: 12.5pt; margin: 16px 0 4px; color: #7c3aed; }
+  p { margin: 6px 0; }
+  ul,ol { margin: 6px 0 6px 18px; padding: 0; }
+  li { margin: 3px 0; }
+  a { color: #b8481a; word-break: break-word; }
+  strong { color: #1a1108; }
+  .muted { color: #7a6a58; }
+  .cover {
+    background: linear-gradient(150deg,#FF6B2C,#FF9A1F 55%,#FFC53D);
+    color:#fff; border-radius: 16px; padding: 40px 34px; margin-bottom: 22px;
+  }
+  .cover h1 { color:#fff; font-size: 34pt; }
+  .cover .tag { font-size: 13pt; opacity:.95; margin-top:6px; }
+  .cover .meta { margin-top: 26px; font-size: 10.5pt; opacity:.95; }
+  .pill { display:inline-block; background:#fff3e6; color:#b8481a; border:1px solid #ffd8b0;
+    border-radius: 999px; padding: 2px 10px; font-size: 9pt; font-weight:600; margin: 2px 3px 2px 0; }
+  .grid { display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0; }
+  .card { border:1px solid #ffe0c2; border-radius: 12px; padding: 12px 14px; background:#fffaf4; }
+  .card h3 { margin-top:0; }
+  table { width:100%; border-collapse: collapse; margin: 10px 0; font-size: 10pt; }
+  th,td { border:1px solid #f0d9c2; padding: 6px 8px; text-align:left; vertical-align: top; }
+  th { background:#fff1e2; color:#b8481a; }
+  .kpi { font-size: 20pt; font-weight: 800; color:#16a34a; }
+  .num { color:#7c3aed; font-weight:700; }
+  blockquote { margin: 10px 0; padding: 8px 14px; background:#f6f0ff; border-left: 3px solid #7c3aed; border-radius: 6px; }
+  .foot { margin-top: 8px; font-size: 8.5pt; color:#9a8a78; }
+  ol.refs li { font-size: 9.5pt; margin: 4px 0; word-break: break-word; }
+  .print-hint { background:#fff3e6; border:1px dashed #ff9a1f; padding:10px 14px; border-radius:10px; margin: 14px 0; font-size:10pt; }
+  @media print { .print-hint { display:none; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="print-hint">
+    ⚙ <strong>To export:</strong> Press <strong>Ctrl/Cmd + P</strong> → “Save as PDF” → save as
+    <strong>AstroLive_{{TEAM_NAME}}_{{LEADER_NAME}}.pdf</strong>. First replace the two placeholders
+    (<code>{{TEAM_NAME}}</code>, <code>{{LEADER_NAME}}</code>) below with your real team & leader name.
+  </div>
+
+  <!-- ===================== COVER ===================== -->
+  <div class="cover">
+    <h1>COSMOS OS</h1>
+    <div class="tag">Turning AstroLive from a consultation marketplace into an AI-powered daily Life Operating System.</div>
+    <div class="meta">
+      <div><strong>AstroHack 2026 — “Build the Next Universe”</strong></div>
+      <div>Team: <strong>{{TEAM_NAME}}</strong> &nbsp;·&nbsp; Team Leader: <strong>{{LEADER_NAME}}</strong></div>
+      <div>Live prototype: <strong>https://dg10911.github.io/cosmos-os/</strong></div>
+      <div>Submission date: August 2026</div>
+    </div>
+  </div>
+
+  <p>
+    <span class="pill">Structural Virality</span>
+    <span class="pill">Habit-Forming UX</span>
+    <span class="pill">New Revenue</span>
+    <span class="pill">Compelling USP</span>
+    <span class="pill">Working Prototype · 25+ screens</span>
+  </p>
+
+  <h2>Executive Summary</h2>
+  <p>
+    AstroLive is a fast-growing astrology consultation platform where thousands of users connect with
+    astrologers by call and chat every day. Its revenue, like the wider Indian astrotech market, is almost
+    entirely <strong>transactional</strong>: a user has a question, books a paid minute-metered session, and
+    leaves. This makes growth expensive (every active user must be re-acquired or re-triggered) and caps
+    revenue at the number of consultation minutes sold.
+  </p>
+  <p>
+    <strong>COSMOS OS</strong> is our answer to all four opportunity vectors in the problem statement, delivered
+    as one coherent product. It wraps AstroLive’s existing consultation marketplace inside a <strong>daily,
+    AI-powered habit surface</strong> — the kind of loop that took Co-Star from 7.5M to 30M+ users with zero paid
+    consultations — and closes the seam between consultation and commerce that the market leader, AstroTalk,
+    has left wide open. The result is a single architecture that simultaneously drives organic virality, daily
+    retention, a new commerce revenue line, and a defensible trust-based USP.
+  </p>
+
+  <blockquote>
+    <strong>The one insight that drives everything:</strong> AstroTalk — the ₹1,214 Cr market leader —
+    built a ₹140 Cr ecommerce business in year one, but <strong>less than 3%</strong> of it comes from in-app
+    cross-sell during a consultation. ~97% is browser-first, decoupled from the astrologer. That is a
+    <strong>~₹130 Cr/year hole</strong> in the leader’s product that no consultation-first player has solved —
+    and it is exactly what our “Ritual Moment” closes.
+  </blockquote>
+</div>
+<div class="pb"></div>
+
+<!-- ===================== 1. PROBLEM ===================== -->
+<div class="page">
+  <h2>1. Problem Statement &amp; Comprehension</h2>
+  <p>
+    The challenge asks us to review AstroLive and address one or more of: <strong>structural virality</strong>,
+    <strong>habit-forming UX</strong>, <strong>new revenue beyond the current model</strong>, or a
+    <strong>compelling USP</strong>. We deliberately target <strong>all four</strong>, because in this category
+    they are not independent — they are symptoms of a single root problem:
+  </p>
+  <blockquote>
+    <strong>Indian astrotech treats astrology as an <em>event</em> you buy, not a <em>habit</em> you live.</strong>
+    A user opens the app only when a problem strikes, pays per minute, and churns. There is no daily reason to
+    return, nothing organically shareable, and no bridge from a consultation to a repeatable product or ritual.
+  </blockquote>
+  <p>This root problem produces four measurable weaknesses, each mapping to a challenge vector:</p>
+  <table>
+    <tr><th>Vector</th><th>Current AstroLive weakness</th><th>Consequence</th></tr>
+    <tr><td><strong>Virality</strong></td><td>No shareable artifact; growth is paid-ad-led.</td><td>High CAC; growth stops when ad spend stops.</td></tr>
+    <tr><td><strong>Habit / retention</strong></td><td>Transactional; no daily surface.</td><td>Low DAU/MAU; users must be re-acquired.</td></tr>
+    <tr><td><strong>Revenue</strong></td><td>~single revenue line (per-minute consults).</td><td>Revenue capped at minutes sold; thin margins.</td></tr>
+    <tr><td><strong>USP</strong></td><td>Undifferentiated vs 6+ near-identical apps; category-wide trust deficit.</td><td>Price/most-astrologers arms race AstroLive cannot win on scale.</td></tr>
+  </table>
+
+  <h3>Why this matters commercially</h3>
+  <p>
+    The India astrology-app market is <strong>$163M (2024) → ~$1.8B by 2030 (~49% CAGR)</strong> [1]. But
+    pure-consultation unit economics are brutal: Astroyogi spent <strong>₹1.01 to earn ₹1</strong> in FY24, with
+    EBITDA margin collapsing from 3.59% to 0.76% [2]. Adding astrologers is a losing arms race; the real levers
+    are <strong>retention frequency</strong> and <strong>new revenue verticals</strong> — precisely what a
+    habit + commerce architecture unlocks.
+  </p>
+</div>
+<div class="pb"></div>
+
+<!-- ===================== 2. TEARDOWN ===================== -->
+<div class="page">
+  <h2>2. AstroLive Teardown &amp; Analysis</h2>
+  <p>
+    AstroLive (Tech4Billion Media Pvt. Ltd., the group behind the <strong>Chingari</strong> short-video app) is a
+    ~9-month-old “Talk to Astrologer” marketplace: chat (₹10/min), audio/video (₹15/min), live streaming, free
+    tools (Daily Horoscope, Panchang, Free Kundli, Kundli Matching, Wallet), an <strong>AstroShop</strong>
+    (gemstones/books) and <strong>E-Puja</strong>. Acquisition hook: 3 free calls on signup. At launch it reported
+    <strong>~100K paid users and ~1,500 astrologers</strong>, targeting 1M paid users [3].
+  </p>
+
+  <h3>What AstroLive does well</h3>
+  <ul>
+    <li>Broad discipline coverage (Vedic, Tarot, Numerology, KP, Lal Kitab, Vastu, Nadi) and healing services.</li>
+    <li>Free-tool acquisition funnel (free Kundli/horoscope) — the proven category top-of-funnel.</li>
+    <li>Pieces of a commerce vertical already exist (AstroShop + E-Puja).</li>
+  </ul>
+
+  <h3>Structural gaps (the opportunity)</h3>
+  <table>
+    <tr><th>Gap</th><th>Evidence</th><th>Our fix</th></tr>
+    <tr><td>Scale / liquidity vs leader</td><td>~100K users &amp; 1,500 astrologers vs AstroTalk’s ~60M &amp; ~13,000 [3][4]</td><td>Win on habit + AI, not headcount</td></tr>
+    <tr><td>No daily habit loop</td><td>Transactional app; no daily-content surface</td><td>Morning Brief, Cosmic Weather, streaks, Daily Graha</td></tr>
+    <tr><td>Consult→commerce attach</td><td>Category leader gets &lt;3% ecommerce from in-app cross-sell [4]</td><td>The <strong>Ritual Moment</strong></td></tr>
+    <tr><td>Under-built “AI Planetary Intelligence”</td><td>Marketed positioning not shipped as product</td><td>Live sidereal ephemeris + AI Twin + Memory Brain</td></tr>
+    <tr><td>Trust deficit (category-wide)</td><td>Top complaints: scripted predictions, wallet drains, fear-selling [5]</td><td>Prediction Tracker + 30-day accuracy Warranty</td></tr>
+  </table>
+
+  <h3>AstroLive’s two unfair advantages (we build on these)</h3>
+  <ol>
+    <li><strong>Chingari distribution.</strong> The parent group owns a 100M+ short-video base — a near-zero-CAC
+      funnel AstroTalk must <em>buy</em> (it spent ~₹331 Cr on marketing in FY25 [4]). Our short-form
+      <strong>Cosmic Scroll</strong> feed is designed as the Chingari→AstroLive discovery pipe.</li>
+    <li><strong>Freshness.</strong> No legacy revenue to protect, so a bold product reinvention is lower-risk for
+      AstroLive than for the incumbent.</li>
+  </ol>
+</div>
+<div class="pb"></div>
+
+<!-- ===================== 3. LANDSCAPE ===================== -->
+<div class="page">
+  <h2>3. Competitive Landscape (2025–26)</h2>
+  <table>
+    <tr><th>Player</th><th>Latest figures</th><th>Key gap we exploit</th></tr>
+    <tr><td><strong>AstroTalk</strong> (leader)</td><td>FY25 ₹1,214 Cr (+85%); Store ₹140 Cr Y1 / ~₹200 Cr ARR; IPO-bound [4]</td><td>&lt;3% in-app cross-sell — the ₹130 Cr hole</td></tr>
+    <tr><td><strong>InstaAstro</strong></td><td>FY24 ₹25 Cr (+93%); pre-Series A ₹18.5 Cr [6]</td><td>Consultation-only; no ecommerce</td></tr>
+    <tr><td><strong>Astroyogi</strong></td><td>FY25 ₹85 Cr; bootstrapped; ~30M users [2]</td><td>Broken unit economics (₹1.01→₹1)</td></tr>
+    <tr><td><strong>Sri Mandir</strong></td><td>Series C ₹175 Cr @ ~$175M; 40M downloads, 55% 6-mo retention [7]</td><td>Devotion/puja, not astrology-first — proves ritual retention works</td></tr>
+    <tr><td><strong>Shaadi AstroChat</strong></td><td>Launched Nov 2024; 250+ astrologers, 500K+ downloads [8]</td><td>Consultation-only; no daily habit</td></tr>
+    <tr><td><strong>Co-Star</strong> (US)</td><td>7.5M→30M+ users on daily push horoscope; no paid consults [9]</td><td>Proves the habit loop — never localized to India</td></tr>
+  </table>
+  <p class="muted">Takeaway: ecommerce cross-sell is where the money is going, daily-habit is where retention is
+    won, and nobody has combined both with Panchang/Dasha/Muhurat cultural depth in India.</p>
+
+  <h2>4. Proposed Solution — COSMOS OS</h2>
+  <p>A four-layer architecture. Each layer directly serves a challenge vector, and the layers compound.</p>
+  <div class="grid">
+    <div class="card"><h3>① Memory Brain (base)</h3><p>Every session, prediction, ritual and mood is remembered.
+      Astrologers open a consultation with a <strong>Life Snapshot</strong> — no repeated intros, deeper questions,
+      higher ARPU. This is the moat.</p></div>
+    <div class="card"><h3>② Consultation + Commerce (middle)</h3><p>Chat/call/video plus the
+      <strong>Ritual Moment</strong>: an astrologer-cosigned, warranty-backed product/ritual recommended
+      <em>inside</em> the consultation — the cross-sell AstroTalk’s browser store can’t do.</p></div>
+    <div class="card"><h3>③ Daily Habit Surface (top)</h3><p>Morning Brief, Cosmic Weather, live transits,
+      streaks, Karma, Missions, Daily Graha, Muhurat Window — reasons to open the app every morning like
+      Instagram.</p></div>
+    <div class="card"><h3>④ Distribution (viral atoms)</h3><p>Cosmic Scroll feed, Compatibility &amp; Festival
+      cards, Destiny Replay, Ask My Stars, Bond Streaks — every user becomes a channel.</p></div>
+  </div>
+</div>
+<div class="pb"></div>
+
+<!-- ===================== 5. FEATURES BY VECTOR ===================== -->
+<div class="page">
+  <h2>5. Feature Walkthrough — mapped to the four vectors</h2>
+
+  <h3>Structural virality (organic growth)</h3>
+  <ul>
+    <li><strong>Cosmic Scroll</strong> — a Reels-style vertical feed of astrology hooks, mantras and prediction
+      teasers; the Chingari→AstroLive discovery pipe.</li>
+    <li><strong>Compatibility &amp; Festival cards</strong> — 9:16 shareable PNGs (real WhatsApp/Instagram share)
+      with constellation art and QR — “Spotify Wrapped for your chart.”</li>
+    <li><strong>Daily Graha</strong> — a Wordle-style one-per-day puzzle with a spoiler-free emoji share grid for
+      WhatsApp Status.</li>
+    <li><strong>Ask My Stars</strong> — an NGL-style anonymous question link; every answer is an ad.</li>
+  </ul>
+
+  <h3>Habit-forming UX (retention)</h3>
+  <ul>
+    <li><strong>Morning Brief</strong> + <strong>Cosmic Weather</strong> + <strong>live sidereal transits</strong>
+      (real ephemeris, verifiable against any panchang) — a daily reason to open.</li>
+    <li><strong>Muhurat Window</strong> (BeReal-style daily scarcity), <strong>Streaks + Karma + Missions</strong>,
+      <strong>Kundli Leagues</strong> (Duolingo weekly tiers), <strong>Bond Streaks</strong> (two-player).</li>
+  </ul>
+
+  <h3>New revenue (beyond per-minute)</h3>
+  <ul>
+    <li><strong>Ritual Moment</strong> — in-consultation, astrologer-cosigned commerce (the core thesis).</li>
+    <li><strong>Karma Gullak</strong> festival savings, <strong>Cosmos+</strong> subscription, remedy/puja upsell.</li>
+  </ul>
+
+  <h3>USP (preferred choice)</h3>
+  <ul>
+    <li><strong>Prediction Tracker + 30-day Accuracy Warranty</strong> — the first honest accountability layer in a
+      trust-broken category.</li>
+    <li><strong>Transparent 36-guna Kundli Match</strong> that shows the dosha-cancellation rules most pandits skip
+      — anti-fear-selling as a feature.</li>
+    <li><strong>Cosmos Twin</strong> — a real AI (gpt-4o-mini) that remembers the user’s chart.</li>
+  </ul>
+
+  <h2>6. Expected Impact &amp; New Revenue Model</h2>
+  <table>
+    <tr><th>Lever</th><th>Mechanism</th><th>Defensible impact</th></tr>
+    <tr><td>Consult→commerce attach</td><td>Ritual Moment lifts in-app cross-sell from &lt;3% toward ~15%</td><td><strong>~5× the ecommerce line</strong> (≈₹600 Cr at leader scale) [4]</td></tr>
+    <tr><td>Daily habit</td><td>Co-Star-style loop → ~30× app opens/user/month</td><td>CAC ↓ <strong>60–70%</strong> (biggest margin lever [2])</td></tr>
+    <tr><td>Viral atoms</td><td>1% of DAU share/day × 0.3 signups/share</td><td>k-factor ≈ 0.003/day ≈ <strong>~9% organic MoM</strong></td></tr>
+  </table>
+</div>
+<div class="pb"></div>
+
+<!-- ===================== 7. METRICS + SCALABILITY ===================== -->
+<div class="page">
+  <h2>7. Success Metrics (what we would instrument)</h2>
+  <div class="grid">
+    <div class="card"><div class="kpi">40%</div><p class="muted">Target <strong>DAU/MAU</strong> via the habit surface (vs 5–10% category norm).</p></div>
+    <div class="card"><div class="kpi">15%</div><p class="muted">In-app <strong>consult→commerce attach</strong> (from &lt;3% today).</p></div>
+    <div class="card"><div class="kpi">≥0.30</div><p class="muted">Viral <strong>k-factor</strong> proxy: signups per shared card.</p></div>
+    <div class="card"><div class="kpi">D1/D7/D30</div><p class="muted">Streak-driven <strong>retention curve</strong> + Prediction-accuracy trust score.</p></div>
+  </div>
+  <p>Secondary: average session depth (Memory Brain effect on ARPU), astrologer utilization, free→paid
+    conversion, share rate per DAU, Cosmos+ conversion, Ritual Moment repeat rate.</p>
+
+  <h2>8. Scalability, Feasibility &amp; Architecture</h2>
+  <p>
+    The prototype is a <strong>Vite + React 19 + TypeScript + Tailwind</strong> mobile-web app (HashRouter,
+    Framer Motion), deployed publicly on GitHub Pages via CI. It already calls <strong>real</strong> services:
+    OpenAI <em>gpt-4o-mini</em> (Cosmos Twin), Open-Meteo (live weather), an in-app <strong>sidereal Lahiri
+    ephemeris</strong> (Sun/Moon positions + lunar phase, verifiable against any panchang), and native
+    WhatsApp/Instagram share + Google Calendar deep-links. State persists locally; an EN/हिंदी toggle serves the
+    mass Indian audience.
+  </p>
+  <p>
+    <strong>Production path (documented, feasible):</strong> Supabase (Postgres, Auth, Storage, Realtime, Edge
+    Functions), Vercel/Cloudflare, Prokerala (kundli/gun-milan), 100ms (video), Razorpay (UPI), MSG91 (OTP),
+    OneSignal (push), PostHog + Sentry. <strong>Security posture:</strong> all secret keys live server-side
+    (Edge Functions) — never in the frontend bundle; only publishable keys ship to the client. This is a
+    deliberate, production-grade boundary, not a demo shortcut.
+  </p>
+  <table>
+    <tr><th>Tier</th><th>Live in prototype now</th><th>One env-var away (production)</th></tr>
+    <tr><td>AI</td><td>OpenAI Twin (bring-your-own-key)</td><td>Server-proxied via Edge Function</td></tr>
+    <tr><td>Astrology</td><td>Sidereal ephemeris + lunar phase (on-device)</td><td>Prokerala full kundli/dasha</td></tr>
+    <tr><td>Data / Utility</td><td>Open-Meteo, WhatsApp, Calendar</td><td>Supabase realtime, 100ms, Razorpay</td></tr>
+  </table>
+
+  <h2>9. Conclusion</h2>
+  <p>
+    COSMOS OS attacks all four challenge vectors with one architecture, exploits AstroLive’s two real unfair
+    advantages (Chingari distribution + an AI layer it markets but hasn’t shipped), and closes the single biggest
+    unsolved revenue gap in the category. The prototype is live, functional, and built on real APIs; the path to
+    scale is documented and secure. It is a product a new AstroLive user understands in seconds and opens every
+    morning — and every consultation becomes worth more.
+  </p>
+</div>
+<div class="pb"></div>
+
+<!-- ===================== REFS ===================== -->
+<div class="page">
+  <h2>References</h2>
+  <ol class="refs">
+    <li>MarkNTel Advisors — India Astrology Market size ($163M 2024 → ~$1.8B 2030). Via industry reporting, 2024.</li>
+    <li>Entrackr — “Astroyogi surpasses ₹85 Cr revenue in FY24…”, entrackr.com.</li>
+    <li>Inc42 / YourStory / Tracxn — AstroLive (Tech4Billion) launch metrics: ~100K paid users, ~1,500 astrologers.</li>
+    <li>Inc42 / Outlook Business / Entrackr — “IPO-bound AstroTalk finds new revenue driver in ecommerce”: FY25 ₹1,214 Cr, Store ₹140 Cr / ~₹200 Cr ARR, &lt;3% in-app cross-sell, ~₹331 Cr marketing spend.</li>
+    <li>Trustpilot / PissedConsumer / Reddit — category complaint clusters (scripted predictions, wallet drains, fear-selling).</li>
+    <li>TheKredible / Indian Startup News — InstaAstro FY24 ₹25.12 Cr, pre-Series A ₹18.5 Cr.</li>
+    <li>Business Standard / YourStory / TechCrunch — Sri Mandir (AppsForBharat) Series C ₹175 Cr @ ~$175M; 40M downloads; 55% 6-mo retention.</li>
+    <li>Inc42 — “Shaadi.com enters spiritual-tech with AstroChat” (Nov 2024; 250+ astrologers, 500K+ downloads).</li>
+    <li>ASAP Journal / reporting on Co-Star — 7.5M (2020) → 30M+ (2023) registered users on a daily-horoscope loop.</li>
+    <li>Deconstructor of Fun / Lenny’s Newsletter — Duolingo streak &amp; league mechanics driving DAU.</li>
+  </ol>
+  <p class="muted" style="margin-top:4px;">All figures are from public trade press and market-research summaries as
+    cited; where exact figures vary by tracker, the most conservative widely-reported number was used.</p>
+
+  <h2>AI Tools &amp; External Assets Disclosure</h2>
+  <p>Per the submission rules, we disclose all AI tools and external assets used to build the prototype and this report:</p>
+  <ul>
+    <li><strong>Anthropic Claude (Claude Code)</strong> — used as a pair-programming and writing assistant to help
+      build the React/TypeScript prototype, structure the information architecture, and draft this report.
+      All strategic decisions, product design, and final content were authored and reviewed by the team.</li>
+    <li><strong>OpenAI gpt-4o-mini</strong> — integrated <em>into</em> the product as the live “Cosmos Twin” chat model.</li>
+    <li><strong>Open-Meteo API</strong> — live weather (open data, no key).</li>
+    <li><strong>Google Fonts</strong> (Baloo 2, Poppins, JetBrains Mono); <strong>Lucide</strong> icons;
+      <strong>Framer Motion</strong>, <strong>html-to-image</strong> — open-source UI libraries.</li>
+    <li>Astrological calculations (sidereal Lahiri Sun/Moon positions, lunar phase) implemented by the team from
+      standard astronomical formulae.</li>
+  </ul>
+
+  <p class="foot">COSMOS OS — prepared for AstroHack 2026. Team {{TEAM_NAME}}, led by {{LEADER_NAME}}.
+    Live prototype: https://dg10911.github.io/cosmos-os/ · Report generated August 2026.</p>
+</div>
+
+</div>
+</body>
+</html>
