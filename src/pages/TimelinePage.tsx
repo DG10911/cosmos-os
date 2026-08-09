@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { PageHeader } from "../components/PageHeader";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, Share2, X } from "lucide-react";
+import { Share2, X } from "lucide-react";
 import { useToast } from "../components/Toast";
 
 type Event = {
@@ -29,7 +29,6 @@ const EVENTS: Event[] = [
 const FILTERS = ["All", "Career", "Love", "Health", "Finance", "Family", "Marriage"];
 
 export default function TimelinePage() {
-  const nav = useNavigate();
   const toast = useToast();
   const [filter, setFilter] = useState("All");
   const [active, setActive] = useState<Event | null>(null);
@@ -39,13 +38,7 @@ export default function TimelinePage() {
 
   return (
     <div className="px-4 pt-3 pb-4">
-      <button
-        onClick={() => nav(-1)}
-        className="mb-2 flex items-center gap-1 text-sm text-text-muted"
-      >
-        <ChevronLeft size={16} /> Back
-      </button>
-      <h1 className="serif text-2xl text-text-primary">Your Destiny Timeline</h1>
+      <PageHeader title="Your Destiny Timeline" sub="Your past & predicted future" />
 
       {/* filters */}
       <div className="no-scrollbar mt-3 flex gap-2 overflow-x-auto">
