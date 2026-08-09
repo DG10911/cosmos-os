@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Lock } from "lucide-react";
 import { useApp } from "../state/AppState";
 import { useToast } from "../components/Toast";
@@ -23,6 +24,7 @@ const REDEEM = [
 
 export default function MissionsPage() {
   const app = useApp();
+  const nav = useNavigate();
   const toast = useToast();
   const [tab, setTab] = useState<"missions" | "karma">("missions");
   const [confetti, setConfetti] = useState(0);
@@ -45,9 +47,13 @@ export default function MissionsPage() {
             </span>
           </div>
         </div>
-        <span className="rounded-full bg-gold/15 px-2.5 py-1 text-[11px] font-medium text-gold">
-          Streak Insurance ✓
-        </span>
+        <button
+          onClick={() => nav("/league")}
+          className="rounded-full px-3 py-1.5 text-[11px] font-bold text-white active:scale-95"
+          style={{ background: "linear-gradient(135deg,#7C3AED,#E11D74)" }}
+        >
+          🏆 Shukra League
+        </button>
       </div>
 
       {/* Tabs */}
@@ -229,6 +235,34 @@ function Karma({
             </div>
           );
         })}
+      </div>
+
+      {/* Karma Gullak — auto micro-savings, breaks on festivals */}
+      <div
+        className="mt-5 flex items-center gap-3 rounded-card p-4 text-white"
+        style={{
+          background: "linear-gradient(135deg,#B45309,#FF6B2C)",
+          boxShadow: "0 10px 26px rgba(180,83,9,0.3)",
+        }}
+      >
+        <span className="text-3xl">🏺</span>
+        <div className="flex-1">
+          <p className="text-sm font-bold">Karma Gullak</p>
+          <p className="text-[11px] text-white/85">
+            10% of every karma you earn drops in automatically
+          </p>
+          <p className="mono mt-1 text-lg font-bold">
+            {Math.round(app.karma * 0.12).toLocaleString("en-IN")} saved
+          </p>
+        </div>
+        <div className="text-center">
+          <span className="block rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold backdrop-blur">
+            breaks on Diwali 🪔
+          </span>
+          <span className="mt-1 block text-[9px] text-white/70">
+            jackpot ×2 multiplier
+          </span>
+        </div>
       </div>
 
       {/* Gift */}

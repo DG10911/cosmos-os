@@ -80,7 +80,8 @@ export default function TodayPage() {
     if (k === "graha") nav("/nakshatra");
     else if (k === "kundli") setKundli(true);
     else if (k === "panch") setPanchangOpen(true);
-    else if (k === "match" || k === "love") nav("/circle/compat");
+    else if (k === "match") nav("/kundli-match");
+    else if (k === "love") nav("/circle/compat");
     else if (k === "num") {
       // life-path number from the user's birth date
       const digits = (getUser()?.birthDate ?? "1999-03-14").replace(/\D/g, "");
