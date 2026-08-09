@@ -60,6 +60,27 @@ export default function ConsultPage() {
         sub="Chat or call — trusted, private, 24×7"
       />
 
+      {/* Smart match entry */}
+      <button
+        onClick={() => nav("/match")}
+        className="aura-border mt-3 flex w-full items-center gap-3 rounded-card bg-white p-4 text-left"
+      >
+        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-cosmic/10 text-xl">
+          🎯
+        </span>
+        <span className="flex-1">
+          <span className="block text-sm font-bold text-text-primary">
+            Don't know who to pick?
+          </span>
+          <span className="block text-[11px] text-text-muted">
+            Tell us what's on your mind — we match by real accuracy records
+          </span>
+        </span>
+        <span className="rounded-full bg-gold px-3 py-1.5 text-xs font-bold text-white">
+          Match me
+        </span>
+      </button>
+
       {/* Live story rings — Instagram-style */}
       <div className="no-scrollbar -mx-4 mt-4 flex gap-3 overflow-x-auto px-4">
         {ASTROLOGERS.filter((a) => a.online)
