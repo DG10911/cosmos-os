@@ -25,6 +25,8 @@ import ScrollPage from "./pages/ScrollPage";
 import NakshatraPage from "./pages/NakshatraPage";
 import ConnectPage from "./pages/ConnectPage";
 import MatchPage from "./pages/MatchPage";
+import KundliMatchPage from "./pages/KundliMatchPage";
+import LeaguePage from "./pages/LeaguePage";
 
 /** Redirect first-time users to the splash/onboarding flow. */
 function HomeGate() {
@@ -71,6 +73,8 @@ export default function App() {
           <Route path="/nakshatra" element={<NakshatraPage />} />
           <Route path="/connect" element={<ConnectPage />} />
           <Route path="/match" element={<MatchPage />} />
+          <Route path="/kundli-match" element={<KundliMatchPage />} />
+          <Route path="/league" element={<LeaguePage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
