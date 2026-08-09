@@ -143,3 +143,37 @@ export function connectedCount(): number {
   const v = store.get<Record<string, string>>(VAULT, {});
   return Object.keys(v).length;
 }
+
+/* ============================================================
+   REAL EPHEMERIS — sidereal (Lahiri) positions, pure math
+   ============================================================ */
+
+const SIGNS = [
+  "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
+  "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces",
+];
+const AYANAMSHA = 24.2; // Lahiri, ~2026
+
+function daysSinceJ2000(date = new Date()) {
+  return (date.getTime() - Date.UTC(2000, 0, 1, 12)) / 86400000;
+}
+
+/** Approximate sidereal Sun position (±0.1°). */
+export function sunPosition(date = new Date()) {
+  const n = daysSinceJ2000(date);
+  const L = (280.46 + 0.9856474 * n) % 360;
+  const g = ((357.528 + 0.9856003 * n) % 360) * (Math.PI / 180);
+  const lambda = L + 1.915 * Math.sin(g) + 0.02 * Math.sin(2 * g);
+  const sid = (((lambda - AYANAMSHA) % 360) + 360) % 360;
+  return { sign: SIGNS[Math.floor(sid / 30)], deg: Math.floor(sid % 30) };
+}
+
+/** Approximate sidereal Moon position (±2°). */
+export function moonPosition(date = new Date()) {
+  const n = daysSinceJ2000(date);
+  const L = (218.316 + 13.176396 * n) % 360;
+  const M = ((134.963 + 13.064993 * n) % 360) * (Math.PI / 180);
+  const lambda = L + 6.289 * Math.sin(M);
+  const sid = (((lambda - AYANAMSHA) % 360) + 360) % 360;
+  return { sign: SIGNS[Math.floor(sid / 30)], deg: Math.floor(sid % 30) };
+}

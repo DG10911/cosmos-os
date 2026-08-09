@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Phone, ChevronLeft, ShieldCheck, ChevronRight } from "lucide-react";
 import { StarField } from "../components/StarField";
 import { Mandala, Spark } from "../components/Glyphs";
+import { saveUser } from "../data/user";
 
 type Stage = "choose" | "phone" | "otp" | "loading" | "success";
 
@@ -133,7 +134,29 @@ export default function AuthPage() {
                   <Phone size={17} /> Continue with Phone
                 </motion.button>
 
-                <p className="mt-6 text-center text-[11px] leading-relaxed text-text-muted">
+                <motion.button
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.62 }}
+                  onClick={() => {
+                    saveUser({
+                      phone: "9876543210",
+                      birthDate: "1999-03-14",
+                      birthTime: "06:45",
+                      birthPlace: "Jaipur, Rajasthan",
+                      goals: ["Career growth", "Inner peace"],
+                      notifyTime: "07:00",
+                      whatsapp: true,
+                      onboardedAt: 0,
+                    });
+                    nav("/today");
+                  }}
+                  className="mt-4 w-full text-center text-[13px] font-semibold text-cosmic underline decoration-cosmic/30"
+                >
+                  Just exploring? Enter the instant demo →
+                </motion.button>
+
+                <p className="mt-5 text-center text-[11px] leading-relaxed text-text-muted">
                   By continuing you agree to our{" "}
                   <span className="font-semibold text-gold underline decoration-gold/40">Terms</span> &{" "}
                   <span className="font-semibold text-gold underline decoration-gold/40">Privacy Policy</span>.
