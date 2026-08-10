@@ -212,6 +212,12 @@ export default function ConsultPage() {
           Sort: {sort.label}
         </button>
       </div>
+      {!loading && (
+        <p className="mt-1 px-1 text-[10px] text-text-muted/80">
+          Sample profiles for demo · trust scores reflect our public Prediction
+          Tracker in production
+        </p>
+      )}
 
       {/* Loading skeletons */}
       {loading && (

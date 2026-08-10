@@ -88,8 +88,13 @@ export const ASTROLOGERS: Astrologer[] = [
   },
 ];
 
+/**
+ * Stylized illustrated portraits (DiceBear "notionists"). Deliberately an
+ * authentic illustration style — NOT fake photos — so demo profiles never
+ * imply real-world people. Warm neutral backgrounds read as headshots.
+ */
 export function avatarUrl(id: number) {
-  return `https://api.dicebear.com/7.x/thumbs/svg?seed=cosmos${id}&backgroundColor=8B7CFC,F4C430,4c1d95`;
+  return `https://api.dicebear.com/7.x/notionists/svg?seed=cosmos${id}&backgroundColor=ffd5a6,ffdfbf,c0aede,d1d4f9,e6d4f9&radius=50`;
 }
 
 /** Today's cosmic weather — hardcoded but realistic for the demo user "Anya". */
