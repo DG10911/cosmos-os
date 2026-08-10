@@ -157,7 +157,7 @@ export default function NakshatraPage() {
               <Share2 size={15} /> Share to WhatsApp Status
             </button>
             <p className="mt-3 text-[11px] text-text-muted">
-              2,41,882 players solved today's Graha
+              One puzzle a day · everyone in India gets the same Graha
             </p>
           </motion.div>
         )}

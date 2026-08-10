@@ -240,7 +240,7 @@ export default function CompatPage() {
             New Reading
           </button>
           <p className="mt-4 text-center text-[11px] text-text-muted">
-            Yours joins 12,483 cards shared today
+            Built to be shared — post it to your Story or family group
           </p>
         </div>
       )}

@@ -175,7 +175,7 @@ export default function CirclePage() {
         <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-bold text-cosmic">
           <Spark size={14} /> Copy my link
         </span>
-        <p className="mt-3 text-xs text-white/85">💌 3 unanswered questions waiting</p>
+        <p className="mt-3 text-xs text-white/85">💌 Anonymous · your kundli answers for you</p>
       </button>
 
       {/* ── Compatibility (viral atom) ── */}
@@ -197,7 +197,7 @@ export default function CirclePage() {
         <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-bold text-[#E11D74]">
           <Spark size={14} /> Create Card
         </span>
-        <p className="mt-3 text-xs text-white/85">🔥 12,483 cards created today</p>
+        <p className="mt-3 text-xs text-white/85">✦ One tap to share on your Story</p>
         <Heart className="absolute -bottom-4 -right-3 fill-white/10 text-white/10" size={96} />
       </button>
     </div>
