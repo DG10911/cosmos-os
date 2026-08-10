@@ -35,8 +35,8 @@ export default {
         cyan: "#0EA5E9",
       },
       fontFamily: {
-        serif: ['"Baloo 2"', "cursive"], // chunky friendly display (multilingual)
-        sans: ['"Poppins"', "system-ui", "sans-serif"],
+        serif: ['"Fraunces"', "Georgia", "serif"], // sophisticated editorial display
+        sans: ['"Inter"', "system-ui", "sans-serif"], // professional product body
         mono: ['"JetBrains Mono"', "monospace"],
       },
       borderRadius: {
