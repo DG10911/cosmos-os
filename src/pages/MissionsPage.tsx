@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Lock } from "lucide-react";
+import { Lock, Target, Gift, Trophy, ChevronRight } from "lucide-react";
 import { useApp } from "../state/AppState";
 import { useToast } from "../components/Toast";
 import { Confetti } from "../components/Confetti";
@@ -52,26 +52,26 @@ export default function MissionsPage() {
           className="rounded-full px-3 py-1.5 text-[11px] font-bold text-white active:scale-95"
           style={{ background: "linear-gradient(135deg,#7C3AED,#E11D74)" }}
         >
-          🏆 Shukra League
+          <Trophy size={13} /> Shukra League
         </button>
       </div>
 
       {/* Growth loop — makes the whole system legible at a glance */}
-      <div className="mt-3 flex items-center justify-between rounded-card bg-gradient-to-r from-cosmic/8 to-gold/10 px-3 py-3">
+      <div className="mt-3 flex items-center justify-between rounded-card bg-gradient-to-r from-cosmic/8 to-gold/10 px-2 py-3">
         {[
-          { e: "🎯", l: "Do", s: "a mission" },
-          { e: "🪙", l: "Earn", s: "Karma" },
-          { e: "🔥", l: "Keep", s: "your streak" },
-          { e: "🎁", l: "Unlock", s: "rewards" },
+          { Icon: Target, l: "Do", s: "a mission", c: "#7C3AED" },
+          { Icon: KarmaCoin, l: "Earn", s: "Karma", c: "#FF6B2C" },
+          { Icon: Flame, l: "Keep", s: "your streak", c: "#FF6B2C" },
+          { Icon: Gift, l: "Unlock", s: "rewards", c: "#16A34A" },
         ].map((step, i, arr) => (
           <div key={step.l} className="flex flex-1 items-center">
             <div className="flex flex-1 flex-col items-center text-center">
-              <span className="text-lg">{step.e}</span>
-              <span className="text-[11px] font-bold text-text-primary">{step.l}</span>
+              <step.Icon size={18} style={{ color: step.c }} />
+              <span className="mt-1 text-[11px] font-semibold text-text-primary">{step.l}</span>
               <span className="text-[9px] leading-tight text-text-muted">{step.s}</span>
             </div>
             {i < arr.length - 1 && (
-              <span className="px-0.5 text-sm text-cosmic/50">→</span>
+              <ChevronRight size={13} className="text-cosmic/40" />
             )}
           </div>
         ))}
@@ -140,7 +140,7 @@ function Missions({
       </div>
 
       <h3 className="mb-2 mt-5 text-sm font-semibold text-text-primary">This Week</h3>
-      <div className="space-y-2">
+      <div className="cosmic-card divide-y divide-gold/10 overflow-hidden">
         {WEEKLY.map((m) => {
           const done = app.weeklyDone.includes(m.id);
           return (
@@ -150,7 +150,7 @@ function Missions({
                 app.toggleWeekly(m.id, m.karma);
                 if (!done) toast("Karma received");
               }}
-              className="cosmic-card flex w-full items-center gap-3 p-3.5 text-left"
+              className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors active:bg-gold/5"
             >
               <DrawTick checked={done} />
               <span
@@ -163,7 +163,7 @@ function Missions({
                   <span className="ml-1 text-xs text-text-muted">({m.when})</span>
                 )}
               </span>
-              <span className="text-xs text-gold">+{m.karma}</span>
+              <span className="text-xs font-semibold text-gold">+{m.karma}</span>
             </button>
           );
         })}
@@ -172,11 +172,11 @@ function Missions({
       <h3 className="mb-2 mt-5 flex items-center gap-1.5 text-sm font-semibold text-text-muted">
         <Lock size={13} /> Unlocks at 20-day streak
       </h3>
-      <div className="space-y-2 opacity-40">
+      <div className="cosmic-card divide-y divide-gold/10 overflow-hidden opacity-50">
         {["Group ritual with friends", "Reserved monthly consultation", "Rare astrologer access"].map(
           (l) => (
-            <div key={l} className="cosmic-card flex items-center gap-3 p-3.5">
-              <Lock size={16} className="text-text-muted" />
+            <div key={l} className="flex items-center gap-3 px-4 py-3">
+              <Lock size={15} className="text-text-muted" />
               <span className="text-sm text-text-primary">{l}</span>
             </div>
           )
