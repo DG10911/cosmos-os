@@ -270,8 +270,12 @@ export default function ConsultPage() {
                   </span>
                   <TrustSigil score={a.trust} />
                   {concern && (
-                    <span className="ml-auto shrink-0 rounded-full bg-cosmic/12 px-1.5 py-0.5 text-[10px] font-bold text-cosmic">
-                      {concernMatch(a.id, concern)}% match
+                    <span className="ml-auto shrink-0 rounded-full bg-cosmic/12 px-2 py-0.5 text-[10px] font-bold text-cosmic">
+                      {concernMatch(a.id, concern) >= 90
+                        ? "Top match"
+                        : concernMatch(a.id, concern) >= 84
+                          ? "Strong match"
+                          : "Good match"}
                     </span>
                   )}
                 </div>

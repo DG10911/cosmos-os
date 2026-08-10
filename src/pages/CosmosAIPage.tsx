@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, Send, UserRound, Zap, X } from "lucide-react";
+import { ChevronLeft, Send, UserRound, Zap, X, CornerDownRight } from "lucide-react";
 import { askTwin, hasLiveAi, setAiKey } from "../lib/ai";
 
 type Msg = { role: "ai" | "user"; text: string };
@@ -11,6 +11,14 @@ const SUGGESTED = [
   "What does this week look like?",
   "Should I change jobs?",
   "What does my relationship chart say?",
+];
+
+/** Contextual follow-ups shown after any answer. */
+const FOLLOWUPS = [
+  "Tell me more",
+  "What should I do today?",
+  "When is the best timing?",
+  "Any remedy for this?",
 ];
 
 /** Canned, chart-aware responses so the demo feels intelligent & personal. */
@@ -205,6 +213,25 @@ export default function CosmosAIPage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* follow-up suggestions after an answer — premium AI affordance */}
+      {!showSuggestions && !typing && msgs[msgs.length - 1]?.role === "ai" && (
+        <motion.div
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="no-scrollbar flex gap-2 overflow-x-auto px-4 pb-2"
+        >
+          {FOLLOWUPS.map((s) => (
+            <button
+              key={s}
+              onClick={() => send(s)}
+              className="flex items-center gap-1 whitespace-nowrap rounded-full border border-cosmic/25 bg-bg-card px-3 py-1.5 text-xs text-cosmic"
+            >
+              <CornerDownRight size={12} /> {s}
+            </button>
+          ))}
+        </motion.div>
+      )}
 
       {/* composer */}
       <div className="glass border-t border-gold/15 px-3 pb-4 pt-2">
