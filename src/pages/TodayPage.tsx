@@ -70,6 +70,16 @@ export default function TodayPage() {
   const lang = useLang();
   const suggested = ASTROLOGERS[0];
 
+  // Hero copy derived from the LIVE moon phase, so it never contradicts the
+  // Panchang shown lower on the page.
+  const mp = moonPhase();
+  const hero =
+    mp.illum >= 55
+      ? { t: "Your Moon is bright today.", s: "Feelings run full — trust your intuition." }
+      : mp.illum <= 25
+        ? { t: "Your Moon is quiet today.", s: "Turn inward — rest, reflect, restore." }
+        : { t: `A ${mp.name.toLowerCase()} Moon.`, s: "Steady energy — build, don't rush." };
+
   // live weather via Open-Meteo (keyless, real)
   useEffect(() => {
     fetchWeather().then(setWeather).catch(() => {});
@@ -128,8 +138,8 @@ export default function TodayPage() {
             <Share2 size={15} />
           </button>
         </div>
-        <h2 className="serif mt-4 text-[24px] leading-snug">{TODAY.heroTitle}</h2>
-        <p className="mt-1 text-[13px] text-white/90">{TODAY.heroSub}</p>
+        <h2 className="serif mt-4 text-[24px] leading-snug">{hero.t}</h2>
+        <p className="mt-1 text-[13px] text-white/90">{hero.s}</p>
         <button
           onClick={() => nav("/brief")}
           className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-[13px] font-bold text-[#FF6B2C] active:scale-95"
@@ -382,23 +392,23 @@ export default function TodayPage() {
 
       <div className="h-4" />
 
-      {/* Floating Cosmos Twin — living orb */}
-      <div className="pointer-events-none fixed bottom-[92px] left-1/2 z-30 flex w-full max-w-[420px] -translate-x-1/2 justify-end px-4">
+      {/* Floating Cosmos Twin — compact circular FAB, hugs the corner above
+          the dock so it never covers page content. */}
+      <div className="pointer-events-none fixed bottom-[86px] left-1/2 z-30 flex w-full max-w-[420px] -translate-x-1/2 justify-end px-3">
         <button
           onClick={() => nav("/twin")}
-          className="glass pointer-events-auto relative flex items-center gap-2 rounded-full border border-cosmic/30 py-2 pl-2 pr-3.5 shadow-[0_8px_24px_rgba(124,58,237,0.28)] transition-transform duration-200 active:scale-95"
+          aria-label="Ask Cosmos Twin"
+          className="glass pointer-events-auto relative flex h-14 w-14 items-center justify-center rounded-full border border-cosmic/30 shadow-[0_8px_24px_rgba(124,58,237,0.32)] transition-transform duration-200 active:scale-90"
         >
-          {/* pulsing halo */}
           <span
-            className="pointer-events-none absolute -left-1 top-1/2 h-11 w-11 -translate-y-1/2 rounded-full"
+            className="pointer-events-none absolute inset-0 rounded-full"
             style={{
-              background: "radial-gradient(circle, rgba(139,124,252,0.45), transparent 70%)",
+              background: "radial-gradient(circle, rgba(139,124,252,0.4), transparent 70%)",
               animation: "orb-halo 2.8s ease-in-out infinite",
             }}
           />
-          <Orb size={30} />
-          <span className="relative text-xs font-bold text-text-primary">Ask Twin</span>
-          <style>{`@keyframes orb-halo{0%,100%{transform:translateY(-50%) scale(1);opacity:.7}50%{transform:translateY(-50%) scale(1.5);opacity:.15}}`}</style>
+          <Orb size={34} />
+          <style>{`@keyframes orb-halo{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.35);opacity:.12}}`}</style>
         </button>
       </div>
 
