@@ -24,6 +24,8 @@ import {
 import { CheckCheck } from "lucide-react";
 import { TrustSigil } from "./TodayPage";
 import { useApp } from "../state/AppState";
+import { useToast } from "../components/Toast";
+import { askTwin, hasLiveAi } from "../lib/ai";
 import { Confetti } from "../components/Confetti";
 import { VoiceNote } from "../components/Waveform";
 import { Spark, Gem } from "../components/Glyphs";
@@ -32,14 +34,17 @@ export default function SessionPage() {
   const { id } = useParams();
   const nav = useNavigate();
   const app = useApp();
+  const toast = useToast();
   const a = ASTROLOGERS.find((x) => x.id === Number(id)) ?? ASTROLOGERS[0];
 
   const [visible, setVisible] = useState<ChatMsg[]>([]);
   const [typing, setTyping] = useState(false);
+  const [input, setInput] = useState("");
   const [snapOpen, setSnapOpen] = useState(true);
   const [timer, setTimer] = useState(272); // 4:32
   const [showWhy, setShowWhy] = useState(false);
   const [bought, setBought] = useState(false);
+  const [skipped, setSkipped] = useState(false);
   const [showBought, setShowBought] = useState(false);
   const [confetti, setConfetti] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -107,6 +112,41 @@ export default function SessionPage() {
     })();
   }
 
+  // Contextual astrologer replies when the live AI isn't connected.
+  function cannedReply(q: string): string {
+    const t = q.toLowerCase();
+    if (/marriage|shaadi|partner|love|relationship/.test(t))
+      return "Venus is well-placed in your 7th house right now, so this is a warm window for the heart. After the 14th the Moon supports honest conversations — that's when to speak from your chart, not your fear.";
+    if (/job|career|work|promotion|business/.test(t))
+      return "Your 10th lord is strengthening through this Rahu period. Thursdays are your Best-Work window. If a move is coming, time it near November — the transits favour a longer-term ask over a rushed jump.";
+    if (/money|finance|wealth|loan|invest/.test(t))
+      return "Saturn is teaching patience with money this year — steady beats sudden. Avoid big commitments during Rahu Kaal. A disciplined SIP-style approach suits your chart far better than a single gamble.";
+    if (/health|stress|anxiety|sleep|tired/.test(t))
+      return "Your mood log has dipped for a few days, and Rahu can scatter your energy. Ground with the diya ritual at sunset and a short morning meditation — small, daily, and your chart responds.";
+    return "I hear you. Reading your chart — Cancer ascendant, Rohini, in a Rahu Mahadasha — this is a season of transformation. Tell me a little more about the situation and I'll ground my guidance in your exact transits.";
+  }
+
+  async function send(text: string) {
+    const q = text.trim();
+    if (!q || typing) return;
+    setInput("");
+    setVisible((v) => [...v, { kind: "user", text: q } as ChatMsg]);
+    setTyping(true);
+    let reply = "";
+    if (hasLiveAi()) {
+      try {
+        reply = await askTwin([{ role: "user", text: q }]);
+      } catch {
+        reply = cannedReply(q);
+      }
+    } else {
+      await wait(1200);
+      reply = cannedReply(q);
+    }
+    setTyping(false);
+    setVisible((v) => [...v, { kind: "astro", text: reply } as ChatMsg]);
+  }
+
   const mm = Math.floor(timer / 60);
   const ss = String(timer % 60).padStart(2, "0");
 
@@ -153,7 +193,18 @@ export default function SessionPage() {
         className="no-scrollbar flex-1 space-y-3 overflow-y-auto px-4 py-4"
       >
         {visible.map((msg, i) => (
-          <Bubble key={i} msg={msg} onBuy={buyRitual} onWhy={() => setShowWhy(true)} bought={bought} />
+          <Bubble
+            key={i}
+            msg={msg}
+            onBuy={buyRitual}
+            onWhy={() => setShowWhy(true)}
+            onSkip={() => {
+              setSkipped(true);
+              toast("No problem — saved to your remedies for later");
+            }}
+            bought={bought}
+            skipped={skipped}
+          />
         ))}
         {typing && <TypingDots />}
         <div className="h-2" />
@@ -162,24 +213,40 @@ export default function SessionPage() {
       {/* Input */}
       <div className="border-t border-gold/15 bg-bg/90 px-3 pb-3 pt-2 backdrop-blur">
         <div className="no-scrollbar mb-2 flex gap-2 overflow-x-auto">
-          {["Tell me more", "Book follow-up", "Show me the ritual"].map((q) => (
-            <button
-              key={q}
-              className="whitespace-nowrap rounded-full border border-gold/20 bg-bg-card px-3 py-1.5 text-xs text-text-muted"
-            >
-              {q}
-            </button>
-          ))}
+          {["Will I get the promotion?", "When is my marriage?", "How's my money this year?"].map(
+            (q) => (
+              <button
+                key={q}
+                onClick={() => send(q)}
+                disabled={typing}
+                className="whitespace-nowrap rounded-full border border-gold/25 bg-bg-card px-3 py-1.5 text-xs text-text-primary active:scale-95 disabled:opacity-50"
+              >
+                {q}
+              </button>
+            )
+          )}
         </div>
         <div className="flex items-center gap-2">
           <input
-            placeholder="Message Pt. Suresh…"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && send(input)}
+            placeholder={`Message ${a.name.split(" ")[0]}…`}
             className="h-11 flex-1 rounded-full bg-bg-card px-4 text-sm text-text-primary outline-none placeholder:text-text-muted/60"
           />
-          <button className="text-text-muted">
+          <button
+            onClick={() => toast("Voice notes need mic access — coming to the app build")}
+            className="text-text-muted active:scale-90"
+            aria-label="Voice note"
+          >
             <Mic size={20} />
           </button>
-          <button className="flex h-11 w-11 items-center justify-center rounded-full bg-gold text-white">
+          <button
+            onClick={() => send(input)}
+            disabled={!input.trim() || typing}
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-gold text-white transition active:scale-90 disabled:opacity-40"
+            aria-label="Send"
+          >
             <Send size={18} />
           </button>
         </div>
@@ -311,15 +378,19 @@ function Bubble({
   msg,
   onBuy,
   onWhy,
+  onSkip,
   bought,
+  skipped,
 }: {
   msg: ChatMsg;
   onBuy: () => void;
   onWhy: () => void;
+  onSkip: () => void;
   bought: boolean;
+  skipped: boolean;
 }) {
   if (msg.kind === "ritual") {
-    return <RitualCard onBuy={onBuy} onWhy={onWhy} bought={bought} />;
+    return <RitualCard onBuy={onBuy} onWhy={onWhy} onSkip={onSkip} bought={bought} skipped={skipped} />;
   }
   if (msg.kind === "system") {
     return (
@@ -376,11 +447,15 @@ function Bubble({
 function RitualCard({
   onBuy,
   onWhy,
+  onSkip,
   bought,
+  skipped,
 }: {
   onBuy: () => void;
   onWhy: () => void;
+  onSkip: () => void;
   bought: boolean;
+  skipped: boolean;
 }) {
   return (
     <motion.div
@@ -421,20 +496,24 @@ function RitualCard({
       </div>
 
       {bought ? (
-        <div className="mt-3 rounded-btn bg-success/15 py-2.5 text-center text-sm font-semibold text-success">
-          ✓ Added to your order
+        <div className="mt-3 flex items-center justify-center gap-1.5 rounded-btn bg-success/15 py-2.5 text-center text-sm font-semibold text-success">
+          <CheckCheck size={15} /> Added to your order
+        </div>
+      ) : skipped ? (
+        <div className="mt-3 rounded-btn bg-black/[0.04] py-2.5 text-center text-sm font-medium text-text-muted">
+          Saved to your remedies · maybe later
         </div>
       ) : (
         <div className="mt-3 flex items-center gap-2">
           <button
             onClick={onBuy}
-            className="flex flex-1 items-center justify-center gap-1.5 rounded-btn bg-gold py-2.5 text-sm font-semibold text-white"
+            className="flex flex-1 items-center justify-center gap-1.5 rounded-btn bg-gold py-2.5 text-sm font-semibold text-white active:scale-95"
           >
             <Spark size={14} /> Buy Now
           </button>
           <button
-            onClick={onWhy}
-            className="rounded-btn border border-gold/20 px-3 py-2.5 text-sm text-text-primary"
+            onClick={onSkip}
+            className="rounded-btn border border-gold/20 px-3 py-2.5 text-sm text-text-primary active:scale-95"
           >
             Skip
           </button>
