@@ -41,7 +41,7 @@ export function AppLayout() {
         <main
           className={cn(
             "flex-1 overflow-y-auto no-scrollbar",
-            !hideChrome && !isScroll && "pt-14 pb-28"
+            !hideChrome && !isScroll && "pt-14 pb-32"
           )}
         >
           <AnimatePresence mode="wait">
