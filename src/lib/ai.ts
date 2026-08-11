@@ -1,5 +1,9 @@
 import { store } from "./utils";
 import { getUser } from "../data/user";
+import { edgeApiReady } from "./cosmosApi";
+
+const BASE = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+const ANON = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 
 /**
  * Live AI wiring for the Cosmos Twin.
@@ -24,7 +28,8 @@ export function setAiKey(k: string) {
 }
 
 export function hasLiveAi(): boolean {
-  return getAiKey().length > 20;
+  // Live if a server proxy (Edge Function) is available OR a runtime key is set.
+  return edgeApiReady() || getAiKey().length > 20;
 }
 
 export type ChatMsg = { role: "ai" | "user"; text: string };
@@ -45,9 +50,6 @@ function systemPrompt(): string {
 
 /** Ask OpenAI (gpt-4o-mini) with full conversation context. Throws on failure. */
 export async function askTwin(history: ChatMsg[]): Promise<string> {
-  const key = getAiKey();
-  if (!key) throw new Error("no-key");
-
   const messages = [
     { role: "system", content: systemPrompt() },
     ...history.slice(-12).map((m) => ({
@@ -55,6 +57,29 @@ export async function askTwin(history: ChatMsg[]): Promise<string> {
       content: m.text,
     })),
   ];
+
+  // Preferred path: server-side proxy (Edge Function) — no key ever in the app.
+  if (edgeApiReady() && BASE && ANON) {
+    try {
+      const r = await fetch(`${BASE}/functions/v1/cosmos-api`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${ANON}`,
+          apikey: ANON,
+        },
+        body: JSON.stringify({ action: "twin", params: { messages } }),
+      });
+      const j = await r.json();
+      if (j?.text) return String(j.text).trim();
+    } catch {
+      /* fall through to runtime-key path */
+    }
+  }
+
+  // Fallback: a runtime key pasted in the app (used when no server proxy).
+  const key = getAiKey();
+  if (!key) throw new Error("no-key");
 
   const res = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",

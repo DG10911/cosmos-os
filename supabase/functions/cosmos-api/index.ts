@@ -122,6 +122,26 @@ Deno.serve(async (req: Request) => {
       return json(await prokerala("kundli-matching", qs));
     }
 
+    if (action === "twin") {
+      // Server-side OpenAI so the key is never entered in the browser.
+      const key = (Deno.env.get("OPENAI_API_KEY") ?? "").trim();
+      if (!key) throw new Error("OPENAI_API_KEY not set");
+      const r = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: { "content-type": "application/json", Authorization: `Bearer ${key}` },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          messages: params.messages ?? [],
+          max_tokens: 300,
+          temperature: 0.8,
+        }),
+      });
+      const j = await r.json();
+      const text = j?.choices?.[0]?.message?.content;
+      if (!text) throw new Error(j?.error?.message ?? "openai failed");
+      return json({ text });
+    }
+
     if (action === "hms-token") {
       const token = await hmsToken(
         params.roomId ?? "",
