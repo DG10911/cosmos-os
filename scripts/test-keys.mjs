@@ -128,7 +128,7 @@ await test("100ms", ["HMS_ACCESS_KEY", "HMS_APP_SECRET"], async () => {
     .update(`${header}.${payload}`)
     .digest("base64url");
   const token = `${header}.${payload}.${sig}`;
-  const r = await fetch("https://api.100ms.live/v2/rooms?limit=1", {
+  const r = await fetch("https://api.100ms.live/v2/rooms?limit=10", {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!r.ok) throw new Error(`HTTP ${r.status}`);
