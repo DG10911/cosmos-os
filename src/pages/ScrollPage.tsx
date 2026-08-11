@@ -16,6 +16,7 @@ import { useToast } from "../components/Toast";
 import { Spark } from "../components/Glyphs";
 
 type Card =
+  | { kind: "video"; video: string; tag: string; title: string; body: string; grad: string }
   | { kind: "insight"; title: string; body: string; tag: string; grad: string }
   | { kind: "astro"; id: number; hook: string; grad: string }
   | { kind: "mantra"; sanskrit: string; meaning: string; grad: string }
@@ -32,11 +33,27 @@ const GRADS = [
 
 const FEED: Card[] = [
   {
+    kind: "video",
+    video: "https://cdn.pixabay.com/video/2020/08/30/48569-454825064_large.mp4",
+    tag: "COSMIC REEL",
+    title: "The night sky is speaking.",
+    body: "Sun in Cancer, Moon waning — a quiet, reflective evening. Slow down and listen.",
+    grad: GRADS[2],
+  },
+  {
     kind: "insight",
     tag: "TODAY'S ENERGY",
     title: "Mercury clears at 4:37 PM",
     body: "That conversation you've been avoiding? The window opens this evening. Speak before sunset.",
     grad: GRADS[0],
+  },
+  {
+    kind: "video",
+    video: "https://cdn.pixabay.com/video/2023/03/28/156091-812130317_large.mp4",
+    tag: "RITUAL REEL",
+    title: "Light a diya at sunset.",
+    body: "Today's ritual for a Rahu Mahadasha — a small offering, a big shift.",
+    grad: GRADS[4],
   },
   { kind: "astro", id: 1, hook: "“Your Saturn isn't punishing you. It's promoting you.”", grad: GRADS[1] },
   {
@@ -133,6 +150,22 @@ function FeedCard({ card, index }: { card: Card; index: number }) {
       style={{ background: card.grad }}
       onClick={onTap}
     >
+      {/* real looping video for reel cards (gradient shows if it fails to load) */}
+      {card.kind === "video" && (
+        <video
+          src={card.video}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{ opacity: 0.72 }}
+        />
+      )}
+      {card.kind === "video" && (
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/30" />
+      )}
+
       {/* ambient sparkles */}
       {Array.from({ length: 18 }).map((_, i) => (
         <span
@@ -169,6 +202,20 @@ function FeedCard({ card, index }: { card: Card; index: number }) {
 
       {/* content */}
       <div className="relative z-10 px-6 pb-32 pr-20">
+        {card.kind === "video" && (
+          <>
+            <span className="rounded-full bg-white/25 px-2.5 py-1 text-[10px] font-bold tracking-[0.2em] text-white backdrop-blur">
+              {card.tag}
+            </span>
+            <h2 className="serif mt-3 text-4xl leading-tight text-white drop-shadow">
+              {card.title}
+            </h2>
+            <p className="mt-3 max-w-[260px] text-[15px] leading-relaxed text-white/95 drop-shadow">
+              {card.body}
+            </p>
+          </>
+        )}
+
         {card.kind === "insight" && (
           <>
             <span className="rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold tracking-[0.2em] text-white">
