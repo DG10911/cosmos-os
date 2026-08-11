@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone, ChevronLeft, ShieldCheck, ChevronRight } from "lucide-react";
+import posthog from "posthog-js";
 import { StarField } from "../components/StarField";
 import { Mandala, Spark } from "../components/Glyphs";
 import { saveUser } from "../data/user";
@@ -29,6 +30,7 @@ export default function AuthPage() {
   }
 
   function toSuccess() {
+    posthog.capture("auth_completed");
     setStage("loading");
     setTimeout(() => {
       setStage("success");
@@ -139,6 +141,7 @@ export default function AuthPage() {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.62 }}
                   onClick={() => {
+                    posthog.capture("demo_entered");
                     saveUser({
                       phone: "9876543210",
                       birthDate: "1999-03-14",

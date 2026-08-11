@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ChevronLeft, Share2, Download } from "lucide-react";
 import { toPng } from "html-to-image";
+import posthog from "posthog-js";
 import { useToast } from "../components/Toast";
 import { Diya, Spark } from "../components/Glyphs";
 
@@ -28,6 +29,9 @@ export default function FestivalPage() {
       link.download = `cosmos-${fest.key}-${name.toLowerCase() || "greeting"}.png`;
       link.href = url;
       link.click();
+      posthog.capture("festival_card_downloaded", {
+        festival: fest.key,
+      });
       toast("Festival card saved · light up their feed ✦");
     } catch {
       toast("Export failed — try again");
@@ -69,7 +73,12 @@ export default function FestivalPage() {
           </div>
           <button
             disabled={!name}
-            onClick={() => setMade(true)}
+            onClick={() => {
+              posthog.capture("festival_card_created", {
+                festival: fest.key,
+              });
+              setMade(true);
+            }}
             className="btn-gold mt-8 flex w-full items-center justify-center gap-2 rounded-full disabled:opacity-40"
           >
             <Spark size={16} /> Create Card

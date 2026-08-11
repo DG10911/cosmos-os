@@ -13,6 +13,7 @@ import {
   Mic,
   ChevronUp,
 } from "lucide-react";
+import posthog from "posthog-js";
 import { ASTROLOGERS, avatarUrl } from "../data/seed";
 import {
   CHAT_SCRIPT,
@@ -89,6 +90,10 @@ export default function SessionPage() {
   }, [visible, typing]);
 
   function buyRitual() {
+    posthog.capture("ritual_purchased", {
+      ritual_title: RITUAL.title,
+      ritual_price: RITUAL.price,
+    });
     setBought(true);
     setShowWhy(false);
     setShowBought(true);
@@ -129,6 +134,9 @@ export default function SessionPage() {
   async function send(text: string) {
     const q = text.trim();
     if (!q || typing) return;
+    posthog.capture("consultation_message_sent", {
+      response_mode: hasLiveAi() ? "live" : "guided",
+    });
     setInput("");
     setVisible((v) => [...v, { kind: "user", text: q } as ChatMsg]);
     setTyping(true);

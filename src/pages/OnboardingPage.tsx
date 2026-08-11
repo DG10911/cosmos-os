@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft } from "lucide-react";
+import posthog from "posthog-js";
 import { StarField } from "../components/StarField";
 import { ArtWheel, ArtOrbits, ArtSunrise } from "../components/CelestialArt";
 import { ChartWheel } from "../components/ChartWheel";
@@ -54,6 +55,10 @@ export default function OnboardingPage() {
     if (step < TOTAL) {
       setStep((s) => s + 1);
     } else {
+      posthog.capture("onboarding_completed", {
+        selected_goal_count: goals.length,
+        whatsapp_digest_enabled: whatsapp,
+      });
       saveUser({
         phone: "",
         birthDate,

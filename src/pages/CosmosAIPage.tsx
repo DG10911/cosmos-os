@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, Send, UserRound, Zap, X, CornerDownRight } from "lucide-react";
+import posthog from "posthog-js";
 import { askTwin, hasLiveAi, setAiKey } from "../lib/ai";
 
 type Msg = { role: "ai" | "user"; text: string };
@@ -62,6 +63,9 @@ export default function CosmosAIPage() {
   async function send(text: string) {
     if (!text.trim() || typing) return;
     const history = [...msgs, { role: "user" as const, text }];
+    posthog.capture("cosmos_twin_message_sent", {
+      response_mode: live ? "live" : "guided",
+    });
     setMsgs(history);
     setInput("");
     setTyping(true);

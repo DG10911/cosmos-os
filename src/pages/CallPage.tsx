@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   Wallet,
 } from "lucide-react";
+import posthog from "posthog-js";
 import { ASTROLOGERS, avatarUrl } from "../data/seed";
 import { LIFE_SNAPSHOT } from "../data/chatScript";
 
@@ -64,6 +65,10 @@ export default function CallPage() {
   const cost = Math.max(1, Math.ceil(secs / 60)) * a.price;
 
   function end() {
+    posthog.capture("consultation_call_ended", {
+      call_type: isVideo ? "video" : "audio",
+      duration_seconds: secs,
+    });
     nav(`/session/${a.id}/summary`);
   }
 

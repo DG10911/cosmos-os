@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react";
-import { PageHeader } from "../components/PageHeader";
 import { motion } from "framer-motion";
 import { ShieldCheck, Check, X, Minus, Target } from "lucide-react";
+import posthog from "posthog-js";
+import { PageHeader } from "../components/PageHeader";
 import { PREDICTIONS, type Prediction } from "../data/predictions";
 import { ASTROLOGERS } from "../data/seed";
 import { CountUp } from "../components/CountUp";
@@ -46,6 +47,11 @@ export default function PredictionsPage() {
   }, [preds]);
 
   function resolve(id: string, status: Prediction["status"]) {
+    const prediction = preds.find((p) => p.id === id);
+    posthog.capture("prediction_resolved", {
+      prediction_category: prediction?.category,
+      outcome: status,
+    });
     setPreds((prev) => prev.map((p) => (p.id === id ? { ...p, status } : p)));
     if (status === "yes") {
       setConfetti((c) => c + 1);
