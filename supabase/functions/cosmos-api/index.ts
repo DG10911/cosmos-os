@@ -28,8 +28,8 @@ async function prokeralaToken(): Promise<string> {
   if (pkToken && Date.now() < pkExp) return pkToken;
   const body = new URLSearchParams({
     grant_type: "client_credentials",
-    client_id: Deno.env.get("PROKERALA_CLIENT_ID") ?? "",
-    client_secret: Deno.env.get("PROKERALA_CLIENT_SECRET") ?? "",
+    client_id: (Deno.env.get("PROKERALA_CLIENT_ID") ?? "").trim(),
+    client_secret: (Deno.env.get("PROKERALA_CLIENT_SECRET") ?? "").trim(),
   });
   const idSet = (Deno.env.get("PROKERALA_CLIENT_ID") ?? "").length;
   const secretSet = (Deno.env.get("PROKERALA_CLIENT_SECRET") ?? "").length;
@@ -49,8 +49,9 @@ async function prokerala(path: string, qs: Record<string, string>) {
   const token = await prokeralaToken();
   const url = `https://api.prokerala.com/v2/astrology/${path}?` + new URLSearchParams(qs);
   const r = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
-  if (!r.ok) throw new Error(`prokerala ${path} HTTP ${r.status}`);
-  return await r.json();
+  const text = await r.text();
+  if (!r.ok) throw new Error(`prokerala ${path} HTTP ${r.status}: ${text.slice(0, 400)}`);
+  return JSON.parse(text);
 }
 
 // ---- 100ms app token (JWT to join a room) ----
