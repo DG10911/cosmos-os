@@ -31,9 +31,15 @@ async function prokeralaToken(): Promise<string> {
     client_id: Deno.env.get("PROKERALA_CLIENT_ID") ?? "",
     client_secret: Deno.env.get("PROKERALA_CLIENT_SECRET") ?? "",
   });
+  const idSet = (Deno.env.get("PROKERALA_CLIENT_ID") ?? "").length;
+  const secretSet = (Deno.env.get("PROKERALA_CLIENT_SECRET") ?? "").length;
   const r = await fetch("https://api.prokerala.com/token", { method: "POST", body });
   const j = await r.json();
-  if (!j.access_token) throw new Error(j.error ?? "prokerala auth failed");
+  if (!j.access_token) {
+    throw new Error(
+      `prokerala auth failed (HTTP ${r.status}): ${j.error ?? ""} ${j.error_description ?? j.message ?? ""} [id_len=${idSet}, secret_len=${secretSet}]`
+    );
+  }
   pkToken = j.access_token;
   pkExp = Date.now() + (j.expires_in ?? 3600) * 1000 - 60_000;
   return pkToken;
