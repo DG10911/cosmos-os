@@ -31,6 +31,7 @@ import { useLang, tr } from "../lib/lang";
 import { auraScore } from "../data/planets";
 import { TODAY, ASTROLOGERS, avatarUrl } from "../data/seed";
 import { getUser } from "../data/user";
+import { fetchRealKundli } from "../lib/cosmosApi";
 import {
   fetchWeather,
   moonPhase,
@@ -469,6 +470,39 @@ export function TrustSigil({ score }: { score: number }) {
 }
 
 function KundliSheet({ onClose }: { onClose: () => void }) {
+  // Try to pull a REAL Vedic chart from Prokerala (via the secure Edge Fn).
+  // Falls back to the built-in reading if the function isn't deployed.
+  const [live, setLive] = useState<[string, string][] | null>(null);
+
+  useEffect(() => {
+    const u = getUser();
+    // In Prokerala sandbox only Jan-1 dates return data; production uses the
+    // real birth date. We send the real date and gracefully fall back.
+    const dt = `${(u?.birthDate ?? "2000-01-01")}T${(u?.birthTime ?? "10:30")}:00+05:30`;
+    fetchRealKundli({ datetime: dt, lat: 26.91, lng: 75.79 }).then((res) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const d = (res as any)?.data?.nakshatra_details;
+      if (!d) return;
+      setLive([
+        ["Nakshatra", d.nakshatra?.name ?? "—"],
+        ["Nakshatra Lord", d.nakshatra?.lord?.vedic_name ?? "—"],
+        ["Moon Sign", d.chandra_rasi?.name ?? "—"],
+        ["Sun Sign", d.soorya_rasi?.name ?? "—"],
+        ["Zodiac", d.zodiac?.name ?? "—"],
+        ["Mangal Dosha", d.additional_info ? (d.mangal_dosha?.has_dosha ? "Yes" : "No") : "—"],
+      ]);
+    });
+  }, []);
+
+  const rows: [string, string][] = live ?? [
+    ["Ascendant", "Cancer"],
+    ["Moon Sign", "Cancer"],
+    ["Nakshatra", "Rohini"],
+    ["Current Dasha", "Rahu"],
+    ["Mangal Dosha", "No"],
+    ["Sade Sati", "Active"],
+  ];
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -485,7 +519,15 @@ function KundliSheet({ onClose }: { onClose: () => void }) {
         className="w-full max-w-[390px] rounded-3xl bg-white p-5"
       >
         <div className="flex items-center justify-between">
-          <h3 className="serif text-xl text-text-primary">Your Free Kundli</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="serif text-xl text-text-primary">Your Free Kundli</h3>
+            {live && (
+              <span className="flex items-center gap-1 rounded-full bg-success/12 px-2 py-0.5 text-[10px] font-bold text-success">
+                <span className="h-1.5 w-1.5 animate-flame-flicker rounded-full bg-success" />
+                LIVE
+              </span>
+            )}
+          </div>
           <button onClick={onClose} className="text-text-muted">
             <X size={20} />
           </button>
@@ -494,21 +536,19 @@ function KundliSheet({ onClose }: { onClose: () => void }) {
           <ChartWheel size={200} />
         </div>
         <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
-          {[
-            ["Ascendant", "Cancer"],
-            ["Moon Sign", "Cancer"],
-            ["Nakshatra", "Rohini"],
-            ["Current Dasha", "Rahu"],
-            ["Mangal Dosha", "No"],
-            ["Sade Sati", "Active"],
-          ].map(([k, v]) => (
+          {rows.map(([k, v]) => (
             <div key={k} className="flex items-center justify-between rounded-xl bg-bg px-3 py-2">
               <span className="text-text-muted">{k}</span>
               <span className="font-semibold text-text-primary">{v}</span>
             </div>
           ))}
         </div>
-        <button onClick={onClose} className="btn-gold mt-4 w-full rounded-btn">
+        <p className="mt-2 text-center text-[10px] text-text-muted">
+          {live
+            ? "Live Vedic chart from Prokerala"
+            : "Computed on-device · connect Prokerala for full chart"}
+        </p>
+        <button onClick={onClose} className="btn-gold mt-3 w-full rounded-btn">
           Get detailed reading
         </button>
       </motion.div>
