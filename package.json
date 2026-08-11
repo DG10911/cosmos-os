@@ -10,10 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@sentry/react": "^10.70.0",
+    "@supabase/supabase-js": "^2.112.3",
     "clsx": "^2.1.1",
     "framer-motion": "^13.0.0",
     "html-to-image": "^1.11.13",
     "lucide-react": "^1.29.0",
+    "posthog-js": "^1.415.2",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.2",

@@ -6,6 +6,8 @@ import {
   type ReactNode,
 } from "react";
 import { store } from "../lib/utils";
+import { logEvent } from "../lib/supabase";
+import { track } from "../lib/analytics";
 
 export type KarmaEntry = { delta: number; reason: string; at: string };
 
@@ -66,6 +68,9 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         karmaLog: [{ delta, reason, at: "Just now" }, ...s.karmaLog],
       };
       persist(next);
+      // Mirror to the real backend + analytics (both no-op if unconfigured).
+      logEvent("karma", { delta, reason, balance: next.karma, streak: s.streak });
+      track("karma_earned", { delta, reason, balance: next.karma });
     },
     [s, persist]
   );
@@ -81,6 +86,8 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         ...s.karmaLog,
       ],
     });
+    logEvent("ritual_completed", { karma: s.karma + 10 });
+    track("ritual_completed", {});
   }, [s, persist]);
 
   const completeMissionDay = useCallback(() => {
@@ -134,6 +141,8 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
           ...s.karmaLog,
         ],
       });
+      logEvent("daily_reward", { amount, karma: s.karma + amount });
+      track("daily_reward_claimed", { amount });
     },
     [s, persist]
   );
