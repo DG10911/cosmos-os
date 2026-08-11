@@ -17,6 +17,7 @@ import { useApp } from "../state/AppState";
 import { useToast } from "../components/Toast";
 import { clearUser } from "../data/user";
 import { store } from "../lib/utils";
+import { openRazorpay } from "../lib/razorpay";
 import { ChartWheel } from "../components/ChartWheel";
 import { CountUp } from "../components/CountUp";
 import { Section } from "../components/Section";
@@ -192,10 +193,18 @@ export default function MePage() {
             <span className="text-xl font-bold">₹199</span>/mo
           </span>
           <button
-            onClick={() => toast("Cosmos+ trial started — 7 days on us ✦")}
+            onClick={async () => {
+              const opened = await openRazorpay({
+                amountInr: 199,
+                description: "Cosmos+ monthly subscription",
+                onSuccess: () => toast("Welcome to Cosmos+ ✦ payment successful"),
+                onDismiss: () => toast("Payment cancelled"),
+              });
+              if (!opened) toast("Cosmos+ trial started — 7 days on us ✦");
+            }}
             className="rounded-btn bg-white px-4 py-2.5 text-sm font-bold text-[#E11D74] active:scale-95"
           >
-            Try Free 7 Days
+            Subscribe ₹199
           </button>
         </div>
       </div>

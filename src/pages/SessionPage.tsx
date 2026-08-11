@@ -26,6 +26,7 @@ import { TrustSigil } from "./TodayPage";
 import { useApp } from "../state/AppState";
 import { useToast } from "../components/Toast";
 import { askTwin, hasLiveAi } from "../lib/ai";
+import { openRazorpay } from "../lib/razorpay";
 import { Confetti } from "../components/Confetti";
 import { VoiceNote } from "../components/Waveform";
 import { Spark, Gem } from "../components/Glyphs";
@@ -88,12 +89,28 @@ export default function SessionPage() {
     });
   }, [visible, typing]);
 
-  function buyRitual() {
+  function completePurchase() {
     setBought(true);
     setShowWhy(false);
     setShowBought(true);
     setConfetti((c) => c + 1);
     app.markBoughtRitual();
+  }
+
+  async function buyRitual() {
+    setShowWhy(false);
+    // Try the REAL Razorpay checkout (test mode, public key only). If Razorpay
+    // isn't configured, fall back to the in-app confirmation flow.
+    const opened = await openRazorpay({
+      amountInr: RITUAL.price,
+      description: RITUAL.title,
+      onSuccess: () => {
+        toast("Payment successful ✓");
+        completePurchase();
+      },
+      onDismiss: () => toast("Payment cancelled"),
+    });
+    if (!opened) completePurchase();
   }
 
   function continueAfterBuy() {
