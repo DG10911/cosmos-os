@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Secrets — NEVER commit real keys
+.env
+.env.*
+!.env.example
+
 .vercel
 
 # Editor directories and files
