@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, Send, UserRound, Zap, X, CornerDownRight } from "lucide-react";
+import { ChevronLeft, Send, UserRound, Zap, X, CornerDownRight, Mic, Volume2, VolumeX } from "lucide-react";
 import { askTwin, hasLiveAi, setAiKey } from "../lib/ai";
+import { voiceSupported, listen, speak, stopSpeaking } from "../lib/voice";
 
 type Msg = { role: "ai" | "user"; text: string };
 
@@ -53,11 +54,23 @@ export default function CosmosAIPage() {
   const [live, setLive] = useState(hasLiveAi());
   const [keySheet, setKeySheet] = useState(false);
   const [keyDraft, setKeyDraft] = useState("");
+  const [voiceOn, setVoiceOn] = useState(false); // speak replies aloud
+  const [listening, setListening] = useState(false);
+  const [lang, setLang] = useState<"en-IN" | "hi-IN">("en-IN");
   const scroller = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     scroller.current?.scrollTo({ top: scroller.current.scrollHeight, behavior: "smooth" });
   }, [msgs, typing]);
+
+  // stop any speech when leaving the screen
+  useEffect(() => () => stopSpeaking(), []);
+
+  function finish(answer: string) {
+    setTyping(false);
+    setMsgs((m) => [...m, { role: "ai", text: answer }]);
+    if (voiceOn) speak(answer, lang);
+  }
 
   async function send(text: string) {
     if (!text.trim() || typing) return;
@@ -65,21 +78,30 @@ export default function CosmosAIPage() {
     setMsgs(history);
     setInput("");
     setTyping(true);
+    stopSpeaking();
 
     if (live) {
       try {
-        const answer = await askTwin(history);
-        setTyping(false);
-        setMsgs((m) => [...m, { role: "ai", text: answer }]);
+        finish(await askTwin(history));
         return;
       } catch {
         // fall through to offline guidance below
       }
     }
-    setTimeout(() => {
-      setTyping(false);
-      setMsgs((m) => [...m, { role: "ai", text: reply(text) }]);
-    }, 1100);
+    setTimeout(() => finish(reply(text)), 1100);
+  }
+
+  function micTap() {
+    if (listening) return;
+    stopSpeaking();
+    setVoiceOn(true); // enable spoken replies once they've spoken
+    setListening(true);
+    listen({
+      lang,
+      onResult: (t) => send(t),
+      onEnd: () => setListening(false),
+      onError: () => setListening(false),
+    });
   }
 
   function saveKey() {
@@ -233,25 +255,76 @@ export default function CosmosAIPage() {
         </motion.div>
       )}
 
+      {/* listening banner */}
+      {listening && (
+        <div className="flex items-center justify-center gap-2 pb-1 text-xs font-semibold text-cosmic">
+          <span className="flex gap-0.5">
+            {[0, 1, 2, 3].map((i) => (
+              <span
+                key={i}
+                className="w-1 rounded-full bg-cosmic"
+                style={{ height: 12, animation: `vwave 0.9s ease-in-out ${i * 0.12}s infinite` }}
+              />
+            ))}
+          </span>
+          Listening… speak now
+          <style>{`@keyframes vwave{0%,100%{transform:scaleY(0.4)}50%{transform:scaleY(1.4)}}`}</style>
+        </div>
+      )}
+
       {/* composer */}
       <div className="glass border-t border-gold/15 px-3 pb-4 pt-2">
         <div className="flex items-center gap-2">
+          {voiceSupported() && (
+            <button
+              onClick={micTap}
+              aria-label="Speak to your Twin"
+              className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition ${
+                listening
+                  ? "bg-danger text-white"
+                  : "bg-cosmic/12 text-cosmic ring-1 ring-cosmic/25"
+              }`}
+            >
+              <Mic size={18} className={listening ? "animate-pulse" : ""} />
+            </button>
+          )}
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && send(input)}
-            placeholder="Ask your Cosmos Twin…"
+            placeholder={listening ? "Listening…" : "Ask your Cosmos Twin…"}
             className="h-11 flex-1 rounded-full bg-bg-card px-4 text-sm text-text-primary outline-none placeholder:text-text-muted/60"
           />
           <button
             onClick={() => send(input)}
-            className="flex h-11 w-11 items-center justify-center rounded-full text-white"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white"
             style={{ background: "linear-gradient(135deg,#8B7CFC,#F4C430)" }}
           >
             <Send size={18} />
           </button>
         </div>
-        <p className="mt-2 text-center text-[10px] text-text-faint">
+        {voiceSupported() && (
+          <div className="mt-2 flex items-center justify-center gap-3 text-[11px]">
+            <button
+              onClick={() => {
+                setVoiceOn((v) => !v);
+                stopSpeaking();
+              }}
+              className={`flex items-center gap-1 font-semibold ${voiceOn ? "text-cosmic" : "text-text-muted"}`}
+            >
+              {voiceOn ? <Volume2 size={13} /> : <VolumeX size={13} />}
+              {voiceOn ? "Voice replies on" : "Voice replies off"}
+            </button>
+            <span className="text-text-muted/40">·</span>
+            <button
+              onClick={() => setLang((l) => (l === "en-IN" ? "hi-IN" : "en-IN"))}
+              className="font-semibold text-cosmic"
+            >
+              {lang === "en-IN" ? "English" : "हिंदी"}
+            </button>
+          </div>
+        )}
+        <p className="mt-1.5 text-center text-[10px] text-text-faint">
           Cosmos Twin offers guidance, not medical or financial advice.
         </p>
       </div>

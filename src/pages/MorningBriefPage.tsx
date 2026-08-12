@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sun, Target, ShieldAlert, Clock, Flame, Sparkles } from "lucide-react";
+import { X, Sun, Target, ShieldAlert, Clock, Flame, Sparkles, Volume2, VolumeX } from "lucide-react";
+import { ttsSupported, speak, stopSpeaking } from "../lib/voice";
 import { useApp } from "../state/AppState";
 import { useToast } from "../components/Toast";
 import { Confetti } from "../components/Confetti";
@@ -57,7 +58,17 @@ export default function MorningBriefPage() {
   const toast = useToast();
   const [i, setI] = useState(0);
   const [confetti, setConfetti] = useState(0);
+  const [narrate, setNarrate] = useState(false);
   const last = i >= CARDS.length;
+
+  // Voice RJ — read each card aloud as it appears when narration is on.
+  useEffect(() => {
+    if (narrate && !last) {
+      const c = CARDS[i];
+      speak(`${c.title}. ${c.body}`, "en-IN");
+    }
+    return () => stopSpeaking();
+  }, [i, narrate, last]);
 
   function next() {
     if (i < CARDS.length) setI((v) => v + 1);
@@ -89,8 +100,24 @@ export default function MorningBriefPage() {
           </div>
         ))}
       </div>
+      {ttsSupported() && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setNarrate((v) => {
+              if (v) stopSpeaking();
+              else if (!last) speak(`${CARDS[i].title}. ${CARDS[i].body}`, "en-IN");
+              return !v;
+            });
+          }}
+          className="absolute left-3 top-8 z-20 flex items-center gap-1 rounded-full bg-white/20 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur"
+        >
+          {narrate ? <Volume2 size={14} /> : <VolumeX size={14} />}
+          {narrate ? "Listening" : "Listen"}
+        </button>
+      )}
       <button
-        onClick={(e) => { e.stopPropagation(); nav("/today"); }}
+        onClick={(e) => { e.stopPropagation(); stopSpeaking(); nav("/today"); }}
         className="absolute right-3 top-8 z-20 text-white/85"
       >
         <X size={22} />
