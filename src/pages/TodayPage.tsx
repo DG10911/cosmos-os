@@ -49,6 +49,7 @@ import { Confetti } from "../components/Confetti";
 import { ChartWheel } from "../components/ChartWheel";
 import { CheckButton } from "../components/CheckButton";
 import { DailyReward } from "../components/DailyReward";
+import { CallCosmo } from "../components/CallCosmo";
 import { Orb } from "./CosmosAIPage";
 
 /* Free-tools funnel (AstroTalk's #1 acquisition loop) */
@@ -406,6 +407,11 @@ export default function TodayPage() {
             NEW
           </span>
         </button>
+
+        {/* Call Cosmo — the Sarvam AI voice agent */}
+        <div className="mt-3">
+          <CallCosmo variant="tile" />
+        </div>
       </Section>
 
       {/* ── SECTION: Today's Wisdom ── */}

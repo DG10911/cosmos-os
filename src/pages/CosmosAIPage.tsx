@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, Send, UserRound, Zap, X, CornerDownRight, Mic, Volume2, VolumeX } from "lucide-react";
 import { askTwin, hasLiveAi, setAiKey } from "../lib/ai";
 import { voiceSupported, listen, speak, stopSpeaking } from "../lib/voice";
+import { CallCosmo } from "../components/CallCosmo";
 
 type Msg = { role: "ai" | "user"; text: string };
 
@@ -133,6 +134,7 @@ export default function CosmosAIPage() {
             {live ? "Live AI · knows your chart" : "Always here · knows your chart"}
           </p>
         </div>
+        <CallCosmo variant="chip" />
         <button
           onClick={() => setKeySheet(true)}
           className={`flex items-center gap-1 rounded-full px-2.5 py-1.5 text-[11px] font-bold ${
