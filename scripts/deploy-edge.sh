@@ -19,11 +19,17 @@ if command -v supabase >/dev/null 2>&1; then SB=(supabase); else SB=(npx --no-in
 
 [ -f .env ] || { echo "❌ cosmos-os/.env not found."; exit 1; }
 
-# Load the access token + the five secrets the edge function needs (nothing printed).
-set -a
-# shellcheck disable=SC1090
-source <(grep -E '^(SUPABASE_ACCESS_TOKEN|OPENAI_API_KEY|PROKERALA_CLIENT_ID|PROKERALA_CLIENT_SECRET|HMS_ACCESS_KEY|HMS_APP_SECRET|SARVAM_API_KEY)=' .env)
-set +a
+# Read each needed value directly (robust to spaces / special chars in secrets —
+# unlike `source`, which chokes on them). Nothing is printed.
+getenv() { grep -E "^$1=" .env | head -1 | cut -d= -f2- | sed -e 's/^[[:space:]]*//' -e 's/^"//' -e 's/"$//' -e "s/^'//" -e "s/'$//" | tr -d '\r'; }
+SUPABASE_ACCESS_TOKEN="$(getenv SUPABASE_ACCESS_TOKEN)"
+OPENAI_API_KEY="$(getenv OPENAI_API_KEY)"
+PROKERALA_CLIENT_ID="$(getenv PROKERALA_CLIENT_ID)"
+PROKERALA_CLIENT_SECRET="$(getenv PROKERALA_CLIENT_SECRET)"
+HMS_ACCESS_KEY="$(getenv HMS_ACCESS_KEY)"
+HMS_APP_SECRET="$(getenv HMS_APP_SECRET)"
+SARVAM_API_KEY="$(getenv SARVAM_API_KEY)"
+export SUPABASE_ACCESS_TOKEN
 
 if [ -z "${SUPABASE_ACCESS_TOKEN:-}" ]; then
   echo "❌ SUPABASE_ACCESS_TOKEN not set in .env."
