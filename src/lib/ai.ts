@@ -63,19 +63,46 @@ export async function askJson(
 ): Promise<Record<string, unknown>> {
   // Preferred: server proxy (key stays server-side).
   if (edgeApiReady() && BASE && ANON) {
-    try {
-      const r = await fetch(`${BASE}/functions/v1/cosmos-api`, {
+    const post = (body: unknown) =>
+      fetch(`${BASE}/functions/v1/cosmos-api`, {
         method: "POST",
         headers: {
           "content-type": "application/json",
           Authorization: `Bearer ${ANON}`,
           apikey: ANON,
         },
-        body: JSON.stringify({ action: "ai-json", params: { system, user } }),
+        body: JSON.stringify(body),
       });
-      const j = await r.json();
+
+    // 1) Preferred: the dedicated ai-json action (JSON mode, 500 tokens).
+    try {
+      const j = await (await post({ action: "ai-json", params: { system, user } })).json();
       if (j?.json) return j.json as Record<string, unknown>;
-      if (j?.text) return JSON.parse(String(j.text));
+      if (j?.text) {
+        const parsed = extractJson(String(j.text));
+        if (parsed) return parsed;
+      }
+    } catch {
+      /* fall through */
+    }
+
+    // 2) Fallback: reuse the always-deployed `twin` action for structured
+    //    output — works even if the function predates the ai-json action.
+    //    Key still never leaves the server.
+    try {
+      const messages = [
+        { role: "system", content: system },
+        {
+          role: "user",
+          content:
+            user + "\n\nReply ONLY with valid minified JSON — no prose, no markdown fences.",
+        },
+      ];
+      const j = await (await post({ action: "twin", params: { messages } })).json();
+      if (j?.text) {
+        const parsed = extractJson(String(j.text));
+        if (parsed) return parsed;
+      }
     } catch {
       /* fall through to runtime key */
     }
@@ -105,7 +132,32 @@ export async function askJson(
   const data = await res.json();
   const text: string | undefined = data?.choices?.[0]?.message?.content;
   if (!text) throw new Error("empty");
-  return JSON.parse(text);
+  const parsed = extractJson(text);
+  if (!parsed) throw new Error("bad-json");
+  return parsed;
+}
+
+/**
+ * Pull a JSON object out of a model response that may be wrapped in prose or
+ * ```json fences. Returns null if nothing parseable is found.
+ */
+function extractJson(raw: string): Record<string, unknown> | null {
+  const cleaned = raw.replace(/```json/gi, "").replace(/```/g, "").trim();
+  try {
+    return JSON.parse(cleaned);
+  } catch {
+    /* try to slice out the first {...} block */
+  }
+  const start = cleaned.indexOf("{");
+  const end = cleaned.lastIndexOf("}");
+  if (start >= 0 && end > start) {
+    try {
+      return JSON.parse(cleaned.slice(start, end + 1));
+    } catch {
+      return null;
+    }
+  }
+  return null;
 }
 
 /** Ask OpenAI (gpt-4o-mini) with full conversation context. Throws on failure. */

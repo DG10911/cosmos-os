@@ -90,6 +90,9 @@ export async function personalizedRitual(
       `They just said: "${lastUserMessages.slice(-2).join(" / ") || "seeking guidance"}". ` +
       `Recommend the single best remedy and explain the "why" citing their dasha and placement.`;
     const j = await askJson(sys, usr);
+    const price = int(j.price, base.price);
+    let strike = int(j.strike, base.strike);
+    if (strike <= price) strike = Math.round(price * 1.2); // always a real discount
     return {
       title: str(j.title) || base.title,
       subtitle: str(j.subtitle) || base.subtitle,
@@ -97,8 +100,8 @@ export async function personalizedRitual(
       why: str(j.why) || base.why,
       mantra: str(j.mantra) || base.mantra,
       category: str(j.category) || base.category,
-      price: int(j.price, base.price),
-      strike: int(j.strike, base.strike),
+      price,
+      strike,
     };
   } catch {
     return base;
