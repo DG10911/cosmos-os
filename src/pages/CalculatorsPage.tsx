@@ -64,7 +64,7 @@ export default function CalculatorsPage() {
       />
 
       {/* Calculator selector */}
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-4 gap-2.5">
         {CALCS.map((c) => {
           const on = c.key === active;
           return (
@@ -86,12 +86,12 @@ export default function CalculatorsPage() {
 
       {/* Inputs */}
       {calc.pair ? (
-        <div className="mt-5 space-y-3">
+        <div className="mt-6 space-y-3.5">
           <LabeledInput label="First name" value={a} onChange={setA} placeholder="e.g. Aditi" />
           <LabeledInput label="Second name" value={b} onChange={setB} placeholder="e.g. Rohan" />
         </div>
       ) : (
-        <div className="mt-5 flex gap-3">
+        <div className="mt-6 flex gap-3">
           <div className="flex-1">
             <label className="text-xs text-text-muted">Date of birth</label>
             <input

@@ -91,7 +91,7 @@ export default function MuhuratPage() {
       </div>
 
       {/* Event picker */}
-      <h3 className="serif mt-6 text-lg text-text-primary">What are you planning?</h3>
+      <h3 className="serif mt-8 text-lg text-text-primary">What are you planning?</h3>
       <div className="no-scrollbar mt-2 flex gap-2 overflow-x-auto pb-1">
         {EVENTS.map((e) => {
           const on = e.key === eventKey;
@@ -111,7 +111,7 @@ export default function MuhuratPage() {
       <p className="mt-1.5 px-0.5 text-[12px] text-text-muted">{ev.blurb}</p>
 
       {/* Auspicious dates */}
-      <h3 className="serif mt-6 flex items-center gap-2 text-lg text-text-primary">
+      <h3 className="serif mt-8 flex items-center gap-2 text-lg text-text-primary">
         <CalendarClock size={17} className="text-gold" /> Shubh Muhurats
         <span className="ml-auto text-[11px] font-normal text-text-muted">next 75 days</span>
       </h3>

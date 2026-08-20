@@ -52,6 +52,7 @@ import { ChartWheel } from "../components/ChartWheel";
 import { CheckButton } from "../components/CheckButton";
 import { DailyReward } from "../components/DailyReward";
 import { CallCosmo } from "../components/CallCosmo";
+import { CoachMarks } from "../components/CoachMarks";
 import { Orb } from "./CosmosAIPage";
 
 /* Free-tools funnel (AstroTalk's #1 acquisition loop) */
@@ -133,6 +134,7 @@ export default function TodayPage() {
   return (
     <div className="px-4 pt-3">
       <Confetti fire={confetti} />
+      <CoachMarks />
 
       {/* First-run tour banner */}
       {guideBanner && (

@@ -67,7 +67,8 @@ export default function OnboardingPage() {
         onboardedAt: Date.now(),
       });
       setFinishing(true);
-      setTimeout(() => nav("/today"), 2200);
+      // First impression: land new users on the guided feature tour.
+      setTimeout(() => nav("/guide"), 2200);
     }
   }
 
