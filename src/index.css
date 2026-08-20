@@ -246,3 +246,173 @@ nav {
 @media (prefers-reduced-motion: reduce) {
   .star, .aura-border::after { animation: none !important; }
 }
+
+/* ============================================================
+   PHONE HANDSET SHELL
+   Mobile-first: the app is full-screen native (real device chrome).
+   On larger screens we wrap it in a realistic device frame — bezel,
+   status bar, notch/island, home indicator — and make the "screen"
+   the containing block so the app's fixed nav + modals stay inside it.
+   ============================================================ */
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.device-outer { min-height: 100dvh; }
+.device-screen {
+  position: relative;
+  width: 100%;
+  min-height: 100dvh;
+  background: #fff6ec;
+}
+.desk-bg,
+.device-chrome,
+.os-toggle { display: none; }
+
+@media (min-width: 480px) {
+  :root {
+    --safe-top: 44px;
+    --safe-bottom: 22px;
+  }
+
+  /* Desk backdrop behind the phone */
+  .desk-bg {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(1200px 820px at 50% -12%, #2a2044, transparent 60%),
+      radial-gradient(900px 900px at 100% 108%, #2c1230, transparent 60%),
+      linear-gradient(160deg, #0c0b15 0%, #14101f 55%, #0a0910 100%);
+  }
+
+  .device-outer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    min-height: 100dvh;
+  }
+
+  .device-screen {
+    width: 400px;
+    height: min(100dvh - 32px, 880px);
+    min-height: 0;
+    border-radius: 52px;
+    overflow: hidden;
+    /* establish a containing block so descendant `position: fixed`
+       (top bar, dock, modals) anchors to the phone screen, not the page */
+    transform: translateZ(0);
+    isolation: isolate;
+    box-shadow:
+      0 0 0 2px #33333a,
+      0 0 0 13px #0d0d11,
+      0 0 0 15px #2a2a31,
+      0 34px 80px rgba(0, 0, 0, 0.62),
+      0 8px 24px rgba(0, 0, 0, 0.5);
+  }
+
+  .device-chrome { display: block; }
+
+  /* Status bar (faux) */
+  .status-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--safe-top);
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 26px;
+    pointer-events: none;
+    color: #14110d;
+  }
+  .status-bar .sb-time {
+    font-family: "Inter", system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.35);
+  }
+  .status-bar .sb-icons { display: flex; align-items: center; gap: 6px; }
+
+  /* iOS Dynamic Island */
+  .island {
+    position: absolute;
+    top: 11px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 118px;
+    height: 34px;
+    background: #08080b;
+    border-radius: 20px;
+    z-index: 61;
+    pointer-events: none;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+  /* Android punch-hole */
+  .punch-hole {
+    position: absolute;
+    top: 13px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    background: #08080b;
+    border-radius: 50%;
+    z-index: 61;
+    pointer-events: none;
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.08);
+  }
+
+  /* Home indicator */
+  .home-indicator {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 132px;
+    height: 5px;
+    border-radius: 3px;
+    background: rgba(20, 17, 13, 0.32);
+    z-index: 60;
+    pointer-events: none;
+  }
+  /* Android nav pill (thinner, wider) */
+  .home-indicator.android {
+    width: 108px;
+    height: 4px;
+    background: rgba(20, 17, 13, 0.28);
+  }
+
+  /* OS toggle chip (desk area) */
+  .os-toggle {
+    display: flex;
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 70;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(8px);
+  }
+  .os-toggle button {
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    transition: all 0.2s;
+  }
+  .os-toggle button.on {
+    background: #fff;
+    color: #14101f;
+  }
+}

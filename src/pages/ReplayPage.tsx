@@ -49,7 +49,10 @@ export default function ReplayPage() {
       <StarField count={120} />
 
       {/* progress bars */}
-      <div className="relative z-10 flex gap-1.5 p-3">
+      <div
+        className="relative z-10 flex gap-1.5 p-3"
+        style={{ paddingTop: "calc(0.75rem + var(--safe-top))" }}
+      >
         {[0, 1, 2].map((i) => (
           <div key={i} className="h-1 flex-1 overflow-hidden rounded-full bg-white/20">
             <div

@@ -99,7 +99,10 @@ export default function OnboardingPage() {
     <div className="relative min-h-screen w-full overflow-hidden bg-bg">
       <StarField count={90} />
 
-      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-[420px] flex-col px-6">
+      <div
+        className="relative z-10 mx-auto flex min-h-screen w-full max-w-[420px] flex-col px-6"
+        style={{ paddingTop: "var(--safe-top)" }}
+      >
         {/* Progress dots */}
         <div className="flex items-center justify-center gap-2 pt-10">
           {Array.from({ length: TOTAL }).map((_, idx) => {

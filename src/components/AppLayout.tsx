@@ -42,8 +42,13 @@ export function AppLayout() {
         <main
           className={cn(
             "flex-1 overflow-y-auto no-scrollbar",
-            !hideChrome && !isScroll && "pt-14 pb-32"
+            !hideChrome && !isScroll && "pb-32"
           )}
+          style={
+            !hideChrome && !isScroll
+              ? { paddingTop: "calc(3.5rem + var(--safe-top))" }
+              : undefined
+          }
         >
           <AnimatePresence mode="wait">
             <motion.div
@@ -72,7 +77,10 @@ function TopBar() {
     h < 12 ? "greetMorning" : h < 17 ? "greetAfternoon" : "greetEvening";
   const firstName = (getUser()?.name || "").trim().split(" ")[0] || "friend";
   return (
-    <header className="glass fixed left-1/2 top-0 z-20 flex h-14 w-full max-w-[420px] -translate-x-1/2 items-center justify-between border-b border-gold/15 px-4">
+    <header
+      className="glass fixed left-1/2 z-20 flex h-14 w-full max-w-[420px] -translate-x-1/2 items-center justify-between border-b border-gold/15 px-4"
+      style={{ top: "var(--safe-top)" }}
+    >
       <span className="serif truncate text-lg text-text-primary">
         {tr(greetKey, lang)}, {firstName}
       </span>
@@ -96,7 +104,10 @@ function TopBar() {
 
 function TabBar() {
   return (
-    <nav className="fixed bottom-3 left-1/2 z-20 w-full max-w-[420px] -translate-x-1/2 px-3">
+    <nav
+      className="fixed left-1/2 z-20 w-full max-w-[420px] -translate-x-1/2 px-3"
+      style={{ bottom: "calc(0.75rem + var(--safe-bottom))" }}
+    >
       <div className="glass flex h-[64px] items-center justify-around rounded-full border border-gold/20 shadow-[0_12px_32px_rgba(191,105,30,0.18)]">
         {TABS.map((tab) => (
           <NavLink

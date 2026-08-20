@@ -119,7 +119,10 @@ export default function CosmosAIPage() {
       style={{ background: "linear-gradient(180deg,#FFEAD2,#FFE6C9)" }}
     >
       {/* header */}
-      <header className="glass flex items-center gap-2 border-b border-gold/15 px-3 py-2.5">
+      <header
+        className="glass flex items-center gap-2 border-b border-gold/15 px-3 py-2.5"
+        style={{ paddingTop: "calc(0.625rem + var(--safe-top))" }}
+      >
         <button onClick={() => nav(-1)} className="text-text-muted">
           <ChevronLeft size={22} />
         </button>

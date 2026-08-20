@@ -56,7 +56,10 @@ export default function AuthPage() {
 @keyframes orbit-b{from{transform:rotate(120deg) translateX(48px) rotate(-120deg)}to{transform:rotate(480deg) translateX(48px) rotate(-480deg)}}
 @keyframes orbit-c{from{transform:rotate(240deg) translateX(60px) rotate(-240deg)}to{transform:rotate(600deg) translateX(60px) rotate(-600deg)}}`}</style>
 
-      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-[420px] flex-col px-6">
+      <div
+        className="relative z-10 mx-auto flex min-h-screen w-full max-w-[420px] flex-col px-6"
+        style={{ paddingTop: "var(--safe-top)" }}
+      >
         {/* back */}
         {(stage === "phone" || stage === "otp") && (
           <button

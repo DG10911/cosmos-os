@@ -93,7 +93,10 @@ export default function MorningBriefPage() {
       <Confetti fire={confetti} />
 
       {/* progress */}
-      <div className="relative z-10 flex gap-1.5 p-3">
+      <div
+        className="relative z-10 flex gap-1.5 p-3"
+        style={{ paddingTop: "calc(0.75rem + var(--safe-top))" }}
+      >
         {CARDS.map((_, idx) => (
           <div key={idx} className="h-1 flex-1 overflow-hidden rounded-full bg-white/25">
             <div className="h-full bg-white" style={{ width: idx < i ? "100%" : "0%" }} />

@@ -227,7 +227,10 @@ export default function SessionPage() {
       <Confetti fire={confetti} />
 
       {/* Top bar */}
-      <header className="flex items-center gap-2 border-b border-gold/15 bg-bg/90 px-3 py-2.5 backdrop-blur">
+      <header
+        className="flex items-center gap-2 border-b border-gold/15 bg-bg/90 px-3 py-2.5 backdrop-blur"
+        style={{ paddingTop: "calc(0.625rem + var(--safe-top))" }}
+      >
         <button onClick={() => nav(-1)} className="text-text-muted">
           <ChevronLeft size={22} />
         </button>
