@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -14,13 +14,6 @@ import {
   ChevronUp,
 } from "lucide-react";
 import { ASTROLOGERS, avatarUrl } from "../data/seed";
-import {
-  CHAT_SCRIPT,
-  CHAT_AFTER_BUY,
-  RITUAL,
-  LIFE_SNAPSHOT,
-  type ChatMsg,
-} from "../data/chatScript";
 import { CheckCheck } from "lucide-react";
 import { TrustSigil } from "./TodayPage";
 import { useApp } from "../state/AppState";
@@ -30,6 +23,20 @@ import { openRazorpay } from "../lib/razorpay";
 import { Confetti } from "../components/Confetti";
 import { VoiceNote } from "../components/Waveform";
 import { Spark, Gem } from "../components/Glyphs";
+import { getUser } from "../data/user";
+import { deriveChart } from "../lib/chart";
+import {
+  openingScript,
+  afterBuyScript,
+  ritualFromChart,
+  personalizedRitual,
+  lifeSnapshot,
+  sessionSummary,
+  sessionSummarySync,
+  type Ritual,
+  type ScriptMsg as ChatMsg,
+} from "../lib/astrologer";
+import { saveSession } from "../lib/session";
 
 export default function SessionPage() {
   const { id } = useParams();
@@ -37,6 +44,12 @@ export default function SessionPage() {
   const app = useApp();
   const toast = useToast();
   const a = ASTROLOGERS.find((x) => x.id === Number(id)) ?? ASTROLOGERS[0];
+
+  // Everything below is derived from the logged-in user's OWN chart.
+  const user = useMemo(() => getUser(), []);
+  const chart = useMemo(() => deriveChart(user), [user]);
+  const snap = useMemo(() => lifeSnapshot(user, chart), [user, chart]);
+  const script = useMemo(() => openingScript(user, chart), [user, chart]);
 
   const [visible, setVisible] = useState<ChatMsg[]>([]);
   const [typing, setTyping] = useState(false);
@@ -48,7 +61,22 @@ export default function SessionPage() {
   const [skipped, setSkipped] = useState(false);
   const [showBought, setShowBought] = useState(false);
   const [confetti, setConfetti] = useState(0);
+  const [ritual, setRitual] = useState<Ritual>(() => ritualFromChart(chart, a.name));
+  const boughtRef = useRef(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Upgrade the (already-personalised) ritual with a live-AI version if a key
+  // is connected. Falls back silently to the chart-driven ritual otherwise.
+  useEffect(() => {
+    let alive = true;
+    const lastUser = script.filter((m) => m.kind === "user").map((m) => (m as { text: string }).text);
+    personalizedRitual(chart, a.name, lastUser).then((r) => {
+      if (alive) setRitual(r);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [chart, a.name, script]);
 
   // session timer
   useEffect(() => {
@@ -56,12 +84,12 @@ export default function SessionPage() {
     return () => clearInterval(t);
   }, []);
 
-  // auto-play the scripted chat with typing indicators
+  // auto-play the personalised opening with typing indicators
   useEffect(() => {
     let cancelled = false;
     async function play() {
-      for (let i = 0; i < CHAT_SCRIPT.length; i++) {
-        const msg = CHAT_SCRIPT[i];
+      for (let i = 0; i < script.length; i++) {
+        const msg = script[i];
         if (msg.kind === "astro") {
           setTyping(true);
           await wait(1400);
@@ -79,7 +107,7 @@ export default function SessionPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [script]);
 
   // auto-scroll
   useEffect(() => {
@@ -91,6 +119,7 @@ export default function SessionPage() {
 
   function completePurchase() {
     setBought(true);
+    boughtRef.current = true;
     setShowWhy(false);
     setShowBought(true);
     setConfetti((c) => c + 1);
@@ -102,8 +131,8 @@ export default function SessionPage() {
     // Try the REAL Razorpay checkout (test mode, public key only). If Razorpay
     // isn't configured, fall back to the in-app confirmation flow.
     const opened = await openRazorpay({
-      amountInr: RITUAL.price,
-      description: RITUAL.title,
+      amountInr: ritual.price,
+      description: ritual.title,
       onSuccess: () => {
         toast("Payment successful ✓");
         completePurchase();
@@ -115,9 +144,8 @@ export default function SessionPage() {
 
   function continueAfterBuy() {
     setShowBought(false);
-    // append the follow-up messages
     (async () => {
-      for (const msg of CHAT_AFTER_BUY) {
+      for (const msg of afterBuyScript(chart)) {
         if (msg.kind === "astro") {
           setTyping(true);
           await wait(1200);
@@ -129,18 +157,45 @@ export default function SessionPage() {
     })();
   }
 
-  // Contextual astrologer replies when the live AI isn't connected.
+  // Generate the recap (AI when available, chart template otherwise), persist
+  // it so the Summary + Prediction pages show what the user was actually told.
+  async function endSession() {
+    const transcript = visible
+      .filter((m) => m.kind === "astro" || m.kind === "user")
+      .map((m) => ({ role: m.kind as "astro" | "user", text: (m as { text: string }).text }));
+    const summary = await withTimeout(
+      sessionSummary(chart, a.name, user?.goals, ritual, transcript),
+      3500,
+      sessionSummarySync(chart, a.name, user?.goals, ritual),
+    );
+    saveSession({
+      astrologerName: a.name,
+      astrologerId: a.id,
+      minutes: Math.max(1, Math.round(timer / 60)),
+      said: summary.said,
+      todo: summary.todo,
+      prediction: summary.prediction,
+      ritual,
+      ritualBought: boughtRef.current,
+      at: Date.now(),
+    });
+    nav(`/session/${a.id}/summary`);
+  }
+
+  // Contextual astrologer replies when the live AI isn't connected — now keyed
+  // to the user's OWN dasha + lucky day instead of a fixed persona.
   function cannedReply(q: string): string {
     const t = q.toLowerCase();
+    const md = chart.mahadashaLord;
     if (/marriage|shaadi|partner|love|relationship/.test(t))
-      return "Venus is well-placed in your 7th house right now, so this is a warm window for the heart. After the 14th the Moon supports honest conversations — that's when to speak from your chart, not your fear.";
+      return `Venus threads through your ${chart.rashiEn} Moon, so the heart is warm right now. Your ${md} Mahadasha asks for honest conversations over grand gestures — speak from your chart, not your fear.`;
     if (/job|career|work|promotion|business/.test(t))
-      return "Your 10th lord is strengthening through this Rahu period. Thursdays are your Best-Work window. If a move is coming, time it near November — the transits favour a longer-term ask over a rushed jump.";
+      return `Your ${md} Mahadasha governs this career phase, and ${chart.luckyDay}s are your strongest window. Time a big ask near your ${chart.antardashaLord} sub-period rather than rushing it.`;
     if (/money|finance|wealth|loan|invest/.test(t))
-      return "Saturn is teaching patience with money this year — steady beats sudden. Avoid big commitments during Rahu Kaal. A disciplined SIP-style approach suits your chart far better than a single gamble.";
+      return `${md} is teaching patience with money this year — steady beats sudden. Avoid commitments outside your ${chart.luckyHour} window; a disciplined approach suits your chart far better than a gamble.`;
     if (/health|stress|anxiety|sleep|tired/.test(t))
-      return "Your mood log has dipped for a few days, and Rahu can scatter your energy. Ground with the diya ritual at sunset and a short morning meditation — small, daily, and your chart responds.";
-    return "I hear you. Reading your chart — Cancer ascendant, Rohini, in a Rahu Mahadasha — this is a season of transformation. Tell me a little more about the situation and I'll ground my guidance in your exact transits.";
+      return `Your ${md} period can scatter energy. Ground with the ${chart.gem.mantra} japa at sunset and a short morning meditation — small, daily, and your ${chart.nakshatra} chart responds.`;
+    return `I hear you. Reading your chart — Moon in ${chart.rashiEn}, ${chart.nakshatra}, in a ${md} Mahadasha — this is a season of transformation. Tell me more and I'll ground my guidance in your exact transits.`;
   }
 
   async function send(text: string) {
@@ -194,7 +249,7 @@ export default function SessionPage() {
           </span>
         </div>
         <button
-          onClick={() => nav(`/session/${a.id}/summary`)}
+          onClick={endSession}
           className="rounded-full bg-danger/90 px-3 py-1.5 text-xs font-semibold text-text-primary"
         >
           End
@@ -202,7 +257,7 @@ export default function SessionPage() {
       </header>
 
       {/* Life Snapshot */}
-      <LifeSnapshot open={snapOpen} setOpen={setSnapOpen} astro={a.name} />
+      <LifeSnapshot open={snapOpen} setOpen={setSnapOpen} astro={a.name} snap={snap} />
 
       {/* Chat body */}
       <div
@@ -213,6 +268,7 @@ export default function SessionPage() {
           <Bubble
             key={i}
             msg={msg}
+            ritual={ritual}
             onBuy={buyRitual}
             onWhy={() => setShowWhy(true)}
             onSkip={() => {
@@ -273,15 +329,17 @@ export default function SessionPage() {
       <AnimatePresence>
         {showWhy && (
           <Modal onClose={() => setShowWhy(false)}>
-            <h3 className="serif text-xl text-text-primary">Why Neelam?</h3>
+            <h3 className="serif text-xl text-text-primary">
+              Why {ritual.title.split(" (")[0]}?
+            </h3>
             <p className="mt-3 text-sm leading-relaxed text-text-muted">
-              {RITUAL.why}
+              {ritual.why}
             </p>
             <button
               onClick={buyRitual}
               className="btn-gold mt-5 w-full rounded-btn"
             >
-              Got it — buy the ring
+              Got it — add to my order
             </button>
           </Modal>
         )}
@@ -297,8 +355,8 @@ export default function SessionPage() {
               </div>
               <h3 className="serif mt-3 text-xl text-text-primary">Ordered!</h3>
               <p className="mt-2 text-sm text-text-muted">
-                Your Neelam ring arrives Aug 15. Pt. Suresh has been notified
-                and will guide the energizing ritual.
+                Your {ritual.title} arrives in 5 days. {a.name} has been notified
+                and will guide the energising ritual.
               </p>
               <button
                 onClick={continueAfterBuy}
@@ -316,20 +374,24 @@ export default function SessionPage() {
 
 /* ---------- Life Snapshot ---------- */
 
+type Snap = ReturnType<typeof lifeSnapshot>;
+
 function LifeSnapshot({
   open,
   setOpen,
   astro,
+  snap,
 }: {
   open: boolean;
   setOpen: (v: boolean) => void;
   astro: string;
+  snap: Snap;
 }) {
   const tiles = [
-    { icon: <Compass size={14} className="text-cosmic" />, label: "Chart", value: LIFE_SNAPSHOT.chart },
-    { icon: <History size={14} className="text-cosmic" />, label: "Recent", value: LIFE_SNAPSHOT.recent },
-    { icon: <Target size={14} className="text-gold" />, label: "Open Prediction", value: LIFE_SNAPSHOT.openPrediction },
-    { icon: <TrendingDown size={14} className="text-danger" />, label: "Mood", value: LIFE_SNAPSHOT.moodTrend },
+    { icon: <Compass size={14} className="text-cosmic" />, label: "Chart", value: snap.chart },
+    { icon: <History size={14} className="text-cosmic" />, label: "Recent", value: snap.recent },
+    { icon: <Target size={14} className="text-gold" />, label: "Open Prediction", value: snap.openPrediction },
+    { icon: <TrendingDown size={14} className="text-danger" />, label: "Dasha", value: snap.moodTrend },
   ];
   return (
     <div
@@ -345,7 +407,7 @@ function LifeSnapshot({
         <div className="flex items-center gap-2">
           <Brain size={15} className="text-cyan-300" />
           <span className="text-xs font-semibold text-text-primary">
-            Anya's Life Snapshot
+            {snap.name} Life Snapshot
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -393,6 +455,7 @@ function LifeSnapshot({
 
 function Bubble({
   msg,
+  ritual,
   onBuy,
   onWhy,
   onSkip,
@@ -400,6 +463,7 @@ function Bubble({
   skipped,
 }: {
   msg: ChatMsg;
+  ritual: Ritual;
   onBuy: () => void;
   onWhy: () => void;
   onSkip: () => void;
@@ -407,7 +471,7 @@ function Bubble({
   skipped: boolean;
 }) {
   if (msg.kind === "ritual") {
-    return <RitualCard onBuy={onBuy} onWhy={onWhy} onSkip={onSkip} bought={bought} skipped={skipped} />;
+    return <RitualCard ritual={ritual} onBuy={onBuy} onWhy={onWhy} onSkip={onSkip} bought={bought} skipped={skipped} />;
   }
   if (msg.kind === "system") {
     return (
@@ -462,12 +526,14 @@ function Bubble({
 }
 
 function RitualCard({
+  ritual,
   onBuy,
   onWhy,
   onSkip,
   bought,
   skipped,
 }: {
+  ritual: Ritual;
   onBuy: () => void;
   onWhy: () => void;
   onSkip: () => void;
@@ -489,7 +555,7 @@ function RitualCard({
       <div className="flex items-center gap-1.5">
         <Spark size={17} className="text-gold" />
         <span className="serif text-[17px] text-gold">
-          Ritual Suggestion from Pt. Suresh
+          Ritual Suggestion — matched to your chart
         </span>
       </div>
 
@@ -498,15 +564,15 @@ function RitualCard({
           <Gem size={44} />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[15px] font-semibold text-text-primary">{RITUAL.title}</p>
-          <p className="text-[11px] text-text-muted">{RITUAL.subtitle}</p>
-          <p className="mt-0.5 text-[13px] text-text-muted">{RITUAL.reason}</p>
+          <p className="text-[15px] font-semibold text-text-primary">{ritual.title}</p>
+          <p className="text-[11px] text-text-muted">{ritual.subtitle}</p>
+          <p className="mt-0.5 text-[13px] text-text-muted">{ritual.reason}</p>
           <div className="mt-1 flex items-baseline gap-2">
             <span className="text-lg font-bold text-gold">
-              ₹{RITUAL.price.toLocaleString("en-IN")}
+              ₹{ritual.price.toLocaleString("en-IN")}
             </span>
             <span className="text-xs text-text-muted line-through">
-              ₹{RITUAL.strike.toLocaleString("en-IN")}
+              ₹{ritual.strike.toLocaleString("en-IN")}
             </span>
           </div>
         </div>
@@ -601,4 +667,11 @@ function Modal({
 
 function wait(ms: number) {
   return new Promise((r) => setTimeout(r, ms));
+}
+
+function withTimeout<T>(p: Promise<T>, ms: number, fallback: T): Promise<T> {
+  return Promise.race([
+    p.catch(() => fallback),
+    new Promise<T>((r) => setTimeout(() => r(fallback), ms)),
+  ]);
 }

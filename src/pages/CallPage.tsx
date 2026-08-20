@@ -13,7 +13,9 @@ import {
   Wallet,
 } from "lucide-react";
 import { ASTROLOGERS, avatarUrl } from "../data/seed";
-import { LIFE_SNAPSHOT } from "../data/chatScript";
+import { getUser } from "../data/user";
+import { deriveChart } from "../lib/chart";
+import { lifeSnapshot } from "../lib/astrologer";
 
 type Phase = "connecting" | "ringing" | "live";
 
@@ -23,6 +25,7 @@ export default function CallPage() {
   const isVideo = params.get("type") !== "audio"; // default video
   const nav = useNavigate();
   const a = ASTROLOGERS.find((x) => x.id === Number(id)) ?? ASTROLOGERS[0];
+  const snap = lifeSnapshot(getUser(), deriveChart(getUser()));
 
   const [phase, setPhase] = useState<Phase>("connecting");
   const [secs, setSecs] = useState(0);
@@ -135,11 +138,11 @@ export default function CallPage() {
         <div className="relative z-10 mx-4 mb-2 rounded-2xl bg-white/10 p-3 backdrop-blur">
           <div className="flex items-center gap-1.5">
             <Brain size={14} className="text-cyan-300" />
-            <span className="text-[11px] font-semibold">Anya's Life Snapshot</span>
+            <span className="text-[11px] font-semibold">{snap.name} Life Snapshot</span>
             <span className="ml-auto text-[10px] text-white/60">only {a.name.split(" ")[0]} sees this</span>
           </div>
           <p className="mt-1 text-[11px] text-white/80">
-            {LIFE_SNAPSHOT.chart} · {LIFE_SNAPSHOT.recent} · open: {LIFE_SNAPSHOT.openPrediction}
+            {snap.chart} · {snap.recent} · open: {snap.openPrediction}
           </p>
         </div>
       )}

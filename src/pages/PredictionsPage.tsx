@@ -7,10 +7,34 @@ import { ASTROLOGERS } from "../data/seed";
 import { CountUp } from "../components/CountUp";
 import { useToast } from "../components/Toast";
 import { Confetti } from "../components/Confetti";
+import { getSession } from "../lib/session";
+
+/** Prepend the prediction auto-extracted from the user's last consultation. */
+function initialPredictions(): Prediction[] {
+  const s = getSession();
+  if (!s) return PREDICTIONS;
+  const madeOn = new Date(s.at).toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+  const live: Prediction = {
+    id: `live-${s.at}`,
+    text: s.prediction.text,
+    category: s.prediction.category,
+    by: s.astrologerName,
+    astrologerId: s.astrologerId,
+    madeOn,
+    dueOn: s.prediction.dueOn,
+    status: "open",
+  };
+  // Avoid duplicating if the page is revisited.
+  return [live, ...PREDICTIONS];
+}
 
 export default function PredictionsPage() {
   const toast = useToast();
-  const [preds, setPreds] = useState<Prediction[]>(PREDICTIONS);
+  const [preds, setPreds] = useState<Prediction[]>(initialPredictions);
   const [confetti, setConfetti] = useState(0);
 
   const resolved = preds.filter((p) => p.status !== "open");

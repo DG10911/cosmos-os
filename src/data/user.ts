@@ -2,6 +2,7 @@ import { store } from "../lib/utils";
 
 export type CosmosUser = {
   phone: string;
+  name?: string;
   birthDate: string;
   birthTime: string;
   birthPlace: string;

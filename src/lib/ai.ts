@@ -1,6 +1,7 @@
 import { store } from "./utils";
 import { getUser } from "../data/user";
 import { edgeApiReady } from "./cosmosApi";
+import { deriveChart } from "./chart";
 
 const BASE = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const ANON = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
@@ -36,16 +37,75 @@ export type ChatMsg = { role: "ai" | "user"; text: string };
 
 function systemPrompt(): string {
   const u = getUser();
+  const c = deriveChart(u);
+  const name = (u?.name || "").trim();
   const profile = u
-    ? `Their birth details: born ${u.birthDate} at ${u.birthTime} in ${u.birthPlace}. Life goals they told you: ${u.goals.join(", ") || "not shared"}.`
+    ? `You are speaking with ${name || "this user"}. Birth details: born ${u.birthDate} at ${u.birthTime} in ${u.birthPlace}. Life goals: ${u.goals.join(", ") || "not shared"}.`
     : "They haven't completed onboarding, so speak generally but warmly.";
   return [
     "You are Cosmos Twin — a warm, wise Vedic astrology companion inside the COSMOS OS app for Indian users.",
     profile,
-    "Their chart context (from the app): Cancer ascendant, Rohini Nakshatra, currently in a Rahu Mahadasha. Today's lucky hour is 2:00–3:30 PM; Rahu Kaal 1:30–3:00 PM.",
-    "Style: 2-4 short sentences. Warm Hinglish-friendly English. Reference their actual chart/dasha when relevant. Practical guidance over doom. Never fear-sell remedies.",
+    `Their chart (computed by the app): Moon in ${c.rashiEn} (${c.rashi}), ${c.nakshatra} nakshatra (lord ${c.nakshatraLord}), ${c.ascendant} ascendant. They are running a ${c.mahadashaLord} Mahadasha (${c.antardashaLord} antardasha), ${c.mahadashaYearsLeft} years remaining. Lucky day ${c.luckyDay}, lucky hour ${c.luckyHour}. Classical remedy planet: ${c.remedyPlanet} (${c.gem.stone}).`,
+    "Style: 2-4 short sentences. Warm Hinglish-friendly English. Reference their ACTUAL chart/dasha above when relevant. Practical guidance over doom. Never fear-sell remedies.",
     "If the question is heavy (health, legal, crisis), gently suggest talking to a verified astrologer in the Consult tab — and for medical/legal issues, a professional.",
   ].join("\n");
+}
+
+/**
+ * Ask the model for a strict JSON object (used by the Astro-Brain to generate
+ * rituals and summaries). Prefers the secure Edge Function; falls back to a
+ * runtime OpenAI key. Throws if neither is available or parsing fails, so
+ * callers can fall back to their chart-driven template.
+ */
+export async function askJson(
+  system: string,
+  user: string,
+): Promise<Record<string, unknown>> {
+  // Preferred: server proxy (key stays server-side).
+  if (edgeApiReady() && BASE && ANON) {
+    try {
+      const r = await fetch(`${BASE}/functions/v1/cosmos-api`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${ANON}`,
+          apikey: ANON,
+        },
+        body: JSON.stringify({ action: "ai-json", params: { system, user } }),
+      });
+      const j = await r.json();
+      if (j?.json) return j.json as Record<string, unknown>;
+      if (j?.text) return JSON.parse(String(j.text));
+    } catch {
+      /* fall through to runtime key */
+    }
+  }
+
+  const key = getAiKey();
+  if (!key) throw new Error("no-key");
+
+  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${key}`,
+    },
+    body: JSON.stringify({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: user },
+      ],
+      max_tokens: 500,
+      temperature: 0.7,
+      response_format: { type: "json_object" },
+    }),
+  });
+  if (!res.ok) throw new Error(`openai-${res.status}`);
+  const data = await res.json();
+  const text: string | undefined = data?.choices?.[0]?.message?.content;
+  if (!text) throw new Error("empty");
+  return JSON.parse(text);
 }
 
 /** Ask OpenAI (gpt-4o-mini) with full conversation context. Throws on failure. */

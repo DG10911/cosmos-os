@@ -142,6 +142,37 @@ Deno.serve(async (req: Request) => {
       return json({ text });
     }
 
+    if (action === "ai-json") {
+      // Structured JSON completion for the Astro-Brain (rituals, summaries).
+      // Key stays server-side; browser only sends {system, user}.
+      const key = (Deno.env.get("OPENAI_API_KEY") ?? "").trim();
+      if (!key) throw new Error("OPENAI_API_KEY not set");
+      const r = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: { "content-type": "application/json", Authorization: `Bearer ${key}` },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          messages: [
+            { role: "system", content: String(params.system ?? "") },
+            { role: "user", content: String(params.user ?? "") },
+          ],
+          max_tokens: 500,
+          temperature: 0.7,
+          response_format: { type: "json_object" },
+        }),
+      });
+      const j = await r.json();
+      const text = j?.choices?.[0]?.message?.content;
+      if (!text) throw new Error(j?.error?.message ?? "openai failed");
+      let parsed: unknown = null;
+      try {
+        parsed = JSON.parse(text);
+      } catch {
+        parsed = null;
+      }
+      return json({ json: parsed, text });
+    }
+
     if (action === "hms-token") {
       const token = await hmsToken(
         params.roomId ?? "",

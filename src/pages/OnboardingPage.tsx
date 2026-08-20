@@ -26,6 +26,7 @@ export default function OnboardingPage() {
   const [step, setStep] = useState(1);
   const [finishing, setFinishing] = useState(false);
 
+  const [name, setName] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [birthTime, setBirthTime] = useState("");
   const [birthPlace, setBirthPlace] = useState("");
@@ -56,6 +57,7 @@ export default function OnboardingPage() {
     } else {
       saveUser({
         phone: "",
+        name: name.trim(),
         birthDate,
         birthTime,
         birthPlace,
@@ -130,6 +132,8 @@ export default function OnboardingPage() {
               {step === 1 && (
                 <StepBirth
                   {...{
+                    name,
+                    setName,
                     birthDate,
                     setBirthDate,
                     birthTime,
@@ -179,6 +183,8 @@ function Question({ title, sub }: { title: string; sub?: string }) {
 }
 
 function StepBirth(props: {
+  name: string;
+  setName: (v: string) => void;
   birthDate: string;
   setBirthDate: (v: string) => void;
   birthTime: string;
@@ -195,6 +201,16 @@ function StepBirth(props: {
         sub="This unlocks your entire cosmic chart"
       />
       <div className="mt-8 space-y-4">
+        <div>
+          <label className="text-xs text-text-muted">Your name</label>
+          <input
+            type="text"
+            value={props.name}
+            onChange={(e) => props.setName(e.target.value)}
+            placeholder="e.g. Aditi"
+            className={inputCls + " placeholder:text-text-muted/50"}
+          />
+        </div>
         <div>
           <label className="text-xs text-text-muted">Date of birth</label>
           <input

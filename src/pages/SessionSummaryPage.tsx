@@ -12,25 +12,41 @@ import {
 } from "lucide-react";
 import { Confetti } from "../components/Confetti";
 import { useToast } from "../components/Toast";
+import { getSession } from "../lib/session";
 
-const SAID = [
-  "Your Rahu Mahadasha is a period of transformation, not just anxiety.",
-  "The promotion timing depends on your Saturn transit — pointing to Nov 2026.",
-  "A Neelam ring, correctly energized, will stabilize your Rahu period.",
-];
-
-const ACTIONS = [
-  "Wear the Neelam ring from Aug 15",
-  "Chant Rahu mantra 108 times on Saturday",
-  "Meditate 10 min daily this week",
-  "Follow up on the promotion talk before Diwali",
-];
+// Fallback recap if the user reaches this page without a generated session.
+const FALLBACK = {
+  astrologerName: "Pt. Suresh Sharma",
+  minutes: 12,
+  said: [
+    "Your Mahadasha is a period of transformation, not just anxiety.",
+    "The timing depends on your current transit — a supportive window opens soon.",
+    "A chart-matched gemstone, correctly energised, will stabilise this period.",
+  ],
+  todo: [
+    "Wear the recommended gemstone on its planetary day",
+    "Chant your remedy mantra 108 times on your lucky day",
+    "Meditate 10 min daily this week",
+    "Follow up on the key decision before it passes",
+  ],
+  prediction: {
+    text: "You'll get clarity on your key question",
+    dueOn: "22 Nov 2026",
+  },
+};
 
 export default function SessionSummaryPage() {
   const nav = useNavigate();
   const toast = useToast();
   const [confetti, setConfetti] = useState(0);
   const [checked, setChecked] = useState<number[]>([]);
+
+  const session = getSession();
+  const astrologerName = session?.astrologerName ?? FALLBACK.astrologerName;
+  const minutes = session?.minutes ?? FALLBACK.minutes;
+  const SAID = session?.said ?? FALLBACK.said;
+  const ACTIONS = session?.todo ?? FALLBACK.todo;
+  const prediction = session?.prediction ?? FALLBACK.prediction;
 
   useEffect(() => {
     setConfetti(1);
@@ -50,7 +66,7 @@ export default function SessionSummaryPage() {
         className="text-center"
       >
         <h1 className="serif text-[26px] text-text-primary">Session Complete</h1>
-        <p className="text-sm text-text-muted">12 min with Pt. Suresh Sharma</p>
+        <p className="text-sm text-text-muted">{minutes} min with {astrologerName}</p>
       </motion.div>
 
       {/* What was said */}
@@ -132,11 +148,11 @@ export default function SessionSummaryPage() {
           </span>
         </div>
         <p className="mt-2 text-sm text-text-primary">
-          Pt. Suresh predicted: you'll get clarity on the promotion by{" "}
-          <span className="text-gold">22 Nov 2026</span>.
+          {astrologerName.split(" ").slice(-1)[0]} predicted: {prediction.text} by{" "}
+          <span className="text-gold">{prediction.dueOn}</span>.
         </p>
         <p className="mt-1 flex items-center gap-1 text-xs text-text-muted">
-          <CalendarClock size={12} /> We'll check in with you on 23 Nov. Tap to
+          <CalendarClock size={12} /> We'll check in with you shortly after. Tap to
           track →
         </p>
       </button>
