@@ -12,6 +12,7 @@ import {
   Sparkles,
   Check,
   Gauge,
+  Compass,
 } from "lucide-react";
 import { useApp } from "../state/AppState";
 import { useToast } from "../components/Toast";
@@ -89,6 +90,18 @@ export default function MePage() {
         </div>
         <Sparkles size={16} className="text-cosmic" />
       </button>
+
+      {/* App tour / feature guide */}
+      <div className="mt-4">
+        <Row
+          icon={<Compass size={18} />}
+          tint="#E0E7FF"
+          fg="#4F46E5"
+          title="Discover COSMOS OS"
+          sub="A quick tour of everything you can do"
+          onClick={() => nav("/guide")}
+        />
+      </div>
 
       {/* SECTION: Chart & Growth */}
       <Section

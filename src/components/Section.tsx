@@ -27,19 +27,19 @@ export function Section({
   first?: boolean;
 }) {
   return (
-    <section className={first ? "mt-5" : "mt-7"}>
-      <div className="mb-3 flex items-center gap-2.5 px-0.5">
+    <section className={first ? "mt-6" : "mt-9"}>
+      <div className="mb-3.5 flex items-center gap-3 px-0.5">
         <span
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl"
           style={{ background: tint, color: fg }}
         >
           {icon}
         </span>
         <div className="min-w-0 flex-1">
-          <h2 className="serif text-[17px] leading-tight text-text-primary">
+          <h2 className="serif text-[18px] leading-tight text-text-primary">
             {title}
           </h2>
-          {sub && <p className="text-[11px] leading-tight text-text-muted">{sub}</p>}
+          {sub && <p className="text-[11.5px] leading-snug text-text-muted">{sub}</p>}
         </div>
         {action && (
           <button

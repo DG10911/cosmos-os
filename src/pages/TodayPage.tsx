@@ -34,6 +34,7 @@ import { useLang, tr } from "../lib/lang";
 import { auraScore } from "../data/planets";
 import { TODAY, ASTROLOGERS, avatarUrl } from "../data/seed";
 import { getUser } from "../data/user";
+import { store } from "../lib/utils";
 import { fetchRealKundli } from "../lib/cosmosApi";
 import {
   fetchWeather,
@@ -83,6 +84,7 @@ export default function TodayPage() {
   const [panchangOpen, setPanchangOpen] = useState(false);
   const [kundli, setKundli] = useState(false);
   const [weather, setWeather] = useState<Weather | null>(null);
+  const [guideBanner, setGuideBanner] = useState(() => !store.get("cosmos_guide_seen", false));
   const lang = useLang();
   const suggested = ASTROLOGERS[0];
 
@@ -131,6 +133,38 @@ export default function TodayPage() {
   return (
     <div className="px-4 pt-3">
       <Confetti fire={confetti} />
+
+      {/* First-run tour banner */}
+      {guideBanner && (
+        <button
+          onClick={() => nav("/guide")}
+          className="mb-4 flex w-full items-center gap-3 rounded-card p-3.5 text-left text-white"
+          style={{
+            background: "linear-gradient(135deg,#7C3AED,#E11D74)",
+            boxShadow: "0 10px 26px rgba(124,58,237,0.3)",
+          }}
+        >
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/20">
+            <Compass size={18} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="text-[13px] font-bold">New here? Take the 1-min tour ✨</p>
+            <p className="text-[11px] text-white/85">See everything COSMOS OS can do for you</p>
+          </div>
+          <span
+            role="button"
+            aria-label="Dismiss"
+            onClick={(e) => {
+              e.stopPropagation();
+              store.set("cosmos_guide_seen", true);
+              setGuideBanner(false);
+            }}
+            className="shrink-0 rounded-full bg-white/20 p-1.5"
+          >
+            <X size={14} />
+          </span>
+        </button>
+      )}
 
       {/* Festive hero banner */}
       <motion.div
