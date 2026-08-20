@@ -81,9 +81,16 @@ function TopBar() {
       className="glass fixed left-1/2 z-20 flex h-14 w-full max-w-[420px] -translate-x-1/2 items-center justify-between border-b border-gold/15 px-4"
       style={{ top: "var(--safe-top)" }}
     >
-      <span className="serif truncate text-lg text-text-primary">
-        {tr(greetKey, lang)}, {firstName}
-      </span>
+      <div className="flex min-w-0 items-center gap-2.5">
+        <img
+          src={`${import.meta.env.BASE_URL}icon.svg`}
+          alt="COSMOS OS"
+          className="h-8 w-8 shrink-0 rounded-[10px] shadow-[0_2px_8px_rgba(124,58,237,0.38)]"
+        />
+        <span className="serif truncate text-[17px] leading-tight text-text-primary">
+          {tr(greetKey, lang)}, {firstName}
+        </span>
+      </div>
       <div className="flex items-center gap-2">
         {/* Language toggle — English / Hindi for mass Indian reach */}
         <button
@@ -108,7 +115,7 @@ function TabBar() {
       className="fixed left-1/2 z-20 w-full max-w-[420px] -translate-x-1/2 px-3"
       style={{ bottom: "calc(0.75rem + var(--safe-bottom))" }}
     >
-      <div className="glass flex h-[64px] items-center justify-around rounded-full border border-gold/20 shadow-[0_12px_32px_rgba(191,105,30,0.18)]">
+      <div className="glass flex h-[64px] items-center justify-around rounded-full border border-gold/20 shadow-[0_16px_40px_rgba(191,105,30,0.22),0_4px_12px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.6)]">
         {TABS.map((tab) => (
           <NavLink
             key={tab.to}
@@ -126,7 +133,13 @@ function TabBar() {
                   <motion.span
                     layoutId="dock-pill"
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                    className="absolute inset-x-0 -inset-y-0.5 rounded-2xl bg-gold/10 ring-1 ring-gold/25"
+                    className="absolute inset-x-0 -inset-y-0.5 rounded-2xl"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, rgba(255,138,61,0.22), rgba(255,107,44,0.08))",
+                      boxShadow:
+                        "0 4px 14px rgba(255,107,44,0.28), inset 0 0 0 1px rgba(255,138,61,0.38)",
+                    }}
                   />
                 )}
                 <tab.icon
