@@ -26,6 +26,7 @@ export type Ritual = {
   strike: number;
   mantra: string;
   category: string;
+  image: string;
 };
 
 export type SessionSummary = {
@@ -60,6 +61,7 @@ export function ritualFromChart(chart: DerivedChart, astroName: string): Ritual 
     price: g.price,
     strike: g.strike,
     mantra: g.mantra,
+    image: `${import.meta.env.BASE_URL}img/gem-ring.jpg`,
     why:
       `You are currently running your ${p} Mahadasha — ${chart.challenge.toLowerCase()} ` +
       `In Vedic remedial astrology, ${g.stone.split(" (")[0]} is the classical stone that steadies ${p}. ` +
@@ -102,6 +104,7 @@ export async function personalizedRitual(
       category: str(j.category) || base.category,
       price,
       strike,
+      image: base.image,
     };
   } catch {
     return base;

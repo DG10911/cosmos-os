@@ -563,8 +563,13 @@ function RitualCard({
       </div>
 
       <div className="mt-3 flex gap-3">
-        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/25 to-indigo-700/25">
-          <Gem size={44} />
+        <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-gradient-to-br from-blue-500/25 to-indigo-700/25">
+          <img
+            src={ritual.image}
+            alt={ritual.title}
+            className="h-full w-full object-cover"
+            onError={(e) => (e.currentTarget.style.display = "none")}
+          />
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-[15px] font-semibold text-text-primary">{ritual.title}</p>

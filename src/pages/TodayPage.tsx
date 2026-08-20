@@ -27,6 +27,7 @@ import {
   MessageCircle,
   Calculator,
   CalendarClock,
+  ShoppingBag,
 } from "lucide-react";
 import { Section } from "../components/Section";
 import { useLang, tr } from "../lib/lang";
@@ -63,6 +64,15 @@ const TOOLS = [
   { key: "horo", label: "Daily\nHoroscope", icon: Star, bg: "#FFF3D6", fg: "#F59E0B" },
   { key: "calc", label: "Astro\nCalcs", icon: Calculator, bg: "#E0E7FF", fg: "#4F46E5" },
   { key: "muhurat", label: "Muhurat\nMarket", icon: CalendarClock, bg: "#FCE7F3", fg: "#DB2777" },
+];
+
+/* Astro Store — real, chart-recommended remedies (the commerce layer) */
+const B = import.meta.env.BASE_URL;
+const STORE = [
+  { img: `${B}img/gem-ring.jpg`, name: "Gemstone Ring", sub: "Certified · sized to your chart", price: 2499, strike: 2999, rating: 4.8 },
+  { img: `${B}img/rudraksha.jpg`, name: "5 Mukhi Rudraksha Mala", sub: "108 beads · energised", price: 899, strike: 1199, rating: 4.7 },
+  { img: `${B}img/crystals.jpg`, name: "Amethyst Healing Set", sub: "Raw crystals · calm & clarity", price: 749, strike: 999, rating: 4.6 },
+  { img: `${B}img/diya.jpg`, name: "Brass Diya · set of 4", sub: "For your daily ritual", price: 349, strike: 499, rating: 4.9 },
 ];
 
 export default function TodayPage() {
@@ -411,6 +421,57 @@ export default function TodayPage() {
         {/* Call Cosmo — the Sarvam AI voice agent */}
         <div className="mt-3">
           <CallCosmo variant="tile" />
+        </div>
+      </Section>
+
+      {/* ── SECTION: Astro Store ── */}
+      <Section
+        icon={<ShoppingBag size={18} />}
+        tint="#DCFCE7"
+        fg="#16A34A"
+        title="Astro Store"
+        sub="Remedies matched to your chart"
+        action="View all"
+        onAction={() => toast("Full store opens in the app build ✦")}
+      >
+        <div className="no-scrollbar -mx-1 flex gap-3 overflow-x-auto px-1 pb-1">
+          {STORE.map((p) => (
+            <div
+              key={p.name}
+              className="w-[150px] shrink-0 overflow-hidden rounded-card bg-bg-card"
+              style={{ boxShadow: "0 6px 18px rgba(0,0,0,0.06)" }}
+            >
+              <div className="relative h-[110px] w-full overflow-hidden bg-black/5">
+                <img
+                  src={p.img}
+                  alt={p.name}
+                  loading="lazy"
+                  className="h-full w-full object-cover"
+                />
+                <span className="absolute left-1.5 top-1.5 flex items-center gap-0.5 rounded-full bg-black/55 px-1.5 py-0.5 text-[9px] font-semibold text-white">
+                  <Star size={9} className="fill-amber text-amber" /> {p.rating}
+                </span>
+              </div>
+              <div className="p-2.5">
+                <p className="truncate text-[12px] font-bold text-text-primary">{p.name}</p>
+                <p className="truncate text-[10px] text-text-muted">{p.sub}</p>
+                <div className="mt-1.5 flex items-center justify-between">
+                  <span className="text-sm font-bold text-gold">
+                    ₹{p.price.toLocaleString("en-IN")}
+                    <span className="ml-1 text-[10px] font-normal text-text-muted line-through">
+                      ₹{p.strike.toLocaleString("en-IN")}
+                    </span>
+                  </span>
+                </div>
+                <button
+                  onClick={() => toast(`${p.name} added to cart ✦`)}
+                  className="mt-1.5 w-full rounded-full bg-gold py-1.5 text-[11px] font-bold text-white active:scale-95"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </Section>
 
