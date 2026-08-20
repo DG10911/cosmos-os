@@ -3,8 +3,8 @@
  * Returns real Prokerala data when the function is deployed; callers fall back
  * to the on-device ephemeris if it isn't (so the app always works).
  */
-const BASE = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const ANON = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+const BASE = (import.meta.env.VITE_SUPABASE_URL as string) || "https://ffyxzqvgmtzjicnrbwgc.supabase.co";
+const ANON = (import.meta.env.VITE_SUPABASE_ANON_KEY as string) || "sb_publishable_PHzxg1e6-1rJ7KYrdYU0Ow_iAXpB9Ev";
 
 export function edgeApiReady(): boolean {
   return !!BASE && !!ANON;
