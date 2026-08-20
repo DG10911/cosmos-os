@@ -42,7 +42,7 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-bg">
+    <div className="relative h-full w-full overflow-y-auto overflow-x-hidden bg-bg">
       <StarField count={90} />
       {/* slow-rotating mandala crown */}
       <div
@@ -57,7 +57,7 @@ export default function AuthPage() {
 @keyframes orbit-c{from{transform:rotate(240deg) translateX(60px) rotate(-240deg)}to{transform:rotate(600deg) translateX(60px) rotate(-600deg)}}`}</style>
 
       <div
-        className="relative z-10 mx-auto flex min-h-screen w-full max-w-[420px] flex-col px-6"
+        className="relative z-10 mx-auto flex min-h-full w-full max-w-[420px] flex-col px-6"
         style={{ paddingTop: "var(--safe-top)" }}
       >
         {/* back */}

@@ -83,7 +83,7 @@ export default function MorningBriefPage() {
 
   return (
     <div
-      className="relative flex h-screen w-full flex-col overflow-hidden text-white"
+      className="relative flex h-full w-full flex-col overflow-hidden text-white"
       style={{
         background:
           "radial-gradient(120% 70% at 50% -10%, rgba(255,197,61,0.5), transparent 60%), linear-gradient(165deg,#FF6B2C 0%,#FF9A1F 50%,#FFB84D 100%)",

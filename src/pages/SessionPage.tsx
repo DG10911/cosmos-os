@@ -223,7 +223,7 @@ export default function SessionPage() {
   const ss = String(timer % 60).padStart(2, "0");
 
   return (
-    <div className="relative flex h-screen w-full flex-col bg-bg">
+    <div className="relative flex h-full w-full flex-col bg-bg">
       <Confetti fire={confetti} />
 
       {/* Top bar */}

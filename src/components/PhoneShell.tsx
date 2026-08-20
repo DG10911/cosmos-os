@@ -12,13 +12,26 @@ import { store } from "../lib/utils";
 type Skin = "ios" | "android";
 const KEY = "cosmos_os_skin";
 
+/** Routes with a dark/coloured background where the status bar should go light. */
+const DARK_ROUTES = ["/call", "/replay", "/brief", "/scroll"];
+function routeIsDark(hash: string): boolean {
+  const path = hash.replace(/^#/, "");
+  return DARK_ROUTES.some((r) => path.startsWith(r));
+}
+
 export function PhoneShell({ children }: { children: ReactNode }) {
   const [skin, setSkin] = useState<Skin>(() => store.get<Skin>(KEY, "ios"));
   const [now, setNow] = useState(() => clock());
+  const [dark, setDark] = useState(() => routeIsDark(window.location.hash));
 
   useEffect(() => {
     const t = setInterval(() => setNow(clock()), 15_000);
-    return () => clearInterval(t);
+    const onHash = () => setDark(routeIsDark(window.location.hash));
+    window.addEventListener("hashchange", onHash);
+    return () => {
+      clearInterval(t);
+      window.removeEventListener("hashchange", onHash);
+    };
   }, []);
 
   function choose(s: Skin) {
@@ -33,7 +46,7 @@ export function PhoneShell({ children }: { children: ReactNode }) {
       <div className="device-outer">
         <div className="device-screen">
           {/* faux status bar (desktop frame only) */}
-          <div className="status-bar device-chrome" aria-hidden>
+          <div className={`status-bar device-chrome ${dark ? "on-dark" : ""}`} aria-hidden>
             <span className="sb-time">{now}</span>
             <span className="sb-icons">
               <SignalHigh size={15} strokeWidth={2.4} />
@@ -51,7 +64,7 @@ export function PhoneShell({ children }: { children: ReactNode }) {
           {children}
 
           <div
-            className={`home-indicator device-chrome ${skin === "android" ? "android" : ""}`}
+            className={`home-indicator device-chrome ${skin === "android" ? "android" : ""} ${dark ? "on-dark" : ""}`}
             aria-hidden
           />
         </div>

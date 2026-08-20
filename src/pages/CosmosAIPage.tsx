@@ -115,7 +115,7 @@ export default function CosmosAIPage() {
 
   return (
     <div
-      className="relative flex h-screen w-full flex-col"
+      className="relative flex h-full w-full flex-col"
       style={{ background: "linear-gradient(180deg,#FFEAD2,#FFE6C9)" }}
     >
       {/* header */}

@@ -39,7 +39,7 @@ export default function ReplayPage() {
 
   return (
     <div
-      className="relative flex h-screen w-full flex-col overflow-hidden"
+      className="relative flex h-full w-full flex-col overflow-hidden"
       style={{
         background:
           "linear-gradient(160deg,#FF6B2C 0%,#E11D74 52%,#FF9A1F 100%)",

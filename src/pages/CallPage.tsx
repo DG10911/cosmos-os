@@ -72,7 +72,7 @@ export default function CallPage() {
 
   return (
     <div
-      className="relative flex h-screen w-full flex-col overflow-hidden text-white"
+      className="relative flex h-full w-full flex-col overflow-hidden text-white"
       style={{
         background:
           "radial-gradient(120% 80% at 50% 0%, rgba(124,58,237,0.55), transparent 60%), linear-gradient(160deg,#3B1470 0%,#7C1D5A 55%,#B3421A 100%)",

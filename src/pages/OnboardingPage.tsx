@@ -73,7 +73,7 @@ export default function OnboardingPage() {
 
   if (finishing) {
     return (
-      <div className="relative flex min-h-screen w-full flex-col items-center justify-center bg-bg">
+      <div className="relative flex h-full w-full flex-col items-center justify-center bg-bg">
         <StarField count={120} />
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
@@ -96,11 +96,11 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-bg">
+    <div className="relative h-full w-full overflow-y-auto overflow-x-hidden bg-bg">
       <StarField count={90} />
 
       <div
-        className="relative z-10 mx-auto flex min-h-screen w-full max-w-[420px] flex-col px-6"
+        className="relative z-10 mx-auto flex min-h-full w-full max-w-[420px] flex-col px-6"
         style={{ paddingTop: "var(--safe-top)" }}
       >
         {/* Progress dots */}

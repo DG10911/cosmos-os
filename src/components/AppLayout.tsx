@@ -32,11 +32,11 @@ export function AppLayout() {
   const isScroll = pathname.startsWith("/scroll");
 
   return (
-    <div className="min-h-screen w-full bg-bg text-text-primary">
+    <div className="h-full w-full bg-bg text-text-primary">
       <StarField />
 
       {/* Phone-frame wrapper (mobile-first, centered on desktop with cosmic wash) */}
-      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-[420px] flex-col">
+      <div className="relative z-10 mx-auto flex h-full w-full max-w-[420px] flex-col">
         {!hideChrome && !isScroll && <TopBar />}
 
         <main

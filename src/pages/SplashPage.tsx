@@ -16,7 +16,7 @@ export default function SplashPage() {
   const moon = moonPhase();
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-bg">
+    <div className="relative h-full w-full overflow-y-auto overflow-x-hidden bg-bg">
       <StarField count={110} />
 
       {/* rotating mandala halo */}
@@ -35,7 +35,7 @@ export default function SplashPage() {
         @keyframes core-breathe{0%,100%{transform:scale(1);filter:brightness(1)}50%{transform:scale(1.05);filter:brightness(1.12)}}
       `}</style>
 
-      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-[420px] flex-col items-center px-6 pb-14 pt-14">
+      <div className="relative z-10 mx-auto flex min-h-full w-full max-w-[420px] flex-col items-center px-6 pb-14 pt-14">
         {/* Live moon-phase chip — signals real data from second one */}
         <motion.div
           initial={{ opacity: 0, y: -8 }}
