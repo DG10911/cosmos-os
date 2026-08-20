@@ -1,0 +1,17 @@
+{
+  "name": "COSMOS OS — Your Life Operating System",
+  "short_name": "COSMOS OS",
+  "description": "Your AI-powered Vedic astrology Life OS — daily cosmic weather, live consultations, muhurat marketplace and more.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#150C2C",
+  "theme_color": "#150C2C",
+  "categories": ["lifestyle", "entertainment"],
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

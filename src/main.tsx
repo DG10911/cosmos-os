@@ -20,3 +20,22 @@ createRoot(document.getElementById("root")!).render(
     </AppStateProvider>
   </StrictMode>
 );
+
+// Fade out the branded launch screen once the app has painted.
+requestAnimationFrame(() => {
+  setTimeout(() => {
+    const boot = document.getElementById("boot");
+    if (!boot) return;
+    boot.classList.add("hide");
+    setTimeout(() => boot.remove(), 600);
+  }, 500);
+});
+
+// Register the (cache-less) service worker so the app is installable as a PWA.
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => {
+      /* installability is a progressive enhancement — ignore failures */
+    });
+  });
+}

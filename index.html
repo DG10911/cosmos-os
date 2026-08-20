@@ -2,14 +2,81 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1" />
-    <meta name="theme-color" content="#0B0B14" />
-    <meta name="description" content="COSMOS OS — Your AI-powered Life Operating System" />
-    <title>COSMOS OS</title>
+    <title>COSMOS OS — Your Life Operating System</title>
+    <meta name="description" content="COSMOS OS — Your AI-powered Vedic astrology Life Operating System" />
+
+    <!-- App icon / favicon -->
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="alternate icon" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- PWA: installable, standalone, branded -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#150C2C" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="COSMOS OS" />
+
+    <!-- Branded launch screen: shows instantly, removed once React mounts -->
+    <style>
+      #boot {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 22px;
+        background:
+          radial-gradient(1000px 700px at 50% -10%, #4a2a86 0%, transparent 60%),
+          radial-gradient(800px 800px at 100% 110%, #7c1d5a 0%, transparent 55%),
+          #150c2c;
+        transition: opacity 0.5s ease;
+        -webkit-tap-highlight-color: transparent;
+      }
+      #boot.hide { opacity: 0; pointer-events: none; }
+      #boot .ico {
+        width: 96px;
+        height: 96px;
+        border-radius: 24px;
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06);
+        animation: boot-pop 0.7s cubic-bezier(0.34, 1.4, 0.64, 1) both, boot-float 3s ease-in-out 0.7s infinite;
+      }
+      #boot .wordmark {
+        font-family: "Fraunces", Georgia, "Times New Roman", serif;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        font-size: 22px;
+        color: #fff2e2;
+        opacity: 0;
+        animation: boot-in 0.6s ease 0.25s forwards;
+      }
+      #boot .sub {
+        font-family: system-ui, sans-serif;
+        font-size: 12px;
+        letter-spacing: 0.04em;
+        color: rgba(255, 231, 168, 0.7);
+        opacity: 0;
+        animation: boot-in 0.6s ease 0.45s forwards;
+      }
+      @keyframes boot-pop { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+      @keyframes boot-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+      @keyframes boot-in { to { opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) {
+        #boot .ico, #boot .wordmark, #boot .sub { animation: none; opacity: 1; }
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
+    <div id="boot" aria-hidden="true">
+      <img class="ico" src="/icon.svg" alt="" width="96" height="96" />
+      <div class="wordmark">COSMOS&nbsp;OS</div>
+      <div class="sub">Aligning your stars…</div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

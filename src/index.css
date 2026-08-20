@@ -345,6 +345,10 @@ nav {
   .status-bar.on-dark { color: #ffffff; }
   .status-bar.on-dark .sb-time { text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45); }
 
+  /* Material tweak: Android clock is lighter, glyphs sit tighter */
+  .status-bar.sb-android .sb-time { font-weight: 500; font-size: 13px; }
+  .status-bar.sb-android .sb-icons { gap: 5px; }
+
   /* iOS Dynamic Island */
   .island {
     position: absolute;
