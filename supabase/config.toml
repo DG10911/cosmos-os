@@ -1,0 +1,4 @@
+project_id = "cosmos-os"
+
+[functions.cosmos-api]
+verify_jwt = false
