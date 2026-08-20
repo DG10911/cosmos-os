@@ -27,6 +27,8 @@ import ConnectPage from "./pages/ConnectPage";
 import MatchPage from "./pages/MatchPage";
 import KundliMatchPage from "./pages/KundliMatchPage";
 import LeaguePage from "./pages/LeaguePage";
+import CalculatorsPage from "./pages/CalculatorsPage";
+import MuhuratPage from "./pages/MuhuratPage";
 
 /** Redirect first-time users to the splash/onboarding flow. */
 function HomeGate() {
@@ -75,6 +77,8 @@ export default function App() {
           <Route path="/match" element={<MatchPage />} />
           <Route path="/kundli-match" element={<KundliMatchPage />} />
           <Route path="/league" element={<LeaguePage />} />
+          <Route path="/calculators" element={<CalculatorsPage />} />
+          <Route path="/muhurat" element={<MuhuratPage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

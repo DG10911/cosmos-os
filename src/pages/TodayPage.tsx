@@ -25,6 +25,8 @@ import {
   Hourglass,
   Compass,
   MessageCircle,
+  Calculator,
+  CalendarClock,
 } from "lucide-react";
 import { Section } from "../components/Section";
 import { useLang, tr } from "../lib/lang";
@@ -58,6 +60,8 @@ const TOOLS = [
   { key: "num", label: "Numero-\nlogy", icon: Hash, bg: "#DCFCE7", fg: "#16A34A" },
   { key: "panch", label: "Today\nPanchang", icon: CalendarDays, bg: "#E0F2FE", fg: "#0EA5E9" },
   { key: "horo", label: "Daily\nHoroscope", icon: Star, bg: "#FFF3D6", fg: "#F59E0B" },
+  { key: "calc", label: "Astro\nCalcs", icon: Calculator, bg: "#E0E7FF", fg: "#4F46E5" },
+  { key: "muhurat", label: "Muhurat\nMarket", icon: CalendarClock, bg: "#FCE7F3", fg: "#DB2777" },
 ];
 
 export default function TodayPage() {
@@ -99,6 +103,8 @@ export default function TodayPage() {
     else if (k === "panch") setPanchangOpen(true);
     else if (k === "match") nav("/kundli-match");
     else if (k === "love") nav("/circle/compat");
+    else if (k === "calc") nav("/calculators");
+    else if (k === "muhurat") nav("/muhurat");
     else if (k === "num") {
       // life-path number from the user's birth date
       const digits = (getUser()?.birthDate ?? "1999-03-14").replace(/\D/g, "");
@@ -379,6 +385,27 @@ export default function TodayPage() {
             <span className="text-[10px] text-white/85">bless a friend, get shared</span>
           </button>
         </div>
+
+        {/* Muhurat Marketplace — new revenue vertical */}
+        <button
+          onClick={() => nav("/muhurat")}
+          className="mt-3 flex w-full items-center gap-3 rounded-card p-4 text-left"
+          style={{
+            background: "linear-gradient(135deg,#7C3AED,#E11D74)",
+            boxShadow: "0 12px 30px rgba(124,58,237,0.32)",
+          }}
+        >
+          <CalendarClock size={22} className="shrink-0 text-white" />
+          <div className="flex-1">
+            <p className="text-[13px] font-bold text-white">Muhurat Marketplace →</p>
+            <p className="text-[10px] text-white/85">
+              auspicious dates + verified vendors, in one flow
+            </p>
+          </div>
+          <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-semibold text-white">
+            NEW
+          </span>
+        </button>
       </Section>
 
       {/* ── SECTION: Today's Wisdom ── */}

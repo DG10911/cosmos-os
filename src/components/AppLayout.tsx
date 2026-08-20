@@ -6,6 +6,7 @@ import { cn } from "../lib/utils";
 import { useApp } from "../state/AppState";
 import { Flame } from "./Glyphs";
 import { useLang, setLang, tr } from "../lib/lang";
+import { getUser } from "../data/user";
 
 const TABS = [
   { to: "/today", icon: Home, label: "Today" },
@@ -69,10 +70,11 @@ function TopBar() {
   const h = new Date().getHours();
   const greetKey =
     h < 12 ? "greetMorning" : h < 17 ? "greetAfternoon" : "greetEvening";
+  const firstName = (getUser()?.name || "").trim().split(" ")[0] || "friend";
   return (
     <header className="glass fixed left-1/2 top-0 z-20 flex h-14 w-full max-w-[420px] -translate-x-1/2 items-center justify-between border-b border-gold/15 px-4">
       <span className="serif truncate text-lg text-text-primary">
-        {tr(greetKey, lang)}, Anya
+        {tr(greetKey, lang)}, {firstName}
       </span>
       <div className="flex items-center gap-2">
         {/* Language toggle — English / Hindi for mass Indian reach */}

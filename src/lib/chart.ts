@@ -219,3 +219,80 @@ function defaultChart(name: string): DerivedChart {
 export function chartLine(c: DerivedChart): string {
   return `${c.rashiEn} · ${c.nakshatra} · ${c.mahadashaLord} Mahadasha`;
 }
+
+/* -------------------------------------------------------------------------- */
+/*  Panchang / calculator primitives (used by Muhurat + Calculators)          */
+/* -------------------------------------------------------------------------- */
+
+export const RASHI_LIST = RASHIS;
+export const NAKSHATRA_LIST = NAKSHATRAS;
+
+/** The Nakshatra the Moon transits on a given date (sidereal proxy). */
+export function nakshatraOfDate(d: Date): { index: number; name: string; lord: Planet } {
+  const days = d.getTime() / 86_400_000;
+  const cyclePos = ((days % SIDEREAL_MONTH) + SIDEREAL_MONTH) % SIDEREAL_MONTH;
+  const index = Math.floor((cyclePos / SIDEREAL_MONTH) * 27) % 27;
+  return { index, name: NAKSHATRAS[index], lord: DASHA[index % 9][0] };
+}
+
+const SYNODIC_MONTH = 29.530588; // new moon → new moon
+const TITHI_NAMES = [
+  "Pratipada", "Dwitiya", "Tritiya", "Chaturthi", "Panchami", "Shashthi",
+  "Saptami", "Ashtami", "Navami", "Dashami", "Ekadashi", "Dwadashi",
+  "Trayodashi", "Chaturdashi", "Purnima/Amavasya",
+];
+
+/** The lunar day (Tithi) + Paksha for a given date (synodic proxy). */
+export function tithiOfDate(d: Date): {
+  index: number; num: number; paksha: string; name: string;
+  isAmavasya: boolean; isPurnima: boolean;
+} {
+  const days = d.getTime() / 86_400_000;
+  const pos = ((days % SYNODIC_MONTH) + SYNODIC_MONTH) % SYNODIC_MONTH;
+  const index = Math.floor((pos / SYNODIC_MONTH) * 30) % 30; // 0..29
+  const num = (index % 15) + 1; // 1..15
+  const shukla = index < 15;
+  const isPurnima = shukla && num === 15;
+  const isAmavasya = !shukla && num === 15;
+  const base = TITHI_NAMES[num - 1];
+  const name = num === 15 ? (shukla ? "Purnima" : "Amavasya") : base;
+  return { index, num, paksha: shukla ? "Shukla" : "Krishna", name, isAmavasya, isPurnima };
+}
+
+const ZODIAC: [string, string, number][] = [
+  // [English, Sanskrit, last day-of-month the PREVIOUS sign spills into]
+  ["Capricorn", "Makara", 20], ["Aquarius", "Kumbha", 19], ["Pisces", "Meena", 20],
+  ["Aries", "Mesha", 20], ["Taurus", "Vrishabha", 21], ["Gemini", "Mithuna", 21],
+  ["Cancer", "Karka", 22], ["Leo", "Simha", 23], ["Virgo", "Kanya", 23],
+  ["Libra", "Tula", 23], ["Scorpio", "Vrishchika", 22], ["Sagittarius", "Dhanu", 22],
+];
+
+/** Western/tropical Sun sign for a date of birth. */
+export function sunSign(d: Date): { en: string; sa: string } {
+  const m = d.getMonth(); // 0..11
+  const day = d.getDate();
+  const [en, sa] = day <= ZODIAC[m][2] ? ZODIAC[m] : ZODIAC[(m + 1) % 12];
+  return { en, sa };
+}
+
+// Saturn's sidereal sign during 2025–2027 (Meena / Pisces).
+const SATURN_SIGN_INDEX = 11;
+
+export type SadeSati = {
+  active: boolean;
+  phase: string; // "Rising" | "Peak" | "Setting" | "Kantaka (Dhaiya)" | "Clear"
+  house: number; // Saturn's house from natal Moon (1..12)
+  note: string;
+};
+
+/** Sade Sati / Dhaiya status for a Moon sign, given Saturn's current transit. */
+export function sadeSati(moonRashiEn: string): SadeSati {
+  const idx = RASHIS.findIndex((r) => r[1] === moonRashiEn);
+  if (idx < 0) return { active: false, phase: "Clear", house: 0, note: "Moon sign unknown." };
+  const house = ((SATURN_SIGN_INDEX - idx + 12) % 12) + 1;
+  if (house === 12) return { active: true, phase: "Rising", house, note: "First dhaiya — Saturn in your 12th. Expenses and endings; simplify and let go." };
+  if (house === 1) return { active: true, phase: "Peak", house, note: "Peak Sade Sati — Saturn over your Moon. The heaviest, most transformative phase. Discipline is your shield." };
+  if (house === 2) return { active: true, phase: "Setting", house, note: "Final dhaiya — Saturn in your 2nd. Focus on savings, family and speech; the tunnel is ending." };
+  if (house === 4 || house === 8) return { active: true, phase: "Kantaka (Dhaiya)", house, note: `Small panoti — Saturn in your ${house}th. A 2.5-year test of patience, not full Sade Sati.` };
+  return { active: false, phase: "Clear", house, note: "No Sade Sati or Dhaiya right now — Saturn is well-placed from your Moon." };
+}
