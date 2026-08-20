@@ -173,6 +173,32 @@ Deno.serve(async (req: Request) => {
       return json({ json: parsed, text });
     }
 
+    if (action === "sarvam-tts") {
+      // Sarvam AI text-to-speech — natural Indic voices (Hindi & 10+ langs).
+      // Key stays server-side; browser only sends { text, lang, speaker }.
+      const key = (Deno.env.get("SARVAM_API_KEY") ?? "").trim();
+      if (!key) throw new Error("SARVAM_API_KEY not set");
+      const r = await fetch("https://api.sarvam.ai/text-to-speech", {
+        method: "POST",
+        headers: { "content-type": "application/json", "api-subscription-key": key },
+        body: JSON.stringify({
+          text: String(params.text ?? "").slice(0, 480),
+          target_language_code: params.lang ?? "hi-IN",
+          speaker: params.speaker ?? "anushka",
+          pitch: 0,
+          pace: 1,
+          loudness: 1,
+          speech_sample_rate: 22050,
+          enable_preprocessing: true,
+          model: "bulbul:v2",
+        }),
+      });
+      const j = await r.json();
+      const audio = j?.audios?.[0];
+      if (!audio) throw new Error(j?.error?.message ?? j?.message ?? "sarvam failed");
+      return json({ audio }); // base64 WAV
+    }
+
     if (action === "hms-token") {
       const token = await hmsToken(
         params.roomId ?? "",

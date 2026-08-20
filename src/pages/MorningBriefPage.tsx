@@ -2,53 +2,72 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sun, Target, ShieldAlert, Clock, Flame, Sparkles, Volume2, VolumeX } from "lucide-react";
-import { ttsSupported, speak, stopSpeaking } from "../lib/voice";
+import { ttsSupported, speakSmart, stopSpeaking } from "../lib/voice";
 import { useApp } from "../state/AppState";
 import { useToast } from "../components/Toast";
 import { Confetti } from "../components/Confetti";
+import { getUser } from "../data/user";
 
 const CARDS = [
   {
     icon: Sun,
     tint: "#FFC53D",
-    kicker: "Good morning, Anya",
+    kicker: "Good morning",
+    kickerHi: "सुप्रभात",
     title: "The universe noticed you woke up.",
     body: "Your Moon is illuminated today. Trust intuition over strategy.",
+    titleHi: "ब्रह्मांड ने आपका जागना महसूस किया।",
+    bodyHi: "आज आपका चंद्रमा प्रकाशित है। रणनीति से ज़्यादा अंतर्ज्ञान पर भरोसा करें।",
   },
   {
     icon: Sparkles,
     tint: "#FF9A1F",
     kicker: "Today's energy",
+    kickerHi: "आज की ऊर्जा",
     title: "Bright & rising ☀",
     body: "Rahu Mahadasha keeps you driven. Channel it into one big thing.",
+    titleHi: "उज्ज्वल और बढ़ता हुआ ☀",
+    bodyHi: "राहु महादशा आपको प्रेरित रखती है। इसे एक बड़े काम में लगाएँ।",
   },
   {
     icon: Target,
     tint: "#7C3AED",
     kicker: "Your one focus",
+    kickerHi: "आपका एक लक्ष्य",
     title: "Have the promotion conversation.",
     body: "Jupiter favours bold asks before noon. This is your window.",
+    titleHi: "पदोन्नति की बातचीत करें।",
+    bodyHi: "दोपहर से पहले बृहस्पति साहसिक माँगों का साथ देता है। यही आपका समय है।",
   },
   {
     icon: ShieldAlert,
     tint: "#E5484D",
     kicker: "Gentle caution",
+    kickerHi: "हल्की सावधानी",
     title: "Don't overcommit after 4 PM.",
     body: "Rahu Kaal (4:30–6:00) — pause big decisions, breathe.",
+    titleHi: "शाम 4 बजे के बाद ज़्यादा वादे न करें।",
+    bodyHi: "राहु काल (4:30–6:00) — बड़े फैसले रोकें, गहरी साँस लें।",
   },
   {
     icon: Clock,
     tint: "#0EA5E9",
     kicker: "Lucky window",
+    kickerHi: "शुभ समय",
     title: "14:22 – 15:47",
     body: "Money & luck align. Send that message, make that call.",
+    titleHi: "दोपहर 2:22 – 3:47",
+    bodyHi: "धन और भाग्य साथ हैं। वह संदेश भेजें, वह कॉल करें।",
   },
   {
     icon: Flame,
     tint: "#FF6B2C",
     kicker: "Today's ritual",
+    kickerHi: "आज का अनुष्ठान",
     title: "Light a diya at sunset.",
     body: "A small offering. A big shift. +10 Karma when you're done.",
+    titleHi: "सूर्यास्त पर एक दीया जलाएँ।",
+    bodyHi: "छोटी सी भेंट, बड़ा बदलाव। पूरा करने पर +10 कर्म।",
   },
 ];
 
@@ -59,16 +78,25 @@ export default function MorningBriefPage() {
   const [i, setI] = useState(0);
   const [confetti, setConfetti] = useState(0);
   const [narrate, setNarrate] = useState(false);
+  const [voiceLang, setVoiceLang] = useState<"en" | "hi">("en");
   const last = i >= CARDS.length;
+  const firstName = (getUser()?.name || "").trim().split(" ")[0];
+
+  // Text to narrate for a card, in the chosen voice language.
+  const speechFor = (idx: number, lang: "en" | "hi") => {
+    const c = CARDS[idx];
+    return lang === "hi" ? `${c.titleHi}। ${c.bodyHi}` : `${c.title}. ${c.body}`;
+  };
 
   // Voice RJ — read each card aloud as it appears when narration is on.
+  // Uses Sarvam AI (natural Hindi/Indic voice) when available, else Web Speech.
   useEffect(() => {
     if (narrate && !last) {
-      const c = CARDS[i];
-      speak(`${c.title}. ${c.body}`, "en-IN");
+      speakSmart(speechFor(i, voiceLang), voiceLang === "hi" ? "hi-IN" : "en-IN");
     }
     return () => stopSpeaking();
-  }, [i, narrate, last]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [i, narrate, last, voiceLang]);
 
   function next() {
     if (i < CARDS.length) setI((v) => v + 1);
@@ -104,24 +132,45 @@ export default function MorningBriefPage() {
         ))}
       </div>
       {ttsSupported() && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setNarrate((v) => {
-              if (v) stopSpeaking();
-              else if (!last) speak(`${CARDS[i].title}. ${CARDS[i].body}`, "en-IN");
-              return !v;
-            });
-          }}
-          className="absolute left-3 top-8 z-20 flex items-center gap-1 rounded-full bg-white/20 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur"
+        <div
+          className="absolute left-3 z-20 flex items-center gap-1.5"
+          style={{ top: "calc(2rem + var(--safe-top))" }}
         >
-          {narrate ? <Volume2 size={14} /> : <VolumeX size={14} />}
-          {narrate ? "Listening" : "Listen"}
-        </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setNarrate((v) => {
+                if (v) stopSpeaking();
+                else if (!last) speakSmart(speechFor(i, voiceLang), voiceLang === "hi" ? "hi-IN" : "en-IN");
+                return !v;
+              });
+            }}
+            className="flex items-center gap-1 rounded-full bg-white/20 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur"
+          >
+            {narrate ? <Volume2 size={14} /> : <VolumeX size={14} />}
+            {narrate ? "Listening" : "Listen"}
+          </button>
+          {/* Voice language — Sarvam AI reads your brief in a natural Hindi voice */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              const nextLang = voiceLang === "en" ? "hi" : "en";
+              setVoiceLang(nextLang);
+              if (narrate && !last) {
+                speakSmart(speechFor(i, nextLang), nextLang === "hi" ? "hi-IN" : "en-IN");
+              }
+            }}
+            className="rounded-full bg-white/20 px-2.5 py-1.5 text-xs font-bold text-white backdrop-blur"
+            aria-label="Voice language"
+          >
+            {voiceLang === "en" ? "EN" : "हिं"}
+          </button>
+        </div>
       )}
       <button
         onClick={(e) => { e.stopPropagation(); stopSpeaking(); nav("/today"); }}
-        className="absolute right-3 top-8 z-20 text-white/85"
+        className="absolute right-3 z-20 text-white/85"
+        style={{ top: "calc(2rem + var(--safe-top))" }}
       >
         <X size={22} />
       </button>
@@ -147,7 +196,7 @@ export default function MorningBriefPage() {
                 })()}
               </span>
               <p className="mt-6 text-sm font-semibold uppercase tracking-[0.18em] text-white/85">
-                {CARDS[i].kicker}
+                {i === 0 && firstName ? `${CARDS[0].kicker}, ${firstName}` : CARDS[i].kicker}
               </p>
               <h1 className="serif mt-2 text-[32px] leading-tight">{CARDS[i].title}</h1>
               <p className="mt-3 max-w-[300px] text-[15px] text-white/90">{CARDS[i].body}</p>

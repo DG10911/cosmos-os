@@ -22,7 +22,7 @@ if command -v supabase >/dev/null 2>&1; then SB=(supabase); else SB=(npx --no-in
 # Load the access token + the five secrets the edge function needs (nothing printed).
 set -a
 # shellcheck disable=SC1090
-source <(grep -E '^(SUPABASE_ACCESS_TOKEN|OPENAI_API_KEY|PROKERALA_CLIENT_ID|PROKERALA_CLIENT_SECRET|HMS_ACCESS_KEY|HMS_APP_SECRET)=' .env)
+source <(grep -E '^(SUPABASE_ACCESS_TOKEN|OPENAI_API_KEY|PROKERALA_CLIENT_ID|PROKERALA_CLIENT_SECRET|HMS_ACCESS_KEY|HMS_APP_SECRET|SARVAM_API_KEY)=' .env)
 set +a
 
 if [ -z "${SUPABASE_ACCESS_TOKEN:-}" ]; then
@@ -41,7 +41,8 @@ echo "▶ Pushing secrets (values read from .env, not shown)…"
   PROKERALA_CLIENT_ID="$PROKERALA_CLIENT_ID" \
   PROKERALA_CLIENT_SECRET="$PROKERALA_CLIENT_SECRET" \
   HMS_ACCESS_KEY="$HMS_ACCESS_KEY" \
-  HMS_APP_SECRET="$HMS_APP_SECRET"
+  HMS_APP_SECRET="$HMS_APP_SECRET" \
+  ${SARVAM_API_KEY:+SARVAM_API_KEY="$SARVAM_API_KEY"}
 
 echo ""
 echo "✅ Done. Verify with:  node scripts/test-keys.mjs   (and re-test the edge actions)"

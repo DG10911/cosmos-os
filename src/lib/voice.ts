@@ -5,9 +5,13 @@
  * two functions — listen() and speak() — so callers never change.
  */
 
+import { fetchSarvamTts } from "./cosmosApi";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const w = window as any;
 const SR = w.SpeechRecognition || w.webkitSpeechRecognition;
+
+let currentAudio: HTMLAudioElement | null = null;
 
 export function voiceSupported(): boolean {
   return typeof window !== "undefined" && !!SR && "speechSynthesis" in window;
@@ -35,6 +39,37 @@ export function speak(text: string, lang = "en-IN") {
 
 export function stopSpeaking() {
   if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.src = "";
+    currentAudio = null;
+  }
+}
+
+/**
+ * Premium voice: try Sarvam AI (natural Indic/Hindi voices, via the secure
+ * Edge Function) and play the returned audio; fall back to the browser's
+ * Web Speech voice if Sarvam isn't available. Same signature as speak().
+ * Speaker examples (bulbul:v2): "anushka", "manisha" (f), "abhilash" (m).
+ */
+export async function speakSmart(
+  text: string,
+  lang = "hi-IN",
+  speaker?: string,
+): Promise<void> {
+  stopSpeaking();
+  try {
+    const res = await fetchSarvamTts({ text, lang, speaker });
+    if (res?.audio) {
+      const audio = new Audio(`data:audio/wav;base64,${res.audio}`);
+      currentAudio = audio;
+      await audio.play();
+      return;
+    }
+  } catch {
+    /* fall back to Web Speech */
+  }
+  speak(text, lang);
 }
 
 /** Listen once and return the transcript. Returns the recognition handle. */

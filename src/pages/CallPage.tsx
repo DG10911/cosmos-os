@@ -33,6 +33,9 @@ export default function CallPage() {
   const [camOff, setCamOff] = useState(!isVideo);
   const [wallet, setWallet] = useState(450);
   const timerRef = useRef<number | null>(null);
+  const localVideoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const [camReady, setCamReady] = useState(false);
 
   // connect sequence: connecting → ringing → live
   useEffect(() => {
@@ -61,6 +64,46 @@ export default function CallPage() {
       setWallet((w) => Math.max(0, w - a.price));
     }
   }, [secs, phase, a.price]);
+
+  // Real device camera + mic while the video call is live. Falls back to the
+  // avatar self-view if the user denies permission or has no camera.
+  useEffect(() => {
+    if (!isVideo || phase !== "live") return;
+    let cancelled = false;
+    navigator.mediaDevices
+      ?.getUserMedia({ video: { facingMode: "user" }, audio: true })
+      .then((stream) => {
+        if (cancelled) {
+          stream.getTracks().forEach((t) => t.stop());
+          return;
+        }
+        streamRef.current = stream;
+        stream.getAudioTracks().forEach((t) => (t.enabled = !muted));
+        stream.getVideoTracks().forEach((t) => (t.enabled = !camOff));
+        if (localVideoRef.current) localVideoRef.current.srcObject = stream;
+        setCamReady(true);
+      })
+      .catch(() => setCamReady(false));
+    return () => {
+      cancelled = true;
+      streamRef.current?.getTracks().forEach((t) => t.stop());
+      streamRef.current = null;
+      setCamReady(false);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isVideo, phase]);
+
+  // keep the <video> bound to the stream, and mirror mute/cam to real tracks
+  useEffect(() => {
+    if (localVideoRef.current && streamRef.current)
+      localVideoRef.current.srcObject = streamRef.current;
+  }, [camReady, camOff]);
+  useEffect(() => {
+    streamRef.current?.getAudioTracks().forEach((t) => (t.enabled = !muted));
+  }, [muted]);
+  useEffect(() => {
+    streamRef.current?.getVideoTracks().forEach((t) => (t.enabled = !camOff));
+  }, [camOff]);
 
   const mm = Math.floor(secs / 60);
   const ss = String(secs % 60).padStart(2, "0");
@@ -122,12 +165,26 @@ export default function CallPage() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="absolute right-4 top-4 flex h-28 w-20 items-center justify-center overflow-hidden rounded-2xl border border-white/20 bg-black/25 backdrop-blur"
+            className="absolute right-4 flex h-28 w-20 items-center justify-center overflow-hidden rounded-2xl border border-white/20 bg-black/25 backdrop-blur"
+            style={{ top: "calc(1rem + var(--safe-top))" }}
           >
-            {camOff ? (
-              <VideoOff size={20} className="text-white/60" />
-            ) : (
-              <img src={avatarUrl(99)} alt="you" className="h-full w-full object-cover" />
+            <video
+              ref={localVideoRef}
+              autoPlay
+              muted
+              playsInline
+              className={`h-full w-full scale-x-[-1] object-cover ${camReady && !camOff ? "" : "hidden"}`}
+            />
+            {(!camReady || camOff) &&
+              (camOff ? (
+                <VideoOff size={20} className="text-white/60" />
+              ) : (
+                <img src={avatarUrl(99)} alt="you" className="h-full w-full object-cover" />
+              ))}
+            {camReady && !camOff && (
+              <span className="absolute bottom-1 left-1 rounded-full bg-black/40 px-1.5 py-0.5 text-[8px] font-semibold text-white">
+                You · live
+              </span>
             )}
           </motion.div>
         )}

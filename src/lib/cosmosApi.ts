@@ -50,3 +50,8 @@ export function fetchRealPanchang(p: { datetime: string; lat: number; lng: numbe
 export function fetchHmsToken(roomId: string, userId?: string) {
   return call<{ token: string }>("hms-token", { roomId, userId, role: "host" });
 }
+
+/** Sarvam AI text-to-speech — returns base64 WAV audio (null if unavailable). */
+export function fetchSarvamTts(p: { text: string; lang?: string; speaker?: string }) {
+  return call<{ audio: string }>("sarvam-tts", p);
+}
